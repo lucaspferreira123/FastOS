@@ -121,7 +121,9 @@ namespace MeuProjeto.Repository
                     throw new Exception("Cliente não encontrado.");
                 }
 
-                _context.Cliente.Remove(cliente);
+                cliente.Ativo = false;
+
+                _context.Cliente.Update(cliente);
 
                 await _context.SaveChangesAsync();
 

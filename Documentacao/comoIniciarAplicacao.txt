@@ -1,0 +1,15 @@
+Passo a passo para rodar o projeto:
+
+1 - Baixar o Visual Studio 2022 "https://visualstudio.microsoft.com/pt-br/downloads/"
+
+2 - Ir no installador e baixar o pacote asp.net core MVC
+
+3 - Baixar o dotnet 9 na maquina "https://dotnet.microsoft.com/pt-br/download/dotnet/9.0"
+
+4 - Baixar os pacotes do Entity Fremework Core
+    "dotnet add package Microsoft.EntityFrameworkCore.SqlServer"
+    "dotnet add package Microsoft.EntityFrameworkCore.Tools"
+
+5 - Criar o banco de dados e configurar suas credenciais no app.settings (O script do banco de dados está no arquivo "scriptCriarTabelasSQLServer"
+
+6 - Rodar o projeto

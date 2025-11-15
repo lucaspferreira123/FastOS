@@ -121,6 +121,37 @@
         }
       }
     },
+    "/Ordem/CadastrarOrdem": {
+      "post": {
+        "tags": [
+          "Ordem"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Produto/CadastrarProduto": {
       "post": {
         "tags": [
@@ -355,6 +386,43 @@
           "endereco": {
             "type": "string",
             "nullable": true
+          },
+          "ativo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemOrdemServicoViewModel": {
+        "type": "object",
+        "properties": {
+          "idItemOrdem": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idOrdemServico": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProduto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataPedido": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataRealizado": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ordemServico": {
+            "$ref": "#/components/schemas/OrdemServicoViewModel"
           }
         },
         "additionalProperties": false
@@ -380,6 +448,30 @@
           },
           "twoFactorRecoveryCode": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrdemServicoViewModel": {
+        "type": "object",
+        "properties": {
+          "idOrdemServico": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pago": {
+            "type": "boolean"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+            },
             "nullable": true
           }
         },

@@ -4,8 +4,6 @@
 
 function ValidarLoginDoUsuarioAoEntrar() {
 
-    console.log('entrou');
-
     var email = $('#txtEmailLogin').val();
     var senha = $('#txtSenhaLogin').val();
 
@@ -32,16 +30,9 @@ function ValidarLoginDoUsuarioAoEntrar() {
                     });
                 }
                 else {
-                    return Swal.fire({
-                        title: 'Sucesso',
-                        text: response,
-                        icon: 'success',
-                        confirmButtonText: 'Ok'
-                    });
+                    return window.location.href = '/Home/index';
                 }
 
-                // exemplo de redirecionamento após sucesso:
-                // window.location.href = '/Home/Index';
             },
             error: function (xhr) {
                 if (xhr.status === 400 || xhr.status === 401) {

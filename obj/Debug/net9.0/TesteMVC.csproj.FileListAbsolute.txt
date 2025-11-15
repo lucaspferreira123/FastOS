@@ -234,4 +234,7 @@ C:\TesteMVC\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\TesteMVC\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\TesteMVC\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\TesteMVC\obj\Debug\net9.0\TesteMVC.MvcApplicationPartsAssemblyInfo.cs
-C:\TesteMVC\obj\Debug\net9.0\compressed\qur21158mg-jo0anmqb69.gz
+C:\TesteMVC\obj\Debug\net9.0\TesteMVC.sourcelink.json
+C:\TesteMVC\obj\Debug\net9.0\compressed\jf25thozn7-wxam0rqv2f.gz
+C:\TesteMVC\obj\Debug\net9.0\compressed\qur21158mg-f8zlk8hdbl.gz
+C:\TesteMVC\obj\Debug\net9.0\compressed\noocz6na9f-1z9p10cr7a.gz

@@ -14,6 +14,11 @@ namespace TesteProjeto.Controllers
             _clienteBusiness = clienteBusiness;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Route("Cliente/CadastrarCliente")]
         public async Task<IActionResult> CadastrarCliente([FromBody] ClienteViewModel cliente)

@@ -17,40 +17,42 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<UsuarioBusiness>();
 builder.Services.AddScoped<ClienteBusiness>();
 builder.Services.AddScoped<ProdutoBusiness>();
+builder.Services.AddScoped<OrdemBusiness>();
 
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
+builder.Services.AddScoped<OrdemRepository>();
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Minha API",
-        Version = "v1"
-    });
-});
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.SwaggerDoc("v1", new OpenApiInfo
+//    {
+//        Title = "Minha API",
+//        Version = "v1"
+//    });
+//});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-        // Deixa vazio ou "swagger" se quiser acessar em /swagger
-        c.RoutePrefix = string.Empty;
-    });
-}
-else
-{
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c =>
+//    {
+//        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+//        // Deixa vazio ou "swagger" se quiser acessar em /swagger
+//        c.RoutePrefix = string.Empty;
+//    });
+//}
+//else
+//{
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-}
+//}
 
 app.UseHttpsRedirection();
 app.UseRouting();

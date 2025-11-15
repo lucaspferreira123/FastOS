@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<OrdemServicoViewModel> OrdensServico { get; set; }
     public DbSet<ItemOrdemServicoViewModel> ItensOrdemServico { get; set; }
     public DbSet<UsuarioViewModel> Usuario { get; set; }
+    public DbSet<StatusViewModel> Status { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -32,6 +33,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ClienteViewModel>().ToTable("Cliente");
         modelBuilder.Entity<ProdutoViewModel>().ToTable("Produto");
         modelBuilder.Entity<UsuarioViewModel>().ToTable("Usuario");
+        modelBuilder.Entity<StatusViewModel>().ToTable("Status");
     }
 
 }

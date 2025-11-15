@@ -88,7 +88,6 @@ C:\TesteMVC\obj\Debug\net9.0\staticwebassets.build.json
 C:\TesteMVC\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\TesteMVC\obj\Debug\net9.0\staticwebassets.development.json
 C:\TesteMVC\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\TesteMVC\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\TesteMVC\obj\Debug\net9.0\TesteMVC.dll
 C:\TesteMVC\obj\Debug\net9.0\refint\TesteMVC.dll
 C:\TesteMVC\obj\Debug\net9.0\TesteMVC.pdb

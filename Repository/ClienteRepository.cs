@@ -40,7 +40,7 @@ namespace MeuProjeto.Repository
         {
             try
             {
-                var clientes = await _context.Cliente.FromSqlRaw(@" SELECT * FROM Cliente WHERE excluido = 0").ToListAsync();
+                var clientes = await _context.Cliente.FromSqlRaw(@" SELECT * FROM Cliente WHERE ativo = 0").ToListAsync();
 
                 return clientes;
             }

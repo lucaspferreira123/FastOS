@@ -1,5 +1,6 @@
-using System.Diagnostics;
+using MeuProjeto.Business;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using TesteMVC.Models;
 
 namespace TesteMVC.Controllers
@@ -7,14 +8,25 @@ namespace TesteMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ClienteBusiness _clienteBusiness;
+        private readonly ProdutoBusiness _produtoBusiness;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, ClienteBusiness clienteBusiness, ProdutoBusiness produtoBusiness)
         {
             _logger = logger;
+            _clienteBusiness = clienteBusiness;
+            _produtoBusiness = produtoBusiness;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var clientes = await _clienteBusiness.ObterTodosClientes();
+            var produtos = await _produtoBusiness.ObterProdutos();
+
+            ViewBag.Produtos = produtos;
+            ViewBag.Clientes = clientes;
+
             return View();
         }
 

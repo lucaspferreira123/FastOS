@@ -9,7 +9,9 @@ namespace TesteMVC.Models
         public int idCliente { get; set; }
         public bool Pago { get; set; }
         public int idStatus { get; set; }
-        public int DescricaoServico { get; set; }
+        public string DescricaoServico { get; set; }
+        public DateTime DataAbertura { get; set; }
+        public DateTime PrevisaoEntrega { get; set; }
         public ICollection<ItemOrdemServicoViewModel> Itens { get; set; }
     }
 }

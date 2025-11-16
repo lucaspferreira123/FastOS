@@ -18,11 +18,13 @@ builder.Services.AddScoped<UsuarioBusiness>();
 builder.Services.AddScoped<ClienteBusiness>();
 builder.Services.AddScoped<ProdutoBusiness>();
 builder.Services.AddScoped<OrdemBusiness>();
+builder.Services.AddScoped<StatusBusiness>();
 
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<OrdemRepository>();
+builder.Services.AddScoped<StatusRepository>();
 
 
 builder.Services.AddEndpointsApiExplorer();

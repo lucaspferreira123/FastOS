@@ -18,10 +18,10 @@ namespace MeuProjeto.Business
         {
             try
             {
-                //if (ordem == null)
-                //{
-                //    throw new ArgumentException("Não foi possivel cadastrar a ordem.");
-                //}
+                if (ordem == null)
+                {
+                    throw new ArgumentException("Não foi possivel cadastrar a ordem.");
+                }
 
                 var ordemCadastrada = await _repository.CadastrarOrdem(ordem);
 

@@ -50,7 +50,6 @@
                     <tr>
                         <th>Nº OS</th>
                         <th>Cliente</th>
-                        <th>Serviço/Produto</th>
                         <th>Data de Abertura</th>
                         <th>Previsão de Entrega</th>
                         <th>Status</th>
@@ -131,12 +130,12 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Status</label>
-                                <select class="form-select" id="status" required>
-                                    <option>Em Aberto</option>
-                                    <option>Em Andamento</option>
-                                    <option>Aguardando Peça</option>
-                                    <option>Concluída</option>
-                                    <option>Cancelada</option>
+                                <select class="form-select" id="selectCriarOrdemStatus" required>
+                                    <option value="">Selecione o status</option>
+                                    @foreach (var status in ViewBag.Status)
+                                    {
+                                        <option value="@status.idStatus">@status.Descricao</option>
+                                    }
                                 </select>
                             </div>
 

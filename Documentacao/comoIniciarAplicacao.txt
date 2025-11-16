@@ -10,6 +10,12 @@ Passo a passo para rodar o projeto:
     "dotnet add package Microsoft.EntityFrameworkCore.SqlServer"
     "dotnet add package Microsoft.EntityFrameworkCore.Tools"
 
-5 - Criar o banco de dados e configurar suas credenciais no app.settings (O script do banco de dados está no arquivo "scriptCriarTabelasSQLServer"
+5 - Criar o banco de dados e configurar suas credenciais no app.settings. A aplicação usa SQL Server.
 
-6 - Rodar o projeto
+6 - Rodar no terminal do projeto o comando "dotnet ef database update" para criar as tabelas no banco de dados.
+
+7 - Rodar o projeto com o comando "dotnet run" ou apertando F5 no Visual Studio.
+
+Observações técnicas: Como ultilizamos o Entity Framework Core Code First, as tabelas serão criadas automaticamente
+no banco de dados ao rodar o comando de atualização do banco de dados. Certifique-se de que as credenciais do banco
+de dados estejam corretas no arquivo appsettings.json para evitar erros de conexão.

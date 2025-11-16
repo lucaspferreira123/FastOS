@@ -1,3 +1,7 @@
+
+!Por enquanto o Script esta desatualizado. Atualizar ate o dia 24 parao cod Review!
+
+
 -------------------------------------------------
 -- TABELA CLIENTE
 -------------------------------------------------
@@ -90,5 +94,7 @@ INSERT INTO Usuario (nome, email, senha, ativo) VALUES
 ('Maria Silva', 'maria@email.com', 'senha456', 0),
 ('João Pereira', 'joao@email.com', 'senha789', 0),
 ('Ana Costa', 'ana@email.com', 'senha321', 1),
+
+
 
 

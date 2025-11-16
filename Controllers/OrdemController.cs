@@ -22,7 +22,11 @@ namespace TesteProjeto.Controllers
             {
                 var ordemCadastrada = await _ordemBusiness.CadastrarOrdem(ordem);
 
-                return Ok(ordemCadastrada);
+                return Ok(new
+                {
+                    id = ordemCadastrada.idOrdemServico,
+                    mensagem = "Criado com sucesso"
+                });
             }
             catch (Exception)
             {

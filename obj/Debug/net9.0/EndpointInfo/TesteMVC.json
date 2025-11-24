@@ -90,6 +90,68 @@
         }
       }
     },
+    "/ItemOrdemServico/AlterarItensOrdemServico": {
+      "post": {
+        "tags": [
+          "ItemOrdemServico"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ItemOrdemServico/ObterItensOrdemServico": {
+      "get": {
+        "tags": [
+          "ItemOrdemServico"
+        ],
+        "parameters": [
+          {
+            "name": "idOrdem",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Login/VerificarLoginUsuarioAoLogar": {
       "post": {
         "tags": [
@@ -145,6 +207,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ordem/ObterOrdens": {
+      "get": {
+        "tags": [
+          "Ordem"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -466,6 +540,22 @@
           },
           "pago": {
             "type": "boolean"
+          },
+          "idStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descricaoServico": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataAbertura": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "previsaoEntrega": {
+            "type": "string",
+            "format": "date-time"
           },
           "itens": {
             "type": "array",

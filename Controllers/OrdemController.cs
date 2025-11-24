@@ -34,7 +34,7 @@ namespace TesteProjeto.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Ordem/ObterOrdens")]
         public async Task<IActionResult> ObterTodasOrdens()
         {

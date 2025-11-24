@@ -6,15 +6,11 @@ namespace TesteMVC.Models
     {
         [Key]
         public int idItemOrdem { get; set; }
-
-        public int idOrdemServico { get; set; } // FK
-
+        public int idOrdemServico { get; set; } 
         public int idProduto { get; set; }
         public DateTime DataPedido { get; set; }
         public DateTime? DataRealizado { get; set; }
         public int Quantidade { get; set; }
-
-        // 🌟 Adicionar isto resolve o problema
         public OrdemServicoViewModel OrdemServico { get; set; }
     }
 }

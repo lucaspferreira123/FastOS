@@ -1,58 +1,210 @@
-﻿
-$(document).ready(function () {
-    //const tabelaOS = $('#tabelaOS').DataTable({
-    //    responsive: true,
-    //    searching: true,
-    //    paging: true,
-    //    ordering: true,
-    //    info: true,
-    //    pageLength: 5,
-    //    language: {
-    //        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-    //    },
-    //    columns: [
-    //        { data: "idOrdemServico" },
-    //        { data: "cliente" },
-    //        { data: "servico" },
-    //        { data: "dataAbertura" },
-    //        { data: "previsaoEntrega" },
-    //        { data: "status" },
-    //        {
-    //            data: null,
-    //            className: "text-center",
-    //            render: function (data) {
-    //                return `
-    //                    <button class="btn btn-warning btn-sm" onclick="EditarOS(${data.idOrdemServico})">
-    //                        <i class="bi bi-pencil-square"></i>
-    //                    </button>
-    //                    <button class="btn btn-danger btn-sm" onclick="ExcluirOS(${data.idOrdemServico})">
-    //                        <i class="bi bi-trash"></i>
-    //                    </button>
-    //                `;
-    //            }
-    //        }
-    //    ]
-    //});
-
-    //ObterOrdens();
+﻿$(document).ready(function () {
+    ObterOrdens();
 });
 
 function ObterOrdens() {
 
     $.ajax({
-        url: '/Ordem/ObterTodasOrdens',
+        url: '/Ordem/ObterOrdens',
         type: 'GET',
-        success: function (response) {
+        success: function (ordens) {
 
-            tabelaOS.clear();      
-            tabelaOS.rows.add(response); 
-            tabelaOS.draw();       
-        },
-        error: function (xhr) {
-            console.error(xhr);
-            Swal.fire("Erro!", "Não foi possível carregar as OS.", "error");
+            let tbody = $("#tabelaOrdens tbody");
+
+            tbody.empty();
+
+            ordens.forEach(o => {
+
+                let funcoes = GerarFuncoesPorStatus(o);
+
+                let linha = `
+                    <tr>
+                        <td>${o.idOrdemServico}</td>
+                        <td>${o.clienteNome}</td>
+                        <td>${o.pago ? "Sim" : "Não"}</td>
+                        <td>${o.statusDescricao}</td>
+                        <td>${formatarData(o.dataAbertura)}</td>
+                        <td>${formatarData(o.previsaoEntrega)}</td>
+                        <td>${funcoes}</td>
+                    </tr>
+                `;
+
+                tbody.append(linha);
+            });
         }
     });
+}
+
+function RequisitarItens(idOrdemServico) {
+
+    $("#modalAdicionarPecas").modal("show");
+
+    $("#modalAdicionarPecas").attr("data-id-os", idOrdemServico);
+
+    CarregarItensDaOrdem(idOrdemServico);
+}
+
+function CarregarItensDaOrdem(idOrdemServico) {
+
+    $.ajax({
+        url: `/ItemOrdemServico/ObterItensOrdemServico/${idOrdemServico}`,
+        type: 'GET',
+        success: function (itens) {
+
+            let tbody = $("#listaPecas");
+            tbody.empty();
+
+            itens.forEach(i => {
+                AdicionarLinhaTabela(i.idItemOrdemServico, i.idProduto, i.nomeProduto, i.quantidade, i.valorUnitario);
+            });
+        },
+        error: function () {
+        }
+    });
+}
+
+function AdicionarPeca() {
+    let idProduto = $("#selectCriarOrdemProduto").val();
+    let nomeProduto = $("#selectCriarOrdemProduto option:selected").text();
+    let qtd = $("#txtQuantidadePeca").val();
+
+    if (!idProduto) {
+        Swal.fire("Atenção", "Selecione um produto.", "warning");
+        return;
+    }
+
+    AdicionarLinhaTabela(0, idProduto, nomeProduto, qtd, 0);
+}
+
+function AdicionarLinhaTabela(idItemOrdem, idProduto, nomeProduto, qtd, valorUnit) {
+
+    let tr = `
+        <tr data-id-item="${idItemOrdem}">
+            <td data-id="${idProduto}">${nomeProduto}</td>
+            <td><input type="number" class="form-control qtdPeca" min="1" value="${qtd}"></td>
+            <td><input type="number" class="form-control valorPeca" min="0" step="0.01" value="${valorUnit}"></td>
+            <td class="totalPeca">${(qtd * valorUnit).toFixed(2)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm btnRemover">X</button>
+            </td>
+        </tr>
+    `;
+
+    $("#listaPecas").append(tr);
+
+    AtualizarTotais();
+}
+
+$(document).on("input", ".qtdPeca, .valorPeca", function () {
+    AtualizarTotais();
+});
+
+$(document).on("click", ".btnRemover", function () {
+    $(this).closest("tr").remove();
+    AtualizarTotais();
+});
+
+function AtualizarTotais() {
+
+    $("#listaPecas tr").each(function () {
+
+        let qtd = parseFloat($(this).find(".qtdPeca").val()) || 0;
+        let valor = parseFloat($(this).find(".valorPeca").val()) || 0;
+
+        let total = qtd * valor;
+
+        $(this).find(".totalPeca").text(total.toFixed(2));
+    });
+}
+
+function SalvarItens() {
+
+    var itens = CarregarJsonItensOrdem();
+
+    $.ajax({
+        url: `/ItemOrdemServico/AlterarItensOrdemServico`,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(itens),
+        success: function () {
+            Swal.fire("Sucesso!", "Itens salvos com sucesso!", "success");
+            $("#modalAdicionarPecas").modal("hide");
+        },
+        error: function () {
+            Swal.fire("Erro!", "Não foi possível salvar os itens da ordem.", "error");
+        }
+    });
+}
+
+function CarregarJsonItensOrdem() {
+
+    let idOS = parseInt($("#modalAdicionarPecas").attr("data-id-os"));
+    let pecas = [];
+
+    $("#listaPecas tr").each(function () {
+
+        let idItemAttr = $(this).attr("data-id-item");
+        let idItem = idItemAttr ? parseInt(idItemAttr) : null;
+
+        let idProduto = parseInt($(this).find("td[data-id]").attr("data-id"));
+        let quantidade = parseInt($(this).find(".qtdPeca").val());
+
+        pecas.push({
+            idItemOrdem: idItem,    
+            idOrdemServico: idOS,
+            idProduto: idProduto,
+            dataPedido: new Date().toISOString(),
+            dataRealizado: null,
+            quantidade: quantidade
+        });
+    });
+
+    return pecas;
+}
+
+function GerarFuncoesPorStatus(o) {
+
+    switch (o.statusDescricao) {
+        case "Aguardando analise e requisição":
+            return `
+                <button class="btn btn-primary btn-sm" onclick="RequisitarItens(${o.idOrdemServico})">
+                    Requisitar itens
+                </button>
+
+                <button class="btn btn-primary btn-sm" onclick="GerarOrcamento(${o.idOrdemServico})">
+                    Gerar Orcamento
+                </button>
+            `;
+
+        case "Em Andamento":
+            return `
+                <button class="btn btn-success btn-sm" onclick="Finalizar(${o.idOrdemServico})">
+                    Finalizar
+                </button>
+            `;
+
+        case "Aguardando Peça":
+            return `
+                <button class="btn btn-warning btn-sm" onclick="ComprarPeca(${o.idOrdemServico})">
+                    Comprar Peça
+                </button>
+            `;
+
+        case "Concluída":
+            return `
+                <button class="btn btn-info btn-sm" onclick="Visualizar(${o.idOrdemServico})">
+                    Ver Detalhes
+                </button>
+            `;
+
+        default:
+            return "-";
+    }
+}
+
+function formatarData(data) {
+    if (!data) return "";
+    return new Date(data).toLocaleDateString("pt-BR");
 }
 
 function ValidarCamposCriarOrdem(ordemBody) {
@@ -82,24 +234,7 @@ function ValidarCamposCriarOrdem(ordemBody) {
         return false;
     }
 
-    if (!ordemBody.itens || ordemBody.itens.length === 0) {
-        Swal.fire("Atenção!", "Adicione pelo menos um item à ordem de serviço.", "error");
-        return false;
-    }
-
-    let item = ordemBody.itens[0];
-
-    if (!item.idProduto || item.idProduto === 0) {
-        Swal.fire("Atenção!", "Selecione um produto.", "error");
-        return false;
-    }
-
-    if (!item.quantidade || item.quantidade <= 0) {
-        Swal.fire("Atenção!", "Informe a quantidade do produto.", "error");
-        return false;
-    }
-
-    return true; 
+    return true;
 }
 
 function CriarOrdem() {
@@ -112,8 +247,8 @@ function CriarOrdem() {
         $.ajax({
             url: '/Ordem/CadastrarOrdem',
             type: 'POST',
-            data: JSON.stringify(ordemBody),     
-            contentType: 'application/json; charset=utf-8', 
+            data: JSON.stringify(ordemBody),
+            contentType: 'application/json; charset=utf-8',
             dataType: 'text',
             success: function (response) {
 
@@ -124,6 +259,8 @@ function CriarOrdem() {
                     title: "Sucesso!",
                     text: `Ordem de serviço Nº: ${ordem.id} criada com sucesso!`,
                 });
+
+                ObterOrdens();
             },
             error: function (xhr) {
                 Swal.fire("Erro!", "Não foi possível carregar as OS.", "error");
@@ -136,7 +273,6 @@ function CarregarJsonOrdem() {
     let cliente = $('#selectCriarOrdemCliente').val();
     let previsaoEntrega = $('#txtCriarOrdemPrevisaoEntrega').val();
     let dataAbertura = $('#txtCriarOrdemDataAbertura').val();
-    let produto = $('#selectCriarOrdemProduto').val();
     let descricao = $('#txtCriarOrdemDescricao').val();
     let status = $('#selectCriarOrdemStatus').val();
 
@@ -148,16 +284,6 @@ function CarregarJsonOrdem() {
         descricaoServico: descricao,
         dataAbertura: dataAbertura,
         previsaoEntrega: previsaoEntrega,
-        itens: [
-            {
-                idItemOrdem: 0,
-                idOrdemServico: 0,
-                idProduto: parseInt(produto),
-                dataPedido: dataAbertura,     
-                dataRealizado: null,
-                quantidade: 1
-            }
-        ]
     };
 
     return ordemJson;

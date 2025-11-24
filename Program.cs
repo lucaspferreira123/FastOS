@@ -19,12 +19,14 @@ builder.Services.AddScoped<ClienteBusiness>();
 builder.Services.AddScoped<ProdutoBusiness>();
 builder.Services.AddScoped<OrdemBusiness>();
 builder.Services.AddScoped<StatusBusiness>();
+builder.Services.AddScoped<ItemOrdemServicoBusiness>();
 
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<OrdemRepository>();
 builder.Services.AddScoped<StatusRepository>();
+builder.Services.AddScoped<ItemOrdemServicoRepository>();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -39,16 +41,16 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+////Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
 //    app.UseSwagger();
-//    app.UseSwaggerUI(c =>
-//    {
-//        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-//        // Deixa vazio ou "swagger" se quiser acessar em /swagger
-//        c.RoutePrefix = string.Empty;
-//    });
+//app.UseSwaggerUI(c =>
+//{
+//c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+//// Deixa vazio ou "swagger" se quiser acessar em /swagger
+//c.RoutePrefix = string.Empty;
+//});
 //}
 //else
 //{
@@ -67,6 +69,5 @@ app.MapControllerRoute(
     name: "default",
      pattern: "{controller=Login}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

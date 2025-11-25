@@ -73,7 +73,6 @@ C:\TesteMVC\wwwroot\css\site.css
 C:\TesteMVC\wwwroot\favicon.ico
 C:\TesteMVC\wwwroot\js\pages\Cliente.js
 C:\TesteMVC\wwwroot\js\pages\login.js
-C:\TesteMVC\wwwroot\js\site.js
 C:\TesteMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 C:\TesteMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 C:\TesteMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
@@ -138,3 +137,4 @@ C:\TesteMVC\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\TesteMVC\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\TesteMVC\wwwroot\lib\jquery\LICENSE.txt
 C:\TesteMVC\wwwroot\js\pages\Ordem.js
+C:\TesteMVC\wwwroot\js\site.js

@@ -1,0 +1,119 @@
+-- DROP SCHEMA dbo;
+
+CREATE SCHEMA dbo;
+-- Pizzalizya.dbo.Cliente definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.Cliente;
+
+CREATE TABLE Pizzalizya.dbo.Cliente (
+	idCliente int IDENTITY(1,1) NOT NULL,
+	Nome nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Email nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Senha nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Telefone nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Endereco nvarchar(MAX) COLLATE Latin1_General_CI_AS NULL,
+	Ativo bit NOT NULL,
+	CONSTRAINT PK_Cliente PRIMARY KEY (idCliente)
+);
+
+
+-- Pizzalizya.dbo.OrdemServico definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.OrdemServico;
+
+CREATE TABLE Pizzalizya.dbo.OrdemServico (
+	idOrdemServico int IDENTITY(1,1) NOT NULL,
+	idCliente int NOT NULL,
+	Pago bit NOT NULL,
+	idStatus int NOT NULL,
+	DescricaoServico nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	DataAbertura datetime2 DEFAULT '0001-01-01T00:00:00.0000000' NOT NULL,
+	PrevisaoEntrega datetime2 DEFAULT '0001-01-01T00:00:00.0000000' NOT NULL,
+	CONSTRAINT PK_OrdemServico PRIMARY KEY (idOrdemServico)
+);
+
+
+-- Pizzalizya.dbo.Produto definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.Produto;
+
+CREATE TABLE Pizzalizya.dbo.Produto (
+	idProduto int IDENTITY(1,1) NOT NULL,
+	NomeProduto nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Descricao nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	PrecoUnitario decimal(18,2) NOT NULL,
+	QuantidadeTotal int NOT NULL,
+	Marca nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	CONSTRAINT PK_Produto PRIMARY KEY (idProduto)
+);
+
+
+-- Pizzalizya.dbo.Status definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.Status;
+
+CREATE TABLE Pizzalizya.dbo.Status (
+	idStatus int IDENTITY(1,1) NOT NULL,
+	Descricao nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	CONSTRAINT PK_Status PRIMARY KEY (idStatus)
+);
+
+
+-- Pizzalizya.dbo.Usuario definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.Usuario;
+
+CREATE TABLE Pizzalizya.dbo.Usuario (
+	idUsuario int IDENTITY(1,1) NOT NULL,
+	Nome nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Email nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Senha nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
+	Ativo bit NOT NULL,
+	CONSTRAINT PK_Usuario PRIMARY KEY (idUsuario)
+);
+
+
+-- Pizzalizya.dbo.[__EFMigrationsHistory] definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.[__EFMigrationsHistory];
+
+CREATE TABLE Pizzalizya.dbo.[__EFMigrationsHistory] (
+	MigrationId nvarchar(150) COLLATE Latin1_General_CI_AS NOT NULL,
+	ProductVersion nvarchar(32) COLLATE Latin1_General_CI_AS NOT NULL,
+	CONSTRAINT PK___EFMigrationsHistory PRIMARY KEY (MigrationId)
+);
+
+
+-- Pizzalizya.dbo.ItemOrdemServico definição
+
+-- Drop table
+
+-- DROP TABLE Pizzalizya.dbo.ItemOrdemServico;
+
+CREATE TABLE Pizzalizya.dbo.ItemOrdemServico (
+	idItemOrdem int IDENTITY(1,1) NOT NULL,
+	idOrdemServico int NOT NULL,
+	idProduto int NOT NULL,
+	DataPedido datetime2 NOT NULL,
+	DataRealizado datetime2 NULL,
+	Quantidade int NOT NULL,
+	CONSTRAINT PK_ItemOrdemServico PRIMARY KEY (idItemOrdem),
+	CONSTRAINT FK_ItemOrdemServico_OrdemServico_idOrdemServico FOREIGN KEY (idOrdemServico) REFERENCES Pizzalizya.dbo.OrdemServico(idOrdemServico) ON DELETE CASCADE
+);
+ CREATE NONCLUSTERED INDEX IX_ItemOrdemServico_idOrdemServico ON Pizzalizya.dbo.ItemOrdemServico (  idOrdemServico ASC  )  
+	 WITH (  PAD_INDEX = OFF ,FILLFACTOR = 100  ,SORT_IN_TEMPDB = OFF , IGNORE_DUP_KEY = OFF , STATISTICS_NORECOMPUTE = OFF , ONLINE = OFF , ALLOW_ROW_LOCKS = ON , ALLOW_PAGE_LOCKS = ON  )
+	 ON [PRIMARY ] ;
+
+

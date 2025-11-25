@@ -16,6 +16,8 @@ Passo a passo para rodar o projeto:
 
 7 - Rodar o projeto com o comando "dotnet run" ou apertando F5 no Visual Studio.
 
+8 - Ao rodar a aplicação a mesma será inicializado no Swagguer. Caso deseje verificar o fluxo acessar a rota /Login
+
 Observações técnicas: Como ultilizamos o Entity Framework Core Code First, as tabelas serão criadas automaticamente
 no banco de dados ao rodar o comando de atualização do banco de dados. Certifique-se de que as credenciais do banco
 de dados estejam corretas no arquivo appsettings.json para evitar erros de conexão.

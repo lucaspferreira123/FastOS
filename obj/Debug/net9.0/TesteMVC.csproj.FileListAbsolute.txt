@@ -22,7 +22,6 @@ C:\TesteMVC\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\TesteMVC\obj\Debug\net9.0\scopedcss\bundle\TesteMVC.styles.css
 C:\TesteMVC\obj\Debug\net9.0\scopedcss\projectbundle\TesteMVC.bundle.scp.css
 C:\TesteMVC\obj\Debug\net9.0\compressed\q7xd6pkp7v-61n19gt1b8.gz
-C:\TesteMVC\obj\Debug\net9.0\compressed\nyzuzbpyrm-xtxxf3hu2r.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\o7fnw4fgki-bqjiyaj88i.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\q4nxvomoub-c2jlpeoesf.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\j1nswibt3w-erw9l3u2r3.gz
@@ -241,4 +240,5 @@ C:\TesteMVC\obj\Debug\net9.0\compressed\8iw38w28x2-x0ipjb9j10.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\ln7n94ib3e-shenl3p7fr.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\ipspqdq8bj-tht9ay2bbt.gz
 C:\TesteMVC\obj\Debug\net9.0\compressed\5ls0lgbza0-jzw3z8vsme.gz
-C:\TesteMVC\obj\Debug\net9.0\compressed\noocz6na9f-j3o0qkfurm.gz
+C:\TesteMVC\obj\Debug\net9.0\compressed\noocz6na9f-cy6eyw9ypt.gz
+C:\TesteMVC\obj\Debug\net9.0\compressed\nyzuzbpyrm-aychkkzzid.gz

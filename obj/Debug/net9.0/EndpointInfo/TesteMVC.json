@@ -130,7 +130,7 @@
         }
       }
     },
-    "/ItemOrdemServico/ObterItensOrdemServico": {
+    "/ItemOrdemServico/ObterItensOrdemServico/{idOrdem}": {
       "get": {
         "tags": [
           "ItemOrdemServico"
@@ -138,7 +138,8 @@
         "parameters": [
           {
             "name": "idOrdem",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"

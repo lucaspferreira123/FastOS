@@ -13,14 +13,14 @@
 </head>
 <body class="bg-light">
 
-    <button id="btnHamburger" class="btn btn-danger m-3" type="button" aria-label="Abrir menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
+    <button id="btnHamburger" class="btn btn-danger m-3" type="button" aria-label="Abrir menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
         <i class="bi bi-list fs-3"></i>
     </button>
 
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasSidebar" data-bs-backdrop="false" aria-labelledby="offcanvasSidebarLabel">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title text-danger fw-bold">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="FecharOffcanvasEBackdrop()" aria-label="Fechar"></button>
         </div>
         <div class="offcanvas-body p-0">
             <nav class="list-group list-group-flush">
@@ -38,6 +38,7 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCadastroOS">
                 <i class="bi bi-file-earmark-plus-fill me-1"></i> Nova OS
             </button>
+        </div>
         </div>
 
         <div class="mb-3">
@@ -81,7 +82,7 @@
             </nav>
         </div>
 
-        <div class="modal fade" id="modalCadastroOS" tabindex="-1" aria-labelledby="modalCadastroOSLabel" aria-hidden="true">
+        <div class="modal" id="modalCadastroOS" tabindex="-1" aria-labelledby="modalCadastroOSLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content rounded-4 shadow-lg border-0">
 
@@ -94,7 +95,7 @@
 
                         <div class="row g-4">
 
-                            <div class="col-md-6">
+                            <div class="col-md-6
                                 <label class="form-label fw-semibold">Cliente</label>
                                 <select id="selectCriarOrdemCliente" class="form-select">
                                     <option value="">Selecione um cliente</option>
@@ -292,6 +293,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css" />
+
+        <script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
 
         <script src="/js/pages/Ordem.js"></script>
 

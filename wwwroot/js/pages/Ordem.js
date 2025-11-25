@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+
+    // 🚨 Troque #ID_DO_SEU_OFFCANVAS pelo ID real do seu offcanvas
+    const offcanvasSeletor = '#offcanvasSidebar';
+
     ObterOrdens();
 });
 
@@ -30,6 +34,15 @@ function ObterOrdens() {
                 `;
 
                 tbody.append(linha);
+            });
+
+            let test = new DataTable('#tabelaOrdens', {
+                language: {
+                    search: "Buscar: ",
+                    lengthMenu: "Mostrando _MENU_ itens por página",
+                    zeroRecords: "Nenhum Registro Encontrado",
+                    info: "Mostrando pagina _PAGE_ de _PAGES_",
+                }
             });
         }
     });
@@ -150,7 +163,7 @@ function CarregarJsonItensOrdem() {
         let quantidade = parseInt($(this).find(".qtdPeca").val());
 
         pecas.push({
-            idItemOrdem: idItem,    
+            idItemOrdem: idItem,
             idOrdemServico: idOS,
             idProduto: idProduto,
             dataPedido: new Date().toISOString(),
@@ -260,7 +273,10 @@ function CriarOrdem() {
                     text: `Ordem de serviço Nº: ${ordem.id} criada com sucesso!`,
                 });
 
+                LimparInputsCriarOrdem();
                 ObterOrdens();
+                $('#modalCadastroOS').modal('hide');
+                $('.modal-backdrop').remove();
             },
             error: function (xhr) {
                 Swal.fire("Erro!", "Não foi possível carregar as OS.", "error");
@@ -288,4 +304,10 @@ function CarregarJsonOrdem() {
 
     return ordemJson;
 }
-
+function LimparInputsCriarOrdem() {
+    $('#selectCriarOrdemCliente').val('');
+    $('#txtCriarOrdemPrevisaoEntrega').val('');
+    $('#txtCriarOrdemDataAbertura').val('');
+    $('#txtCriarOrdemDescricao').val('');
+    $('#selectCriarOrdemStatus').val('');
+}

@@ -3,6 +3,7 @@ wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\pages\Cliente.js
 wwwroot\js\pages\login.js
+wwwroot\js\pages\Ordem.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -68,7 +69,6 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\js\pages\Ordem.js
 C:\TesteMVC\wwwroot\css\site.css
 C:\TesteMVC\wwwroot\favicon.ico
 C:\TesteMVC\wwwroot\js\pages\Cliente.js

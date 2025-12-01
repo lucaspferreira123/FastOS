@@ -1,10 +1,17 @@
 ﻿$(document).ready(function () {
 
-    // 🚨 Troque #ID_DO_SEU_OFFCANVAS pelo ID real do seu offcanvas
-    const offcanvasSeletor = '#offcanvasSidebar';
-
-
     ObterOrdens();
+});
+
+tbody = $("#tabelaOrdens tbody");
+
+tabelaOrdensDT = $('#tabelaOrdens').DataTable({
+    language: {
+        search: "Buscar: ",
+        lengthMenu: "Mostrando _MENU_ itens por página",
+        zeroRecords: "Nenhum Registro Encontrado",
+        info: "Mostrando página _PAGE_ de _PAGES_",
+    }
 });
 
 function ObterOrdens() {
@@ -14,37 +21,24 @@ function ObterOrdens() {
         type: 'GET',
         success: function (ordens) {
 
-            let tbody = $("#tabelaOrdens tbody");
-
-            tbody.empty();
+            tabelaOrdensDT.clear(); 
 
             ordens.forEach(o => {
 
                 let funcoes = GerarFuncoesPorStatus(o);
 
-                let linha = `
-                    <tr>
-                        <td>${o.idOrdemServico}</td>
-                        <td>${o.clienteNome}</td>
-                        <td>${o.pago ? "Sim" : "Não"}</td>
-                        <td>${o.statusDescricao}</td>
-                        <td>${formatarData(o.dataAbertura)}</td>
-                        <td>${formatarData(o.previsaoEntrega)}</td>
-                        <td>${funcoes}</td>
-                    </tr>
-                `;
-
-                tbody.append(linha);
+                tabelaOrdensDT.row.add([
+                    o.idOrdemServico,
+                    o.clienteNome,
+                    o.pago ? "Sim" : "Não",
+                    o.statusDescricao,
+                    formatarData(o.dataAbertura),
+                    formatarData(o.previsaoEntrega),
+                    funcoes
+                ]);
             });
 
-            let test = new DataTable('#tabelaOrdens', {
-                language: {
-                    search: "Buscar: ",
-                    lengthMenu: "Mostrando _MENU_ itens por página",
-                    zeroRecords: "Nenhum Registro Encontrado",
-                    info: "Mostrando pagina _PAGE_ de _PAGES_",
-                }
-            });
+            tabelaOrdensDT.draw(); // redesenha com os novos dados
         }
     });
 }
@@ -327,101 +321,6 @@ function GerarFuncoesPorStatus(o) {
             return "-";
     }
 }
-
-
-
-//function GerarFuncoesPorStatus(o) {
-
-//    switch (o.statusDescricao) {
-//        case "Aguardando Analise e Requisição":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="RequisitarItens(${o.idOrdemServico})">
-//                    Requisitar itens
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="AlterarStatus(${o.idOrdemServico}, 3)">
-//                    Finalizar Analise e Requisição
-//                </button>
-//            `;
-
-//        case "Gerando Orcamento":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrcamento(${o.idOrdemServico})">
-//                    Alterar Orçamento
-//                </button>
-
-//                 <button class="btn btn-primary btn-sm" onclick="ImprimirOrcamento(${o.idOrdemServico})">
-//                    Imprimir Orçamento
-//                </button>
-
-//                 <button class="btn btn-primary btn-sm" onclick="AlterarStatus(${o.idOrdemServico}, 4)">
-//                    Enviar para aguardando aprovação
-//                </button>
-//            `;
-
-//        case "Aguardando Aprovação":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="AlterarStatus(${o.idOrdemServico}, 7)">
-//                    Aprovar Orçamento Ordem
-//                </button>
-//            `;
-
-//        case "Ordem em Execução":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick=AlterarStatus"(${o.idOrdemServico}, 8)">
-//                    Finalizar Ordem
-//                </button>
-//            `;
-
-//        case "Concluída / Aguardando Pagamento":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="ImprimirBoleto(${o.idOrdemServico})">
-//                    Imprimir Boleto
-//                </button>
-
-//                <button class="btn btn-primary btn-sm" onclick="AlterarStatus(${o.idOrdemServico}, 5)">
-//                    Confirmar Pagamento
-//                </button>
-//            `;
-
-//        case "Concluída / Pagamento Realizado":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-//            `;
-
-//        case "Cancelada":
-//            return `
-//                <button class="btn btn-primary btn-sm" onclick="AbrirModalAlterarOrdem(${o.idOrdemServico})">
-//                    Alterar Ordem
-//                </button>
-//            `;
-
-//        default:
-//            return "-";
-//    }
-//}
 
 function AbrirModalAlterarOrdem(idOrdem) {
 

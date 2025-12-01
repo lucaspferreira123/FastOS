@@ -41,9 +41,9 @@
         </div>
         </div>
 
-        <div class="mb-3">
+       @*  <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Buscar por cliente, serviço ou status...">
-        </div>
+        </div> *@
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="tabelaOrdens">
@@ -63,25 +63,6 @@
             </table>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-            <div class="d-flex align-items-center mb-2 mb-md-0">
-                <label for="rowsPerPageSelect" class="me-2 mb-0 text-secondary fw-semibold">Mostrar</label>
-                <select id="rowsPerPageSelect" class="form-select form-select-sm w-auto">
-                    <option value="1">1</option>
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="all">Todos</option>
-                </select>
-                <span class="ms-2 text-secondary">registros</span>
-            </div>
-
-            <nav>
-                <ul class="pagination pagination-sm mb-0" id="pagination"></ul>
-            </nav>
-        </div>
-
         <div class="modal" id="modalCadastroOS" tabindex="-1" aria-labelledby="modalCadastroOSLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content rounded-4 shadow-lg border-0">
@@ -95,7 +76,7 @@
 
                         <div class="row g-4">
 
-                            <div class="col-md-6
+                            <div class="col-md-12">
                                 <label class="form-label fw-semibold">Cliente</label>
                                 <select id="selectCriarOrdemCliente" class="form-select">
                                     <option value="">Selecione um cliente</option>
@@ -145,62 +126,68 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modalEditarOS" tabindex="-1" aria-labelledby="modalEditarOSLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content rounded-4">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-danger fw-bold" id="modalEditarOSLabel">Editar Ordem de Serviço</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="formEditarOS">
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">Nº da OS</label>
-                                    <input type="text" class="form-control" id="editNumOS" disabled>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Cliente</label>
-                                    <select class="form-select" id="editCliente" required>
-                                        <option>Cliente A</option>
-                                        <option>Cliente B</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Serviço/Produto</label>
-                                    <input type="text" class="form-control" id="editServicoProduto" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Data de Abertura</label>
-                                    <input type="date" class="form-control" id="editDataAbertura" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Previsão de Entrega</label>
-                                    <input type="date" class="form-control" id="editPrevisaoEntrega">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select" id="editStatus" required>
-                                        <option>Em Aberto</option>
-                                        <option>Em Andamento</option>
-                                        <option>Aguardando Peça</option>
-                                        <option>Concluída</option>
-                                        <option>Cancelada</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Descrição do Problema</label>
-                                    <textarea class="form-control" id="editDescricao" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-danger">Salvar Alterações</button>
-                            </div>
-                        </form>
-                    </div>
+    <div class="modal" id="modalEditarOS" tabindex="-1" aria-labelledby="modalEditarOSLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+
+                <div class="modal-header bg-light border-bottom-0 pb-0">
+                    <h5 class="modal-title text-danger fw-bold" id="modalEditarOSLabel">Editar Ordem de Serviço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-12">
+                                <label class="form-label fw-semibold">Cliente</label>
+                            <select id="selectEditarOrdemCliente" class="form-select selectpicker">
+                                    <option value="">Selecione um cliente</option>
+                                    @foreach (var cliente in ViewBag.Clientes)
+                                    {
+                                            <option value="@cliente.idCliente">@cliente.Nome</option>
+                                    }
+                                </select>
+                            </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Data de Abertura</label>
+                            <input type="date" class="form-control" id="txtEditarOrdemDataAbertura" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Previsão de Finalização</label>
+                            <input type="date" class="form-control" id="txtEditarOrdemPrevisaoEntrega">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select class="form-select selectpicker" id="selectEditarOrdemStatus" required>
+                                <option value="">Selecione o status</option>
+                                @foreach (var status in ViewBag.Status)
+                                {
+                                    <option value="@status.idStatus">@status.Descricao</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Descrição do Problema</label>
+                            <textarea class="form-control" id="txtEditarOrdemDescricao" rows="3"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-top-0 mt-2">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger px-4 fw-bold" onclick="AlterarOrdem()">Alterar Ordem</button>
+                </div>
+
             </div>
         </div>
+    </div>
 
         <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -264,10 +251,9 @@
                             <table class="table table-bordered">
                                 <thead class="table-light">
                                     <tr>
+                                        <th>Codigo</th>
                                         <th>Peça</th>
                                         <th>Qtd</th>
-                                        <th>Valor Unit.</th>
-                                        <th>Total</th>
                                         <th>Funções</th>
                                     </tr>
                                 </thead>
@@ -283,6 +269,62 @@
                 </div>
             </div>
         </div>
+
+    <div class="modal" id="modalOrcamentoOS" tabindex="-1" aria-labelledby="modalOrcamentoOSLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg border-0">
+
+                <div class="modal-header bg-light border-bottom-0 pb-0">
+                    <h5 class="modal-title text-danger fw-bold" id="modalOrcamentoOSLabel">Orçamento da Ordem de Serviço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Valor da Mão de Obra (R$)</label>
+                            <input type="number" class="form-control" id="txtOrcamentoMaoDeObra"  onchange="CalcularValorOrcamento()">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Valor dos Materiais (R$)</label>
+                            <input type="number" class="form-control" id="txtOrcamentoMateriais"  onchange="CalcularValorOrcamento()" disabled>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Desconto (%)</label>
+                            <input type="number" class="form-control" id="txtOrcamentoDesconto"  onchange="CalcularValorOrcamento()">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Taxas Extras (R$)</label>
+                            <input type="number" class="form-control" id="txtOrcamentoTaxas"  onchange="CalcularValorOrcamento()">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Valor Final (R$)</label>
+                            <input type="number" class="form-control" id="txtOrcamentoValorFinal"  disabled>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Forma de pagamento</label>
+                            <input type="text" class="form-control" id="txtOrcamentoFormaPagamento">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-top-0 mt-2">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger px-4 fw-bold" onclick="SalvarOrcamento()">Salvar Orçamento</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
         <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:2000"></div>

@@ -11,13 +11,14 @@ public class AppDbContext : DbContext
     public DbSet<ItemOrdemServicoViewModel> ItensOrdemServico { get; set; }
     public DbSet<UsuarioViewModel> Usuario { get; set; }
     public DbSet<StatusViewModel> Status { get; set; }
+    public DbSet<OrcamentoViewModel> Orcamento { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<OrdemServicoViewModel>(entity =>
         {
-            entity.ToTable("OrdemServico"); // nome correto no banco
+            entity.ToTable("OrdemServico"); 
 
             entity.HasMany(o => o.Itens)
                   .WithOne(i => i.OrdemServico)
@@ -28,6 +29,16 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ItemOrdemServicoViewModel>(entity =>
         {
             entity.ToTable("ItemOrdemServico");
+        });
+
+        modelBuilder.Entity<OrcamentoViewModel>(entity =>
+        {
+            entity.ToTable("Orcamento");
+
+            entity.HasOne(o => o.OrdemServico)
+                  .WithOne(os => os.Orcamento)
+                  .HasForeignKey<OrcamentoViewModel>(o => o.idOrdemServico)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<ClienteViewModel>().ToTable("Cliente");

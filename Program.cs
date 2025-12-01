@@ -2,6 +2,9 @@ using MeuProjeto.Business;
 using MeuProjeto.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TesteMVC.IRepository;
+using TesteMVC.Relatorios;
+using TesteMVC.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,17 +20,20 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<UsuarioBusiness>();
 builder.Services.AddScoped<ClienteBusiness>();
 builder.Services.AddScoped<ProdutoBusiness>();
-builder.Services.AddScoped<OrdemBusiness>();
+builder.Services.AddScoped<OrdemServicoBusiness>();
 builder.Services.AddScoped<StatusBusiness>();
 builder.Services.AddScoped<ItemOrdemServicoBusiness>();
+builder.Services.AddScoped<RelatorioBusiness>();
+builder.Services.AddScoped<OrcamentoBusiness>();
 
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
-builder.Services.AddScoped<OrdemRepository>();
+builder.Services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>(); 
 builder.Services.AddScoped<StatusRepository>();
-builder.Services.AddScoped<ItemOrdemServicoRepository>();
-
+builder.Services.AddScoped<IItemOrdemServicoRepository ,ItemOrdemServicoRepository>();
+builder.Services.AddScoped<IOrcamentoRepository ,OrcamentoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

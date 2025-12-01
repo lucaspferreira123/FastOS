@@ -21,6 +21,44 @@ namespace TesteMVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("OrcamentoViewModel", b =>
+                {
+                    b.Property<int>("idOrcamento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idOrcamento"));
+
+                    b.Property<decimal>("Desconto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("FormaPagamento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MaoDeObra")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Materiais")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TaxasExtras")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ValorFinal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("idOrdemServico")
+                        .HasColumnType("int");
+
+                    b.HasKey("idOrcamento");
+
+                    b.HasIndex("idOrdemServico")
+                        .IsUnique();
+
+                    b.ToTable("Orcamento", (string)null);
+                });
+
             modelBuilder.Entity("TesteMVC.Models.ClienteViewModel", b =>
                 {
                     b.Property<int>("idCliente")
@@ -194,6 +232,17 @@ namespace TesteMVC.Migrations
                     b.ToTable("Usuario", (string)null);
                 });
 
+            modelBuilder.Entity("OrcamentoViewModel", b =>
+                {
+                    b.HasOne("TesteMVC.Models.OrdemServicoViewModel", "OrdemServico")
+                        .WithOne("Orcamento")
+                        .HasForeignKey("OrcamentoViewModel", "idOrdemServico")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrdemServico");
+                });
+
             modelBuilder.Entity("TesteMVC.Models.ItemOrdemServicoViewModel", b =>
                 {
                     b.HasOne("TesteMVC.Models.OrdemServicoViewModel", "OrdemServico")
@@ -208,6 +257,8 @@ namespace TesteMVC.Migrations
             modelBuilder.Entity("TesteMVC.Models.OrdemServicoViewModel", b =>
                 {
                     b.Navigation("Itens");
+
+                    b.Navigation("Orcamento");
                 });
 #pragma warning restore 612, 618
         }

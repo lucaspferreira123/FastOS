@@ -36,7 +36,7 @@ namespace TesteProjeto.Controllers
         {
             try
             {
-                var itens = await _itemOrdemServicoBusiness.ObterItensOrdemServico();
+                var itens = await _itemOrdemServicoBusiness.ObterItensOrdemServico(idOrdem);
 
                 return Ok(itens);
             }

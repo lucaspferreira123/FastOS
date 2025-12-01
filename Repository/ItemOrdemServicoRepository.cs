@@ -3,15 +3,17 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TesteMVC.Dto;
 using TesteMVC.Dto.TesteMVC.Dto;
+using TesteMVC.IRepository;
 using TesteMVC.Models;
+using TesteMVC.Repository;
 
 namespace MeuProjeto.Repository
 {
-    public class ItemOrdemServicoRepository
+    public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoViewModel>, IItemOrdemServicoRepository
     {
         private readonly AppDbContext _context;
 
-        public ItemOrdemServicoRepository(AppDbContext context)
+        public ItemOrdemServicoRepository(AppDbContext context): base(context)
         {
             _context = context;
         }
@@ -29,7 +31,6 @@ namespace MeuProjeto.Repository
 
                 foreach (var item in itens)
                 {
-                    // Busca pelo produto, pois seu front envia id = 0
                     var existente = itensBanco
                         .FirstOrDefault(i => i.idProduto == item.idProduto);
 
@@ -47,6 +48,15 @@ namespace MeuProjeto.Repository
                     }
                 }
 
+                // EXCLUIR OS QUE NÃO ESTÃO MAIS NA LISTA
+                var idsProdutosEnviados = itens.Select(i => i.idProduto).ToList();
+
+                var itensRemover = itensBanco
+                    .Where(i => !idsProdutosEnviados.Contains(i.idProduto))
+                    .ToList();
+
+                _context.ItensOrdemServico.RemoveRange(itensRemover);
+
                 await _context.SaveChangesAsync();
 
                 return itens;
@@ -58,7 +68,8 @@ namespace MeuProjeto.Repository
             }
         }
 
-        public async Task<List<ItensOrdemServicoDto>> ObterItensOrdemServico()
+
+        public async Task<List<ItensOrdemServicoDto>> ObterItensOrdemServico(int idOrdem)
         {
             var itens = await _context.ItensOrdemServico
             .Join(
@@ -75,7 +86,7 @@ namespace MeuProjeto.Repository
                     DescricaoServico = prod.Descricao,
                     valorUnitario = prod.PrecoUnitario
                 }
-            )
+            ).Where(i => i.idOrdemServico == idOrdem)
             .ToListAsync();
 
             return itens;

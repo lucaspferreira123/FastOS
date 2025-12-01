@@ -13,5 +13,6 @@ namespace TesteMVC.Models
         public DateTime DataAbertura { get; set; }
         public DateTime PrevisaoEntrega { get; set; }
         public ICollection<ItemOrdemServicoViewModel> Itens { get; set; }
+        public OrcamentoViewModel? Orcamento { get; set; }
     }
 }

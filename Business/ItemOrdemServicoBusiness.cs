@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TesteMVC.Dto;
 using TesteMVC.Dto.TesteMVC.Dto;
+using TesteMVC.IRepository;
 using TesteMVC.Models;
 
 namespace MeuProjeto.Business
 {
     public class ItemOrdemServicoBusiness
     {
-        private readonly ItemOrdemServicoRepository _repository;
+        private readonly IItemOrdemServicoRepository _repository;
 
-        public ItemOrdemServicoBusiness(ItemOrdemServicoRepository repository)
+        public ItemOrdemServicoBusiness(IItemOrdemServicoRepository repository)
         {
             _repository = repository;
         }
@@ -35,11 +36,11 @@ namespace MeuProjeto.Business
             }
         }
 
-        public async Task<List<ItensOrdemServicoDto>> ObterItensOrdemServico()
+        public async Task<List<ItensOrdemServicoDto>> ObterItensOrdemServico(int idOrdem)
         {
             try
             {
-                var itens = await _repository.ObterItensOrdemServico();
+                var itens = await _repository.ObterItensOrdemServico(idOrdem);
 
                 return itens;
             }

@@ -184,6 +184,60 @@
         }
       }
     },
+    "/Orcamento/AlterarOrcamento": {
+      "post": {
+        "tags": [
+          "Orcamento"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrcamentoViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrcamentoViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrcamentoViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Orcamento/ObterOrcamento/{idOrdem}": {
+      "get": {
+        "tags": [
+          "Orcamento"
+        ],
+        "parameters": [
+          {
+            "name": "idOrdem",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Ordem/CadastrarOrdem": {
       "post": {
         "tags": [
@@ -219,6 +273,92 @@
       "get": {
         "tags": [
           "Ordem"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ordem/ObterOrdem/{idOrdem}": {
+      "get": {
+        "tags": [
+          "Ordem"
+        ],
+        "parameters": [
+          {
+            "name": "idOrdem",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ordem/AlterarOrdem": {
+      "put": {
+        "tags": [
+          "Ordem"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdemServicoViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Ordem/AlterarStatusOrdem/{idOrdem}/{idStatus}": {
+      "put": {
+        "tags": [
+          "Ordem"
+        ],
+        "parameters": [
+          {
+            "name": "idOrdem",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idStatus",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -332,6 +472,29 @@
         "parameters": [
           {
             "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Relatorio/ImprimirRelatorioOrcamento/{idOrdem}": {
+      "get": {
+        "tags": [
+          "Relatorio"
+        ],
+        "parameters": [
+          {
+            "name": "idOrdem",
             "in": "path",
             "required": true,
             "schema": {
@@ -528,6 +691,47 @@
         },
         "additionalProperties": false
       },
+      "OrcamentoViewModel": {
+        "type": "object",
+        "properties": {
+          "idOrcamento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idOrdemServico": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maoDeObra": {
+            "type": "number",
+            "format": "double"
+          },
+          "materiais": {
+            "type": "number",
+            "format": "double"
+          },
+          "desconto": {
+            "type": "number",
+            "format": "double"
+          },
+          "taxasExtras": {
+            "type": "number",
+            "format": "double"
+          },
+          "valorFinal": {
+            "type": "number",
+            "format": "double"
+          },
+          "formaPagamento": {
+            "type": "string",
+            "nullable": true
+          },
+          "ordemServico": {
+            "$ref": "#/components/schemas/OrdemServicoViewModel"
+          }
+        },
+        "additionalProperties": false
+      },
       "OrdemServicoViewModel": {
         "type": "object",
         "properties": {
@@ -564,6 +768,9 @@
               "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
             },
             "nullable": true
+          },
+          "orcamento": {
+            "$ref": "#/components/schemas/OrcamentoViewModel"
           }
         },
         "additionalProperties": false

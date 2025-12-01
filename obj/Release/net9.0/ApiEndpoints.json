@@ -48,6 +48,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TesteProjeto.Controllers.ItemOrdemServicoController",
+    "Method": "AlterarItensOrdemServico",
+    "RelativePath": "ItemOrdemServico/AlterarItensOrdemServico",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itens",
+        "Type": "System.Collections.Generic.List\u00601[[TesteMVC.Models.ItemOrdemServicoViewModel, TesteMVC, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.ItemOrdemServicoController",
+    "Method": "ObterItensOrdemServico",
+    "RelativePath": "ItemOrdemServico/ObterItensOrdemServico/{idOrdem}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TesteProjeto.Controllers.LoginController",
     "Method": "VerificarLoginUsuarioAoLogar",
     "RelativePath": "Login/VerificarLoginUsuarioAoLogar",
@@ -61,6 +93,117 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrcamentoController",
+    "Method": "AlterarOrcamento",
+    "RelativePath": "Orcamento/AlterarOrcamento",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orcamento",
+        "Type": "OrcamentoViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrcamentoController",
+    "Method": "ObterOrcamento",
+    "RelativePath": "Orcamento/ObterOrcamento/{idOrdem}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrdemController",
+    "Method": "AlterarOrdem",
+    "RelativePath": "Ordem/AlterarOrdem",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "TesteMVC.Models.OrdemServicoViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrdemController",
+    "Method": "AlterarStatusOrdem",
+    "RelativePath": "Ordem/AlterarStatusOrdem/{idOrdem}/{idStatus}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idStatus",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrdemController",
+    "Method": "CadastrarOrdem",
+    "RelativePath": "Ordem/CadastrarOrdem",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ordem",
+        "Type": "TesteMVC.Models.OrdemServicoViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrdemController",
+    "Method": "ObterOrdem",
+    "RelativePath": "Ordem/ObterOrdem/{idOrdem}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.OrdemController",
+    "Method": "ObterTodasOrdens",
+    "RelativePath": "Ordem/ObterOrdens",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -135,6 +278,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.RelatorioController",
+    "Method": "ImprimirRelatorioOrcamento",
+    "RelativePath": "Relatorio/ImprimirRelatorioOrcamento/{idOrdem}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

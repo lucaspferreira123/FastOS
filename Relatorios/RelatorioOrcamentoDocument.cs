@@ -77,23 +77,25 @@ namespace TesteMVC.Relatorios
                     column.Item().Column(col =>
                     {
                         col.Item().PaddingBottom(6)
-                            .Text($"Valor da Mão de Obra: R$ {Model.Orcamento.MaoDeObra:F2}");
+                            .Text($"Valor da Mão de Obra: R$ {Model.Orcamento.MaoDeObra.ToString("F2") ?? "0,00"}");
 
                         col.Item().PaddingBottom(6)
-                            .Text($"Valor dos Materiais: R$ {Model.Orcamento.Materiais:F2}");
+                            .Text($"Valor dos Materiais: R$ {Model.Orcamento.Materiais.ToString("F2") ?? "0,00"}");
 
                         col.Item().PaddingBottom(6)
-                            .Text($"Desconto: {Model.Orcamento.Desconto:F2}%");
+                            .Text($"Desconto: {Model.Orcamento.Desconto.ToString("F2") ?? "0,00"}%");
 
                         col.Item().PaddingBottom(6)
-                            .Text($"Taxas Extras: R$ {Model.Orcamento.TaxasExtras:F2}");
+                            .Text($"Taxas Extras: R$ {Model.Orcamento.TaxasExtras.ToString("F2") ?? "0,00"}");
 
                         col.Item().PaddingBottom(6)
-                            .Text($"Forma de Pagamento: {Model.Orcamento.FormaPagamento}");
+                            .Text($"Forma de Pagamento: {Model.Orcamento.FormaPagamento ?? "—"}");
 
                         col.Item().PaddingBottom(6)
-                            .Text($"Valor Final do Orçamento: R$ {Model.Orcamento.ValorFinal:F2}").Bold();
+                            .Text($"Valor Final do Orçamento: R$ {Model.Orcamento.ValorFinal.ToString("F2") ?? "0,00"}")
+                            .Bold();
                     });
+
 
 
                     column.Item().Element(HeaderCellStyleComponent).PaddingTop(10).Text($"Condições comerciais");

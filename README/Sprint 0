@@ -1,0 +1,109 @@
+# Projeto de Sistemas Distribuídos – Sprint 0
+
+---
+
+## 1. Formação da Equipe
+
+**Projeto Base:**  
+FastOS – Sistema Web para Emissão de Ordens de Serviço  
+
+**Integrantes:**
+
+- Lucas Panhossi Ferreira  230023612
+- Lucas da Silva Pinto  230023407
+- Luis Felipe Gomes Sobreira 230023822 
+
+---
+
+## 2. Definição do Domínio
+
+O projeto **FastOS – Sistema Web para Emissão de Ordens de Serviço** tem como objetivo digitalizar e otimizar o processo de criação, controle e emissão de ordens de serviço para empresas prestadoras de serviços técnicos.
+
+A iniciativa surgiu a partir da necessidade da empresa **UTI do PC Informática**, que enfrentava problemas relacionados a:
+
+- Processos manuais  
+- Perda de informações  
+- Retrabalho operacional  
+- Ausência de histórico centralizado  
+
+O sistema permite que técnicos realizem o cadastro, atualização e finalização de ordens de serviço diretamente no local de atendimento, utilizando um navegador web.  
+
+Também possibilita:
+
+- Geração de documentos em PDF  
+- Controle de usuários  
+- Armazenamento histórico das informações  
+
+---
+
+### Arquitetura Lógica
+
+A arquitetura adotada será do tipo **Cliente-Servidor**, caracterizando o sistema como distribuído.
+
+**Cliente:**  
+Interface web responsiva acessada por navegadores (técnicos e administradores).
+
+**Servidor:**  
+API desenvolvida em **ASP.NET Core**, responsável pelo processamento das regras de negócio e validações.
+
+**Banco de Dados:**  
+**SQL Server**, responsável pelo armazenamento persistente das ordens de serviço, usuários e clientes.
+
+Essa arquitetura é considerada distribuída porque múltiplos clientes podem acessar simultaneamente um servidor central através da rede, realizando operações concorrentes sobre recursos compartilhados.
+
+---
+
+### Restrições do Ambiente
+
+- Acesso simultâneo de múltiplos usuários  
+- Dependência de comunicação remota via HTTP  
+- Possibilidade de falhas de rede  
+- Necessidade de consistência transacional no banco de dados  
+- Risco de concorrência sobre dados compartilhados  
+
+O foco da disciplina será analisar essa arquitetura e aplicar conceitos como:
+
+- Controle de concorrência  
+- Exclusão mútua  
+- Tolerância a falhas  
+
+Para tornar o sistema mais robusto e confiável.
+
+---
+
+## 3. O Recurso Crítico
+
+O principal recurso crítico identificado no sistema é o **registro da Ordem de Serviço**, especialmente:
+
+- O número identificador da ordem  
+- O status da ordem (Aberta, Em Andamento, Finalizada)  
+- Os dados editáveis da ordem durante seu ciclo de vida  
+
+Como o sistema será utilizado por múltiplos técnicos simultaneamente, podem ocorrer situações de concorrência, tais como:
+
+- Geração duplicada do número identificador da ordem de serviço  
+- Edição simultânea da mesma ordem por usuários diferentes  
+- Conflitos de atualização que comprometam a integridade das informações  
+- Sobrescrita de dados por atualizações concorrentes  
+
+Esse recurso exige a aplicação de mecanismos de controle de concorrência para garantir:
+
+- Geração única e sequencial de identificadores  
+- Integridade e consistência dos dados  
+- Controle de edição simultânea  
+- Prevenção de *race conditions*  
+- Confiabilidade do banco de dados  
+
+---
+
+### Estratégias de Mitigação
+
+Para mitigar esses problemas, poderão ser utilizados mecanismos como:
+
+- Controle transacional no banco de dados  
+- Definição de níveis de isolamento adequados  
+- Bloqueio pessimista ou otimista  
+- Controle de versão de registros  
+- Mecanismos de exclusão mútua (Lock/Mutex) no servidor  
+
+Dessa forma, o sistema garante que o recurso crítico não seja acessado simultaneamente de maneira inconsistente, preservando a integridade dos dados e a confiabilidade da aplicação distribuída.

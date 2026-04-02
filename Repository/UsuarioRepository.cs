@@ -23,12 +23,14 @@ namespace MeuProjeto.Repository
             try
             {
                 var usuarios = await _context.Usuario
-                    .Where(u => u.Ativo == true && u.Email == email && u.Senha == senha)
+                    .Where(u => u.Ativo && u.Email == email)
                     .Select(u => new UsuarioViewModel
                     {
                         idUsuario = u.idUsuario,
                         Nome = u.Nome,
                         Email = u.Email,
+                        Senha = u.Senha,
+                        Ativo = u.Ativo,
                     })
                     .ToListAsync();
 

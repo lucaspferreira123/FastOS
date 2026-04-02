@@ -1,4 +1,5 @@
 ﻿using MeuProjeto.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TesteMVC.Models;
 
@@ -7,29 +8,95 @@ namespace MeuProjeto.Business
     public class UsuarioBusiness
     {
         private readonly UsuarioRepository _repository;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsuarioBusiness(UsuarioRepository repository)
+        public UsuarioBusiness(
+            UsuarioRepository repository,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
-        public async Task<List<UsuarioViewModel>> ObterUsuarioPeloLoginESenha(string email, string senha)
+        public async Task<string> VerificarLoginUsuarioAoLogar(string email, string senha)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
+            var usuarioValidado = await ObterUsuarioPeloLoginESenha(email, senha);
+
+            if (!usuarioValidado.Ativo)
             {
-                throw new ArgumentException("Email e senha não podem ser nulos ou vazios.");
+                throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+            }
+
+            var identityUser = await _userManager.FindByEmailAsync(usuarioValidado.Email);
+            if (identityUser == null)
+            {
+                identityUser = new ApplicationUser
+                {
+                    UserName = usuarioValidado.Email,
+                    Email = usuarioValidado.Email,
+                    Nome = usuarioValidado.Nome,
+                    Ativo = usuarioValidado.Ativo,
+                    EmailConfirmed = true
+                };
+
+                var resultadoCriacao = await _userManager.CreateAsync(identityUser);
+                if (!resultadoCriacao.Succeeded)
+                {
+                    throw new InvalidOperationException("Não foi possível preparar o acesso do usuário.");
+                }
             }
             else
             {
-                var usuarios = await _repository.ObterUsuarioPeloLoginESenha(email, senha);
+                identityUser.UserName = usuarioValidado.Email;
+                identityUser.Email = usuarioValidado.Email;
+                identityUser.Nome = usuarioValidado.Nome;
+                identityUser.Ativo = usuarioValidado.Ativo;
 
-                if (usuarios == null || !usuarios.Any())
+                var resultadoAtualizacao = await _userManager.UpdateAsync(identityUser);
+                if (!resultadoAtualizacao.Succeeded)
                 {
-                    throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+                    throw new InvalidOperationException("Não foi possível preparar o acesso do usuário.");
                 }
-                
-                return usuarios;
             }
+
+            await _signInManager.SignInAsync(identityUser, isPersistent: false);
+
+            return "/Home/Index";
+        }
+
+        public async Task<UsuarioViewModel> ObterUsuarioPeloLoginESenha(string email, string senha)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
+            {
+                throw new ArgumentException("Email e senha não podem ser nulos ou vazios.");
+            }
+
+            var usuarios = await _repository.ObterUsuarioPeloLoginESenha(email, senha);
+            var usuario = usuarios?.FirstOrDefault();
+
+            if (usuario == null)
+            {
+                throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+            }
+
+            var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+
+            var resultado = passwordHasher.VerifyHashedPassword(
+                usuario,
+                usuario.Senha, 
+                senha          
+            );
+
+            if (resultado == PasswordVerificationResult.Success ||
+                resultado == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                return usuario;
+            }
+
+            throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
         }
 
         public async Task<UsuarioViewModel> CadastrarUsuario(UsuarioViewModel usuario)
@@ -45,6 +112,10 @@ namespace MeuProjeto.Business
 
                 if (usuarios == null || !usuarios.Any())
                 {
+                    var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+
+                    usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
+                    
                     var usuariosCadastrados = await _repository.CadastrarUsuario(usuario);
 
                     return usuariosCadastrados;
@@ -97,6 +168,16 @@ namespace MeuProjeto.Business
                 }
                 else
                 {
+                    if (string.IsNullOrWhiteSpace(usuario.Senha))
+                    {
+                        usuario.Senha = usuarioAntigo.Senha;
+                    }
+                    else
+                    {
+                        var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+                        usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
+                    }
+
                     var usuarioAlterado = await _repository.AlterarUsuario(usuario);
 
                     return usuarioAlterado;

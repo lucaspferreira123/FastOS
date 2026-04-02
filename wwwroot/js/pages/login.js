@@ -21,17 +21,8 @@ function ValidarLoginDoUsuarioAoEntrar() {
             }),
             success: function (response) {
 
-                if (response === 'Email ou senha inválidos') {
-                    return Swal.fire({
-                        title: 'Atenção',
-                        text: response,
-                        icon: 'warning',
-                        confirmButtonText: 'Ok'
-                    });
-                }
-                else {
-                    return window.location.href = '/Home/index';
-                }
+                var redirect = response && response.redirectUrl ? response.redirectUrl : '/Home/Index';
+                return window.location.href = redirect;
 
             },
             error: function (xhr) {

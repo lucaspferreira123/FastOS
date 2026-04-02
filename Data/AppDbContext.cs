@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TesteMVC.Models;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -12,13 +14,14 @@ public class AppDbContext : DbContext
     public DbSet<UsuarioViewModel> Usuario { get; set; }
     public DbSet<StatusViewModel> Status { get; set; }
     public DbSet<OrcamentoViewModel> Orcamento { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<OrdemServicoViewModel>(entity =>
         {
-            entity.ToTable("OrdemServico"); 
+            entity.ToTable("OrdemServico");
 
             entity.HasMany(o => o.Itens)
                   .WithOne(i => i.OrdemServico)
@@ -46,5 +49,4 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<UsuarioViewModel>().ToTable("Usuario");
         modelBuilder.Entity<StatusViewModel>().ToTable("Status");
     }
-
 }

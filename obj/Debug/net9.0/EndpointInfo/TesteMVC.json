@@ -90,6 +90,37 @@
         }
       }
     },
+    "/Diagnostico/ReceberDiagnostico": {
+      "post": {
+        "tags": [
+          "Diagnostico"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnosticoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnosticoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnosticoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/ItemOrdemServico/AlterarItensOrdemServico": {
       "post": {
         "tags": [
@@ -177,6 +208,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Login/Logout": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -510,6 +553,41 @@
         }
       }
     },
+    "/Usuario/ObterUsuarios": {
+      "get": {
+        "tags": [
+          "Usuario"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Usuario/ObterUsuario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Usuario"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Usuario/CadastrarUsuario": {
       "post": {
         "tags": [
@@ -631,6 +709,19 @@
         },
         "additionalProperties": false
       },
+      "DiagnosticoDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maquina": {
+            "$ref": "#/components/schemas/MaquinaDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "ItemOrdemServicoViewModel": {
         "type": "object",
         "properties": {
@@ -685,6 +776,32 @@
             "nullable": true
           },
           "twoFactorRecoveryCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MaquinaDto": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "nullable": true
+          },
+          "sistemaOperacional": {
+            "type": "string",
+            "nullable": true
+          },
+          "arquitetura": {
+            "type": "string",
+            "nullable": true
+          },
+          "fabricante": {
+            "type": "string",
+            "nullable": true
+          },
+          "modelo": {
             "type": "string",
             "nullable": true
           }

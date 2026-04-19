@@ -19,6 +19,59 @@ namespace TesteProjeto.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("Cliente/ObterClientes")]
+        public async Task<IActionResult> ObterClientes()
+        {
+            try
+            {
+                var clientes = await _clienteBusiness.ObterTodosClientes();
+
+                return Ok(clientes.Select(c => new
+                {
+                    c.idCliente,
+                    c.Nome,
+                    c.Email,
+                    c.Telefone,
+                    c.Endereco,
+                    c.Ativo
+                }));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu um erro interno.");
+            }
+        }
+
+        [HttpGet]
+        [Route("Cliente/ObterCliente/{idCliente}")]
+        public async Task<IActionResult> ObterCliente(int idCliente)
+        {
+            try
+            {
+                var cliente = (await _clienteBusiness.ObterClientePeloId(idCliente)).FirstOrDefault();
+
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(new
+                {
+                    cliente.idCliente,
+                    cliente.Nome,
+                    cliente.Email,
+                    cliente.Telefone,
+                    cliente.Endereco,
+                    cliente.Ativo
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu um erro interno.");
+            }
+        }
+
         [HttpPost]
         [Route("Cliente/CadastrarCliente")]
         public async Task<IActionResult> CadastrarCliente([FromBody] ClienteViewModel cliente)

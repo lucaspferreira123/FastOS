@@ -149,8 +149,11 @@ function renderizarTabela() {
                 <td>${escapeHtml(usuario.email)}</td>
                 <td>${badgeStatus}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-danger me-1" onclick="abrirModalEdicao(${usuario.idUsuario})">
+                    <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicao(${usuario.idUsuario})">
                         <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="abrirModalExclusao(${usuario.idUsuario}, '${escapeJs(usuario.nome)}')">
+                        <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>

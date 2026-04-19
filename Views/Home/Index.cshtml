@@ -12,25 +12,7 @@
 
 </head>
 <body class="bg-light">
-
-    <button id="btnHamburger" class="btn btn-danger m-3" type="button" aria-label="Abrir menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
-        <i class="bi bi-list fs-3"></i>
-    </button>
-
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasSidebar" data-bs-backdrop="false" aria-labelledby="offcanvasSidebarLabel">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title text-danger fw-bold">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="FecharOffcanvasEBackdrop()" aria-label="Fechar"></button>
-        </div>
-        <div class="offcanvas-body p-0">
-            <nav class="list-group list-group-flush">
-                <a href="/Home" class="list-group-item list-group-item-action">Ordens de Serviço</a>
-                <a href="/Cliente" class="list-group-item list-group-item-action">Cadastro de Clientes</a>
-                <a href="/Produto" class="list-group-item list-group-item-action">Estoque de Peças</a>
-                <a href="/Usuario" class="list-group-item list-group-item-action">Cadastro de Usuarios</a>
-            </nav>
-        </div>
-    </div>
+    <partial name="_SidebarMenu" />
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -39,7 +21,7 @@
                 <i class="bi bi-file-earmark-plus-fill me-1"></i> Nova OS
             </button>
         </div>
-        </div>
+    </div>
 
        @*  <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Buscar por cliente, serviço ou status...">
@@ -338,6 +320,7 @@
 
         <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css" />
 
+        <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
 
         <script src="/js/pages/Ordem.js"></script>

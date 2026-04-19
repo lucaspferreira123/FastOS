@@ -225,7 +225,7 @@ function GerarFuncoesPorStatus(o) {
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Finalizar Análise"
-                        onclick="AlterarStatus(${o.idOrdemServico}, 3)">
+                        onclick="AlterarStatus(${o.idOrdemServico}, 2)">
                         <i class="bi bi-check2-circle"></i>
                     </button>
                 </div>
@@ -250,7 +250,7 @@ function GerarFuncoesPorStatus(o) {
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Enviar para Aprovação"
-                        onclick="AlterarStatus(${o.idOrdemServico}, 4)">
+                        onclick="AlterarStatus(${o.idOrdemServico}, 3)">
                         <i class="bi bi-send-check"></i>
                     </button>
                 </div>
@@ -265,7 +265,7 @@ function GerarFuncoesPorStatus(o) {
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Aprovar Orçamento"
-                        onclick="AlterarStatus(${o.idOrdemServico}, 7)">
+                        onclick="AlterarStatus(${o.idOrdemServico}, 4)">
                         <i class="bi bi-check-circle"></i>
                     </button>
                 </div>
@@ -280,7 +280,7 @@ function GerarFuncoesPorStatus(o) {
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Finalizar Ordem"
-                        onclick="AlterarStatus(${o.idOrdemServico}, 8)">
+                        onclick="AlterarStatus(${o.idOrdemServico}, 5)">
                         <i class="bi bi-check2-circle"></i>
                     </button>
                 </div>
@@ -300,7 +300,7 @@ function GerarFuncoesPorStatus(o) {
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Confirmar Pagamento"
-                        onclick="AlterarStatus(${o.idOrdemServico}, 5)">
+                        onclick="AlterarStatus(${o.idOrdemServico}, 6)">
                         <i class="bi bi-cash-coin"></i>
                     </button>
                 </div>

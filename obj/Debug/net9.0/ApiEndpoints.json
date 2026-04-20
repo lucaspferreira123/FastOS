@@ -48,6 +48,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TesteProjeto.Controllers.ClienteController",
+    "Method": "ObterCliente",
+    "RelativePath": "Cliente/ObterCliente/{idCliente}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TesteProjeto.Controllers.ClienteController",
+    "Method": "ObterClientes",
+    "RelativePath": "Cliente/ObterClientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TesteProjeto.Controllers.DiagnosticoController",
     "Method": "ReceberDiagnostico",
     "RelativePath": "Diagnostico/ReceberDiagnostico",

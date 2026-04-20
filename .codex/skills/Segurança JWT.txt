@@ -1,0 +1,36 @@
+---
+name: jwt-security-fastos
+description: regras de autenticação e segurança com jwt no fastos
+---
+
+## Autenticação
+
+- Sempre validar token JWT
+- Rotas protegidas devem usar [Authorize]
+
+---
+
+## Backend
+
+- Nunca confiar em dados do frontend
+- Validar tudo no servidor
+
+---
+
+## Token
+
+- Nunca expor token em logs
+- Validar expiração
+
+---
+
+## Dados sensíveis
+
+- Nunca retornar senha
+- Nunca retornar dados internos
+
+---
+
+## Erros
+
+- Nunca expor exception detalhada

@@ -479,11 +479,7 @@ C:\Projeto Integrador\FastOS\obj\Debug\net9.0\scopedcss\bundle\TesteMVC.styles.c
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\scopedcss\projectbundle\TesteMVC.bundle.scp.css
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\jf2ga8k4xe-{0}-54iajr2wns-54iajr2wns.gz
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\35njzvz2jh-{0}-61n19gt1b8-61n19gt1b8.gz
-C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\v0h3y7wzgo-{0}-wxam0rqv2f-wxam0rqv2f.gz
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\dn6wk0dopr-{0}-8p6eyc226m-8p6eyc226m.gz
-C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\72d0vg3qov-{0}-wo36p7so2m-wo36p7so2m.gz
-C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\8wxcrs3ca1-{0}-7ogyu2zedn-7ogyu2zedn.gz
-C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\xe6jtf0rz0-{0}-aychkkzzid-aychkkzzid.gz
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\k55yd8yyb1-{0}-t1cqhe9u97-t1cqhe9u97.gz
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\d55uj7mqdl-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\99784zjaxz-{0}-sejl45xvog-sejl45xvog.gz
@@ -561,3 +557,8 @@ C:\Projeto Integrador\FastOS\obj\Debug\net9.0\TesteMVC.pdb
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\TesteMVC.genruntimeconfig.cache
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\ref\TesteMVC.dll
 C:\Projeto Integrador\FastOS\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\v0h3y7wzgo-{0}-2lrj7zm66e-2lrj7zm66e.gz
+C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\72d0vg3qov-{0}-mm281r82cp-mm281r82cp.gz
+C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\6f0vd7kchf-{0}-hm7h4wpo3w-hm7h4wpo3w.gz
+C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\8wxcrs3ca1-{0}-cf352l0pxw-cf352l0pxw.gz
+C:\Projeto Integrador\FastOS\obj\Debug\net9.0\compressed\xe6jtf0rz0-{0}-c57rdmt1jt-c57rdmt1jt.gz

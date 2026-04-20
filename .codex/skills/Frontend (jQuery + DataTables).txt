@@ -1,0 +1,30 @@
+---
+name: frontend-fastos-jquery
+description: regras para uso de jquery e datatables no fastos
+---
+
+## jQuery
+
+- Usar apenas para manipulação de DOM
+- Evitar lógica complexa
+
+---
+
+## DataTables
+
+- Usar para listagens
+- Evitar carregar dados desnecessários
+
+---
+
+## Requisições
+
+- Sempre tratar erro de API
+- Sempre validar antes de enviar
+
+---
+
+## UX
+
+- Sempre dar feedback ao usuário
+- Evitar ações silenciosas

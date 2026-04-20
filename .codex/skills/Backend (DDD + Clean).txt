@@ -1,0 +1,53 @@
+---
+name: backend-fastos-ddd
+description: criação de código backend seguindo DDD, Clean Architecture e padrão Controller Business Repository
+---
+
+## Controllers
+
+- Apenas recebem request e retornam response
+- Nunca conter regra de negócio
+
+❌ ERRADO:
+_context.Usuarios.ToList()
+
+✅ CERTO:
+_usuarioBusiness.ObterUsuarios()
+
+---
+
+## Business
+
+- Contém TODA regra de negócio
+- Valida dados antes de persistir
+- Orquestra repositories
+
+---
+
+## Repository
+
+- Apenas acesso a dados via Entity Framework
+- Nunca conter regra de negócio
+
+---
+
+## Interfaces
+
+- Sempre usar interfaces:
+  - IUsuarioBusiness
+  - IUsuarioRepository
+
+---
+
+## Boas práticas
+
+- Métodos async
+- Try/catch em operações críticas
+- Nome de métodos claro
+
+---
+
+## DTOs
+
+- Sempre usar DTO para entrada e saída
+- Nunca expor entidades do banco

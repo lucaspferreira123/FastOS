@@ -1,0 +1,36 @@
+---
+name: ef-core-fastos
+description: regras para uso correto do entity framework no fastos
+---
+
+## Consultas
+
+- Sempre usar AsNoTracking() para leitura
+
+---
+
+## Performance
+
+- Evitar Include desnecessário
+- Evitar carregar entidades completas sem necessidade
+
+---
+
+## Problemas comuns
+
+- Evitar duplicação em joins
+- Cuidado com múltiplos relacionamentos
+
+---
+
+## Escrita
+
+- Validar antes de salvar
+- Evitar múltiplos SaveChanges()
+
+---
+
+## Boas práticas
+
+- Usar FirstOrDefaultAsync ao invés de First
+- Sempre async/await

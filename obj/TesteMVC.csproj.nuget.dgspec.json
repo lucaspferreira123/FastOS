@@ -10,7 +10,7 @@
         "projectUniqueName": "C:\\Projeto Integrador\\FastOS\\TesteMVC.csproj",
         "projectName": "TesteMVC",
         "projectPath": "C:\\Projeto Integrador\\FastOS\\TesteMVC.csproj",
-        "packagesPath": "C:\\Projeto Integrador\\FastOS\\.dotnet\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
         "outputPath": "C:\\Projeto Integrador\\FastOS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net9.0": {
+            "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {}
           }
@@ -49,6 +50,7 @@
       },
       "frameworks": {
         "net9.0": {
+          "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {

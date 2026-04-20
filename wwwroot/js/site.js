@@ -1,12 +1,35 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
-function FecharOffcanvasEBackdrop() {
+$(function () {
+    const $sidebar = $('#appSidebar');
+    let cleanupTimer = null;
 
-    // 1. forço a remoção do backdrop (Solução de força bruta)
-    setTimeout(function () {
-        $('.offcanvas-backdrop').remove();
-        $('body').removeClass('offcanvas-open');
-    }, 300); // Um pequeno atraso para dar tempo ao Bootstrap de começar a fechar
-}
+    if ($sidebar.length === 0) {
+        return;
+    }
+
+    $sidebar.on('show.bs.offcanvas', function () {
+        if (cleanupTimer) {
+            window.clearTimeout(cleanupTimer);
+            cleanupTimer = null;
+        }
+
+        $('.offcanvas-backdrop').not('.show').remove();
+    });
+
+    $sidebar.on('hidden.bs.offcanvas', function () {
+        cleanupTimer = window.setTimeout(function () {
+            if ($sidebar.hasClass('show')) {
+                return;
+            }
+
+            $('.offcanvas-backdrop').remove();
+            $('body').css({
+                overflow: '',
+                'padding-right': ''
+            });
+            cleanupTimer = null;
+        }, 200);
+    });
+});

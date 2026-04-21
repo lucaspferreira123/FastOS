@@ -1,0 +1,12 @@
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\bin\Debug\net9.0\FastOS.Domain.deps.json
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\bin\Debug\net9.0\FastOS.Domain.dll
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\bin\Debug\net9.0\FastOS.Domain.pdb
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.AssemblyInfoInputs.cache
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.AssemblyInfo.cs
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.csproj.CoreCompileInputs.cache
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.sourcelink.json
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.dll
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\refint\FastOS.Domain.dll
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\FastOS.Domain.pdb
+C:\Projeto Integrador\FastOS\src\FastOS.Domain\obj\Debug\net9.0\ref\FastOS.Domain.dll

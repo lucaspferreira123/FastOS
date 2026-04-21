@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "FastOS.Domain": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.API"
+    },
+    "Perfil 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.API\\Program.cs",
+      "workingDirectory": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.API"
+    }
+  }
+}

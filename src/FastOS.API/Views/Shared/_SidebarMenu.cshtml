@@ -1,0 +1,55 @@
+@{
+    var currentController = (ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty).ToLowerInvariant();
+
+    string GetItemClasses(string controllerName)
+    {
+        return currentController == controllerName
+            ? "list-group-item list-group-item-action active"
+            : "list-group-item list-group-item-action";
+    }
+}
+
+<button id="btnHamburger"
+        class="btn btn-danger m-3"
+        type="button"
+        aria-label="Abrir menu"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#appSidebar"
+        aria-controls="appSidebar">
+    <i class="bi bi-list fs-3"></i>
+</button>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="appSidebar" aria-labelledby="appSidebarLabel">
+    <div class="offcanvas-header border-bottom">
+        <div>
+            <div class="text-uppercase text-secondary small">FastOS</div>
+            <h5 class="offcanvas-title text-danger fw-bold mb-0" id="appSidebarLabel">Menu</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <nav class="list-group list-group-flush">
+            <a href="/Home"
+               class="@GetItemClasses("home")"
+               aria-current="@(currentController == "home" ? "page" : null)">
+                Ordens de Servico
+            </a>
+            <a href="/Cliente"
+               class="@GetItemClasses("cliente")"
+               aria-current="@(currentController == "cliente" ? "page" : null)">
+                Cadastro de Clientes
+            </a>
+            <a href="/Produto"
+               class="@GetItemClasses("produto")"
+               aria-current="@(currentController == "produto" ? "page" : null)">
+                Estoque de Pecas
+            </a>
+            <a href="/Usuario"
+               class="@GetItemClasses("usuario")"
+               aria-current="@(currentController == "usuario" ? "page" : null)">
+                Cadastro de Usuarios
+            </a>
+        </nav>
+    </div>
+</div>
+

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\\FastOS.Application\\FastOS.Application.csproj" />
+    <ProjectReference Include="..\\FastOS.CrossCutting\\FastOS.CrossCutting.csproj" />
+    <ProjectReference Include="..\\FastOS.Domain\\FastOS.Domain.csproj" />
+    <ProjectReference Include="..\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

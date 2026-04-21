@@ -14,13 +14,13 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<ClienteViewModel> CadastrarCliente(ClienteViewModel cliente)
+        public async Task<ClienteEntity> CadastrarCliente(ClienteEntity cliente)
         {
             try
             {
                 if (cliente == null)
                 {
-                    throw new ArgumentException("N„o foi possivel cadastrar o cliente.");
+                    throw new ArgumentException("N√£o foi possivel cadastrar o cliente.");
                 }
 
                 var clientes = await ObterClientePeloNome(cliente.Nome);
@@ -33,7 +33,7 @@ namespace FastOS.Application.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Cliente j· cadastrado!");
+                    throw new ArgumentException("Cliente j√° cadastrado!");
                 }
             }
             catch (Exception ex)
@@ -42,20 +42,20 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<ClienteViewModel> AlterarCliente(ClienteViewModel cliente)
+        public async Task<ClienteEntity> AlterarCliente(ClienteEntity cliente)
         {
             try
             {
                 if (cliente == null)
                 {
-                    throw new ArgumentException("N„o foi possivel alterar o cliente.");
+                    throw new ArgumentException("N√£o foi possivel alterar o cliente.");
                 }
 
                 var clienteAntigo = ObterClientePeloId(cliente.idCliente).Result.FirstOrDefault();
 
                 if (clienteAntigo == null)
                 {
-                    throw new ArgumentException("Cliente n„o encontrado para alteraÁ„o!");
+                    throw new ArgumentException("Cliente n√£o encontrado para altera√ß√£o!");
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ClienteViewModel>> ObterClientePeloNome(string nome)
+        public async Task<List<ClienteEntity>> ObterClientePeloNome(string nome)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ClienteViewModel>> ObterClientePeloId(int idCliente)
+        public async Task<List<ClienteEntity>> ObterClientePeloId(int idCliente)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ClienteViewModel>> ObterTodosClientes()
+        public async Task<List<ClienteEntity>> ObterTodosClientes()
         {
             try
             {
@@ -120,7 +120,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<ClienteViewModel> ExcluirCliente(int idCliente)
+        public async Task<ClienteEntity> ExcluirCliente(int idCliente)
         {
             try
             {

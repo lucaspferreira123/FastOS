@@ -21,7 +21,7 @@ namespace FastOS.API.Controllers
 
         [HttpPost]
         [Route("Produto/CadastrarProduto")]
-        public async Task<IActionResult> CadastrarProduto([FromBody] ProdutoViewModel produto)
+        public async Task<IActionResult> CadastrarProduto([FromBody] ProdutoEntity produto)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace FastOS.API.Controllers
 
         [HttpPut]
         [Route("Produto/AlterarProduto")]
-        public async Task<IActionResult> AlterarProduto([FromBody] ProdutoViewModel produto)
+        public async Task<IActionResult> AlterarProduto([FromBody] ProdutoEntity produto)
         {
             try
             {

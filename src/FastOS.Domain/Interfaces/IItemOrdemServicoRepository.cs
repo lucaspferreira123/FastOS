@@ -3,8 +3,8 @@ using FastOS.Domain.ValueObjects;
 
 namespace FastOS.Domain.Interfaces;
 
-public interface IItemOrdemServicoRepository : IBaseRepository<ItemOrdemServicoViewModel>
+public interface IItemOrdemServicoRepository : IBaseRepository<ItemOrdemServicoEntity>
 {
-    Task<List<ItemOrdemServicoViewModel>> AlterarItensOrdemServico(List<ItemOrdemServicoViewModel> itens);
+    Task<List<ItemOrdemServicoEntity>> AlterarItensOrdemServico(List<ItemOrdemServicoEntity> itens);
     Task<List<ItensOrdemServicoDto>> ObterItensOrdemServico(int idOrdem);
 }

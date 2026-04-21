@@ -15,7 +15,7 @@ public class ItemOrdemServicoController : Controller
 
     [HttpPost]
     [Route("ItemOrdemServico/AlterarItensOrdemServico")]
-    public async Task<IActionResult> AlterarItensOrdemServico([FromBody] List<ItemOrdemServicoViewModel> itens)
+    public async Task<IActionResult> AlterarItensOrdemServico([FromBody] List<ItemOrdemServicoEntity> itens)
     {
         try
         {

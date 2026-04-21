@@ -2,8 +2,8 @@ using FastOS.Domain.Entities;
 
 namespace FastOS.Domain.Interfaces;
 
-public interface IOrcamentoRepository : IBaseRepository<OrcamentoViewModel>
+public interface IOrcamentoRepository : IBaseRepository<OrcamentoEntity>
 {
-    Task<OrcamentoViewModel> AlterarOrcamento(OrcamentoViewModel model);
-    Task<OrcamentoViewModel?> ObterOrcamentoPorOrdemServico(int idOrdemServico);
+    Task<OrcamentoEntity> AlterarOrcamento(OrcamentoEntity model);
+    Task<OrcamentoEntity?> ObterOrcamentoPorOrdemServico(int idOrdemServico);
 }

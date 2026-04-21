@@ -12,7 +12,7 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<List<StatusViewModel>> ObterTodosStatus()
+        public async Task<List<StatusEntity>> ObterTodosStatus()
         {
             try
             {

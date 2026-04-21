@@ -1,4 +1,4 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
@@ -14,7 +14,7 @@ public class ClienteRepository
         _context = context;
     }
 
-    public async Task<ClienteViewModel> CadastrarCliente(ClienteViewModel clienteVm)
+    public async Task<ClienteEntity> CadastrarCliente(ClienteEntity clienteVm)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ClienteRepository
         }
     }
 
-    public async Task<List<ClienteViewModel>> ObterTodosClientes()
+    public async Task<List<ClienteEntity>> ObterTodosClientes()
     {
         try
         {
@@ -41,7 +41,7 @@ public class ClienteRepository
         }
     }
 
-    public async Task<List<ClienteViewModel>> ObterClientePeloNome(string nome)
+    public async Task<List<ClienteEntity>> ObterClientePeloNome(string nome)
     {
         try
         {
@@ -54,7 +54,7 @@ public class ClienteRepository
         }
     }
 
-    public async Task<List<ClienteViewModel>> ObterClientePeloId(int idCliente)
+    public async Task<List<ClienteEntity>> ObterClientePeloId(int idCliente)
     {
         try
         {
@@ -67,7 +67,7 @@ public class ClienteRepository
         }
     }
 
-    public async Task<ClienteViewModel> AlterarCliente(ClienteViewModel dadosAtualizados)
+    public async Task<ClienteEntity> AlterarCliente(ClienteEntity dadosAtualizados)
     {
         try
         {
@@ -94,7 +94,7 @@ public class ClienteRepository
         }
     }
 
-    public async Task<ClienteViewModel> ExcluirCliente(int idCliente)
+    public async Task<ClienteEntity> ExcluirCliente(int idCliente)
     {
         try
         {

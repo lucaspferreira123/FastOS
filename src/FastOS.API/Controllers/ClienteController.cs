@@ -74,7 +74,7 @@ namespace FastOS.API.Controllers
 
         [HttpPost]
         [Route("Cliente/CadastrarCliente")]
-        public async Task<IActionResult> CadastrarCliente([FromBody] ClienteViewModel cliente)
+        public async Task<IActionResult> CadastrarCliente([FromBody] ClienteEntity cliente)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace FastOS.API.Controllers
 
         [HttpPut]
         [Route("Cliente/AlterarCliente")]
-        public async Task<IActionResult> AlterarCliente([FromBody] ClienteViewModel cliente)
+        public async Task<IActionResult> AlterarCliente([FromBody] ClienteEntity cliente)
         {
             try
             {

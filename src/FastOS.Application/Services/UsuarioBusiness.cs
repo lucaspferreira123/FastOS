@@ -27,7 +27,7 @@ namespace FastOS.Application.Services
 
             if (!usuarioValidado.Ativo)
             {
-                throw new UnauthorizedAccessException("Usu·rio ou senha incorreta.");
+                throw new UnauthorizedAccessException("Usu√°rio ou senha incorreta.");
             }
 
             var identityUser = await _userManager.FindByEmailAsync(usuarioValidado.Email);
@@ -45,7 +45,7 @@ namespace FastOS.Application.Services
                 var resultadoCriacao = await _userManager.CreateAsync(identityUser);
                 if (!resultadoCriacao.Succeeded)
                 {
-                    throw new InvalidOperationException("N„o foi possÌvel preparar o acesso do usu·rio.");
+                    throw new InvalidOperationException("N√£o foi poss√≠vel preparar o acesso do usu√°rio.");
                 }
             }
             else
@@ -58,7 +58,7 @@ namespace FastOS.Application.Services
                 var resultadoAtualizacao = await _userManager.UpdateAsync(identityUser);
                 if (!resultadoAtualizacao.Succeeded)
                 {
-                    throw new InvalidOperationException("N„o foi possÌvel preparar o acesso do usu·rio.");
+                    throw new InvalidOperationException("N√£o foi poss√≠vel preparar o acesso do usu√°rio.");
                 }
             }
 
@@ -67,11 +67,11 @@ namespace FastOS.Application.Services
             return "/Home/Index";
         }
 
-        public async Task<UsuarioViewModel> ObterUsuarioPeloLoginESenha(string email, string senha)
+        public async Task<UsuarioEntity> ObterUsuarioPeloLoginESenha(string email, string senha)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
             {
-                throw new ArgumentException("Email e senha n„o podem ser nulos ou vazios.");
+                throw new ArgumentException("Email e senha n√£o podem ser nulos ou vazios.");
             }
 
             var usuarios = await _repository.ObterUsuarioPeloLoginESenha(email, senha);
@@ -79,10 +79,10 @@ namespace FastOS.Application.Services
 
             if (usuario == null)
             {
-                throw new UnauthorizedAccessException("Usu·rio ou senha incorreta.");
+                throw new UnauthorizedAccessException("Usu√°rio ou senha incorreta.");
             }
 
-            var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+            var passwordHasher = new PasswordHasher<UsuarioEntity>();
 
             var resultado = passwordHasher.VerifyHashedPassword(
                 usuario,
@@ -96,23 +96,23 @@ namespace FastOS.Application.Services
                 return usuario;
             }
 
-            throw new UnauthorizedAccessException("Usu·rio ou senha incorreta.");
+            throw new UnauthorizedAccessException("Usu√°rio ou senha incorreta.");
         }
 
-        public async Task<UsuarioViewModel> CadastrarUsuario(UsuarioViewModel usuario)
+        public async Task<UsuarioEntity> CadastrarUsuario(UsuarioEntity usuario)
         {
             try
             {
                 if (usuario == null)
                 {
-                    throw new ArgumentException("N„o foi possivel cadastrar o usuario.");
+                    throw new ArgumentException("N√£o foi possivel cadastrar o usuario.");
                 }
 
                 var usuarios = await ObterUsuarioPeloNome(usuario.Nome);
 
                 if (usuarios == null || !usuarios.Any())
                 {
-                    var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+                    var passwordHasher = new PasswordHasher<UsuarioEntity>();
 
                     usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
                     
@@ -122,7 +122,7 @@ namespace FastOS.Application.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Usuario j· cadastrado!");
+                    throw new ArgumentException("Usuario j√° cadastrado!");
                 }
             }
             catch (Exception ex)
@@ -131,7 +131,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<UsuarioViewModel>> ObterUsuarioPeloNome(string nome)
+        public async Task<List<UsuarioEntity>> ObterUsuarioPeloNome(string nome)
         {
             try
             {
@@ -151,20 +151,20 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<UsuarioViewModel> AlterarUsuario(UsuarioViewModel usuario)
+        public async Task<UsuarioEntity> AlterarUsuario(UsuarioEntity usuario)
         {
             try
             {
                 if (usuario == null)
                 {
-                    throw new ArgumentException("N„o foi possivel alterar o usuario.");
+                    throw new ArgumentException("N√£o foi possivel alterar o usuario.");
                 }
 
                 var usuarioAntigo = ObterUsuarioPeloId(usuario.idUsuario).Result.FirstOrDefault();
 
                 if (usuarioAntigo == null)
                 {
-                    throw new ArgumentException("Usuario n„o encontrado para alteraÁ„o!");
+                    throw new ArgumentException("Usuario n√£o encontrado para altera√ß√£o!");
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace FastOS.Application.Services
                     }
                     else
                     {
-                        var passwordHasher = new PasswordHasher<UsuarioViewModel>();
+                        var passwordHasher = new PasswordHasher<UsuarioEntity>();
                         usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
                     }
 
@@ -189,7 +189,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<UsuarioViewModel>> ObterTodosUsuarios()
+        public async Task<List<UsuarioEntity>> ObterTodosUsuarios()
         {
             try
             {
@@ -203,7 +203,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<UsuarioViewModel> ExcluirUsuario(int idUsuario)
+        public async Task<UsuarioEntity> ExcluirUsuario(int idUsuario)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<UsuarioViewModel>> ObterUsuarioPeloId(int idUsuario)
+        public async Task<List<UsuarioEntity>> ObterUsuarioPeloId(int idUsuario)
         {
             try
             {

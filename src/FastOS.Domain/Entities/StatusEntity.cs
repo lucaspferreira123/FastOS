@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastOS.Domain.Entities;
 
-public class StatusViewModel
+public class StatusEntity
 {
     [Key]
     public int idStatus { get; set; }

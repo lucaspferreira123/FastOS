@@ -15,7 +15,7 @@ public class OrdemController : Controller
 
     [HttpPost]
     [Route("Ordem/CadastrarOrdem")]
-    public async Task<IActionResult> CadastrarOrdem([FromBody] OrdemServicoViewModel ordem)
+    public async Task<IActionResult> CadastrarOrdem([FromBody] OrdemServicoEntity ordem)
     {
         try
         {
@@ -65,7 +65,7 @@ public class OrdemController : Controller
 
     [HttpPut]
     [Route("Ordem/AlterarOrdem")]
-    public async Task<IActionResult> AlterarOrdem([FromBody] OrdemServicoViewModel model)
+    public async Task<IActionResult> AlterarOrdem([FromBody] OrdemServicoEntity model)
     {
         try
         {

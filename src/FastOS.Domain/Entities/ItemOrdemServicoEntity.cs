@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastOS.Domain.Entities;
 
-public class ItemOrdemServicoViewModel
+public class ItemOrdemServicoEntity
 {
     [Key]
     public int idItemOrdem { get; set; }
@@ -11,5 +11,5 @@ public class ItemOrdemServicoViewModel
     public DateTime DataPedido { get; set; }
     public DateTime? DataRealizado { get; set; }
     public int Quantidade { get; set; }
-    public OrdemServicoViewModel OrdemServico { get; set; } = null!;
+    public OrdemServicoEntity OrdemServico { get; set; } = null!;
 }

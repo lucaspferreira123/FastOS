@@ -1,4 +1,4 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ public class StatusRepository
         _context = context;
     }
 
-    public async Task<List<StatusViewModel>> ObterTodosStatus()
+    public async Task<List<StatusEntity>> ObterTodosStatus()
     {
         try
         {

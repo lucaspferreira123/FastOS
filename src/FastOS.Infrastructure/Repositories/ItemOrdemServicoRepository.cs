@@ -1,4 +1,4 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Domain.Interfaces;
 using FastOS.Domain.ValueObjects;
 using FastOS.Infrastructure.Data;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FastOS.Infrastructure.Repositories;
 
-public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoViewModel>, IItemOrdemServicoRepository
+public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoEntity>, IItemOrdemServicoRepository
 {
     private readonly AppDbContext _context;
 
@@ -15,7 +15,7 @@ public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoViewMod
         _context = context;
     }
 
-    public async Task<List<ItemOrdemServicoViewModel>> AlterarItensOrdemServico(List<ItemOrdemServicoViewModel> itens)
+    public async Task<List<ItemOrdemServicoEntity>> AlterarItensOrdemServico(List<ItemOrdemServicoEntity> itens)
     {
         try
         {

@@ -1,11 +1,11 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Domain.Interfaces;
 using FastOS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastOS.Infrastructure.Repositories;
 
-public class OrcamentoRepository : BaseRepository<OrcamentoViewModel>, IOrcamentoRepository
+public class OrcamentoRepository : BaseRepository<OrcamentoEntity>, IOrcamentoRepository
 {
     private readonly AppDbContext _context;
 
@@ -14,7 +14,7 @@ public class OrcamentoRepository : BaseRepository<OrcamentoViewModel>, IOrcament
         _context = context;
     }
 
-    public async Task<OrcamentoViewModel> AlterarOrcamento(OrcamentoViewModel model)
+    public async Task<OrcamentoEntity> AlterarOrcamento(OrcamentoEntity model)
     {
         try
         {
@@ -43,7 +43,7 @@ public class OrcamentoRepository : BaseRepository<OrcamentoViewModel>, IOrcament
         }
     }
 
-    public async Task<OrcamentoViewModel?> ObterOrcamentoPorOrdemServico(int idOrdemServico)
+    public async Task<OrcamentoEntity?> ObterOrcamentoPorOrdemServico(int idOrdemServico)
     {
         try
         {

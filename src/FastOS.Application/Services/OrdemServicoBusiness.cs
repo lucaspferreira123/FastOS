@@ -17,13 +17,13 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<OrdemServicoViewModel> CadastrarOrdem(OrdemServicoViewModel ordem)
+        public async Task<OrdemServicoEntity> CadastrarOrdem(OrdemServicoEntity ordem)
         {
             try
             {
                 if (ordem == null)
                 {
-                    throw new ArgumentException("Não foi possivel cadastrar a ordem.");
+                    throw new ArgumentException("NÃ£o foi possivel cadastrar a ordem.");
                 }
 
                 var ordemCadastrada = await _repository.CadastrarOrdem(ordem);
@@ -64,7 +64,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<OrdemServicoViewModel> AlterarOrdemServico(OrdemServicoViewModel model)
+        public async Task<OrdemServicoEntity> AlterarOrdemServico(OrdemServicoEntity model)
         {
             try
             {

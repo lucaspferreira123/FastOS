@@ -9,19 +9,19 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<ClienteViewModel> Cliente { get; set; }
-    public DbSet<ProdutoViewModel> Produto { get; set; }
-    public DbSet<OrdemServicoViewModel> OrdensServico { get; set; }
-    public DbSet<ItemOrdemServicoViewModel> ItensOrdemServico { get; set; }
-    public DbSet<UsuarioViewModel> Usuario { get; set; }
-    public DbSet<StatusViewModel> Status { get; set; }
-    public DbSet<OrcamentoViewModel> Orcamento { get; set; }
+    public DbSet<ClienteEntity> Cliente { get; set; }
+    public DbSet<ProdutoEntity> Produto { get; set; }
+    public DbSet<OrdemServicoEntity> OrdensServico { get; set; }
+    public DbSet<ItemOrdemServicoEntity> ItensOrdemServico { get; set; }
+    public DbSet<UsuarioEntity> Usuario { get; set; }
+    public DbSet<StatusEntity> Status { get; set; }
+    public DbSet<OrcamentoEntity> Orcamento { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<OrdemServicoViewModel>(entity =>
+        modelBuilder.Entity<OrdemServicoEntity>(entity =>
         {
             entity.ToTable("OrdemServico");
 
@@ -31,24 +31,24 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<ItemOrdemServicoViewModel>(entity =>
+        modelBuilder.Entity<ItemOrdemServicoEntity>(entity =>
         {
             entity.ToTable("ItemOrdemServico");
         });
 
-        modelBuilder.Entity<OrcamentoViewModel>(entity =>
+        modelBuilder.Entity<OrcamentoEntity>(entity =>
         {
             entity.ToTable("Orcamento");
 
             entity.HasOne(o => o.OrdemServico)
                   .WithOne(os => os.Orcamento)
-                  .HasForeignKey<OrcamentoViewModel>(o => o.idOrdemServico)
+                  .HasForeignKey<OrcamentoEntity>(o => o.idOrdemServico)
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<ClienteViewModel>().ToTable("Cliente");
-        modelBuilder.Entity<ProdutoViewModel>().ToTable("Produto");
-        modelBuilder.Entity<UsuarioViewModel>().ToTable("Usuario");
-        modelBuilder.Entity<StatusViewModel>().ToTable("Status");
+        modelBuilder.Entity<ClienteEntity>().ToTable("Cliente");
+        modelBuilder.Entity<ProdutoEntity>().ToTable("Produto");
+        modelBuilder.Entity<UsuarioEntity>().ToTable("Usuario");
+        modelBuilder.Entity<StatusEntity>().ToTable("Status");
     }
 }

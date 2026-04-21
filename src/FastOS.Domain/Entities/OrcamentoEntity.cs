@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastOS.Domain.Entities;
 
-public class OrcamentoViewModel
+public class OrcamentoEntity
 {
     [Key]
     public int idOrcamento { get; set; }
@@ -13,5 +13,5 @@ public class OrcamentoViewModel
     public decimal TaxasExtras { get; set; }
     public decimal ValorFinal { get; set; }
     public string FormaPagamento { get; set; } = string.Empty;
-    public OrdemServicoViewModel OrdemServico { get; set; } = null!;
+    public OrdemServicoEntity OrdemServico { get; set; } = null!;
 }

@@ -1,4 +1,4 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +14,12 @@ public class ProdutoRepository
         _context = context;
     }
 
-    public List<ProdutoViewModel> GetAll()
+    public List<ProdutoEntity> GetAll()
     {
         return _context.Produto.ToList();
     }
 
-    public async Task<ProdutoViewModel> CadastrarProduto(ProdutoViewModel produto)
+    public async Task<ProdutoEntity> CadastrarProduto(ProdutoEntity produto)
     {
         try
         {
@@ -34,7 +34,7 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<List<ProdutoViewModel>> ObterProdutos()
+    public async Task<List<ProdutoEntity>> ObterProdutos()
     {
         try
         {
@@ -46,7 +46,7 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<List<ProdutoViewModel>> ObterProdutoPeloNome(string nome)
+    public async Task<List<ProdutoEntity>> ObterProdutoPeloNome(string nome)
     {
         try
         {
@@ -59,7 +59,7 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<List<ProdutoViewModel>> ObterProdutoPeloId(int idProduto)
+    public async Task<List<ProdutoEntity>> ObterProdutoPeloId(int idProduto)
     {
         try
         {
@@ -72,7 +72,7 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<ProdutoViewModel> AlterarProduto(ProdutoViewModel dadosAtualizados)
+    public async Task<ProdutoEntity> AlterarProduto(ProdutoEntity dadosAtualizados)
     {
         try
         {
@@ -98,7 +98,7 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<ProdutoViewModel> ExcluirProduto(int idProduto)
+    public async Task<ProdutoEntity> ExcluirProduto(int idProduto)
     {
         try
         {

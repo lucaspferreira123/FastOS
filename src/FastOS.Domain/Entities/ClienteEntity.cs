@@ -2,7 +2,7 @@
 
 namespace FastOS.Domain.Entities
 {
-    public class ClienteViewModel
+    public class ClienteEntity
     {
         [Key]
         public int idCliente { get; set; }

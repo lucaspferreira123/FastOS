@@ -16,7 +16,7 @@ namespace FastOS.API.Controllers
 
         [HttpPost]
         [Route("Orcamento/AlterarOrcamento")]
-        public async Task<IActionResult> AlterarOrcamento([FromBody] OrcamentoViewModel orcamento)
+        public async Task<IActionResult> AlterarOrcamento([FromBody] OrcamentoEntity orcamento)
         {
             try
             {

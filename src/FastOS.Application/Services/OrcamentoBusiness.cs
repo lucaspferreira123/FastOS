@@ -17,14 +17,14 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<OrcamentoViewModel> AlterarOrcamento(OrcamentoViewModel orcamento)
+        public async Task<OrcamentoEntity> AlterarOrcamento(OrcamentoEntity orcamento)
         {
             try
             {
 
                 var orcamentoAntigo = ObterOrcamento(orcamento.idOrdemServico).Result;
 
-                var orcamentoNovo = new OrcamentoViewModel{};
+                var orcamentoNovo = new OrcamentoEntity{};
 
                 if (orcamentoAntigo == null)
                 {
@@ -41,7 +41,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<OrcamentoViewModel> ObterOrcamento(int idOrdem)
+        public async Task<OrcamentoEntity> ObterOrcamento(int idOrdem)
         {
             try
             {

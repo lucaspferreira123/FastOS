@@ -49,17 +49,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             }
           }
@@ -80,17 +80,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ClienteViewModel"
+                "$ref": "#/components/schemas/ClienteEntity"
               }
             }
           }
@@ -167,7 +167,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                  "$ref": "#/components/schemas/ItemOrdemServicoEntity"
                 }
               }
             },
@@ -175,7 +175,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                  "$ref": "#/components/schemas/ItemOrdemServicoEntity"
                 }
               }
             },
@@ -183,7 +183,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+                  "$ref": "#/components/schemas/ItemOrdemServicoEntity"
                 }
               }
             }
@@ -271,17 +271,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrcamentoViewModel"
+                "$ref": "#/components/schemas/OrcamentoEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrcamentoViewModel"
+                "$ref": "#/components/schemas/OrcamentoEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/OrcamentoViewModel"
+                "$ref": "#/components/schemas/OrcamentoEntity"
               }
             }
           }
@@ -325,17 +325,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             }
           }
@@ -391,17 +391,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/OrdemServicoViewModel"
+                "$ref": "#/components/schemas/OrdemServicoEntity"
               }
             }
           }
@@ -454,17 +454,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             }
           }
@@ -485,17 +485,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ProdutoViewModel"
+                "$ref": "#/components/schemas/ProdutoEntity"
               }
             }
           }
@@ -632,17 +632,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             }
           }
@@ -663,17 +663,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UsuarioViewModel"
+                "$ref": "#/components/schemas/UsuarioEntity"
               }
             }
           }
@@ -711,7 +711,7 @@
   },
   "components": {
     "schemas": {
-      "ClienteViewModel": {
+      "ClienteEntity": {
         "type": "object",
         "properties": {
           "idCliente": {
@@ -757,7 +757,7 @@
         },
         "additionalProperties": false
       },
-      "ItemOrdemServicoViewModel": {
+      "ItemOrdemServicoEntity": {
         "type": "object",
         "properties": {
           "idItemOrdem": {
@@ -786,7 +786,7 @@
             "format": "int32"
           },
           "ordemServico": {
-            "$ref": "#/components/schemas/OrdemServicoViewModel"
+            "$ref": "#/components/schemas/OrdemServicoEntity"
           }
         },
         "additionalProperties": false
@@ -843,7 +843,7 @@
         },
         "additionalProperties": false
       },
-      "OrcamentoViewModel": {
+      "OrcamentoEntity": {
         "type": "object",
         "properties": {
           "idOrcamento": {
@@ -879,12 +879,12 @@
             "nullable": true
           },
           "ordemServico": {
-            "$ref": "#/components/schemas/OrdemServicoViewModel"
+            "$ref": "#/components/schemas/OrdemServicoEntity"
           }
         },
         "additionalProperties": false
       },
-      "OrdemServicoViewModel": {
+      "OrdemServicoEntity": {
         "type": "object",
         "properties": {
           "idOrdemServico": {
@@ -917,17 +917,17 @@
           "itens": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ItemOrdemServicoViewModel"
+              "$ref": "#/components/schemas/ItemOrdemServicoEntity"
             },
             "nullable": true
           },
           "orcamento": {
-            "$ref": "#/components/schemas/OrcamentoViewModel"
+            "$ref": "#/components/schemas/OrcamentoEntity"
           }
         },
         "additionalProperties": false
       },
-      "ProdutoViewModel": {
+      "ProdutoEntity": {
         "type": "object",
         "properties": {
           "idProduto": {
@@ -957,7 +957,7 @@
         },
         "additionalProperties": false
       },
-      "UsuarioViewModel": {
+      "UsuarioEntity": {
         "type": "object",
         "properties": {
           "idUsuario": {

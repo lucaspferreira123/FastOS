@@ -17,13 +17,13 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<List<ItemOrdemServicoViewModel>> AlterarItensOrdemServico(List<ItemOrdemServicoViewModel> itens)
+        public async Task<List<ItemOrdemServicoEntity>> AlterarItensOrdemServico(List<ItemOrdemServicoEntity> itens)
         {
             try
             {
                 if (!itens.Any())
                 {
-                    throw new ArgumentException("Não foi possivel salvar os itens da ordem.");
+                    throw new ArgumentException("NÃ£o foi possivel salvar os itens da ordem.");
                 }
 
                 var cadastrarItens = await _repository.AlterarItensOrdemServico(itens);

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastOS.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b98f890212d3d96042efe9e0b2b26c43005b960")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c055ff8437bd03b21147f0189cd190090a39e91d")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastOS.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastOS.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

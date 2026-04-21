@@ -157,7 +157,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OrcamentoViewModel", b =>
+            modelBuilder.Entity("OrcamentoEntity", b =>
                 {
                     b.Property<int>("idOrcamento")
                         .ValueGeneratedOnAdd()
@@ -270,7 +270,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.ClienteViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.ClienteEntity", b =>
                 {
                     b.Property<int>("idCliente")
                         .ValueGeneratedOnAdd()
@@ -305,7 +305,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("Cliente", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.ItemOrdemServicoViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.ItemOrdemServicoEntity", b =>
                 {
                     b.Property<int>("idItemOrdem")
                         .ValueGeneratedOnAdd()
@@ -335,7 +335,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("ItemOrdemServico", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.OrdemServicoViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.OrdemServicoEntity", b =>
                 {
                     b.Property<int>("idOrdemServico")
                         .ValueGeneratedOnAdd()
@@ -367,7 +367,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("OrdemServico", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.ProdutoViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.ProdutoEntity", b =>
                 {
                     b.Property<int>("idProduto")
                         .ValueGeneratedOnAdd()
@@ -398,7 +398,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("Produto", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.StatusViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.StatusEntity", b =>
                 {
                     b.Property<int>("idStatus")
                         .ValueGeneratedOnAdd()
@@ -415,7 +415,7 @@ namespace TesteMVC.Migrations
                     b.ToTable("Status", (string)null);
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.UsuarioViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.UsuarioEntity", b =>
                 {
                     b.Property<int>("idUsuario")
                         .ValueGeneratedOnAdd()
@@ -494,20 +494,20 @@ namespace TesteMVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OrcamentoViewModel", b =>
+            modelBuilder.Entity("OrcamentoEntity", b =>
                 {
-                    b.HasOne("TesteMVC.Models.OrdemServicoViewModel", "OrdemServico")
+                    b.HasOne("TesteMVC.Models.OrdemServicoEntity", "OrdemServico")
                         .WithOne("Orcamento")
-                        .HasForeignKey("OrcamentoViewModel", "idOrdemServico")
+                        .HasForeignKey("OrcamentoEntity", "idOrdemServico")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("OrdemServico");
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.ItemOrdemServicoViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.ItemOrdemServicoEntity", b =>
                 {
-                    b.HasOne("TesteMVC.Models.OrdemServicoViewModel", "OrdemServico")
+                    b.HasOne("TesteMVC.Models.OrdemServicoEntity", "OrdemServico")
                         .WithMany("Itens")
                         .HasForeignKey("idOrdemServico")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -516,7 +516,7 @@ namespace TesteMVC.Migrations
                     b.Navigation("OrdemServico");
                 });
 
-            modelBuilder.Entity("TesteMVC.Models.OrdemServicoViewModel", b =>
+            modelBuilder.Entity("TesteMVC.Models.OrdemServicoEntity", b =>
                 {
                     b.Navigation("Itens");
 

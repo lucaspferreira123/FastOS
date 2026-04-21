@@ -12,13 +12,13 @@ namespace FastOS.Application.Services
             _repository = repository;
         }
 
-        public async Task<ProdutoViewModel> CadastrarProduto(ProdutoViewModel produto)
+        public async Task<ProdutoEntity> CadastrarProduto(ProdutoEntity produto)
         {
             try
             {
                 if (produto == null)
                 {
-                    throw new ArgumentException("N„o foi possÌvel cadastrar o produto.");
+                    throw new ArgumentException("N√£o foi poss√≠vel cadastrar o produto.");
                 }
 
                 var produtosExistentes = await ObterProdutoPeloNome(produto.NomeProduto);
@@ -30,7 +30,7 @@ namespace FastOS.Application.Services
                 }
                 else
                 {
-                    throw new ArgumentException("Produto j· cadastrado!");
+                    throw new ArgumentException("Produto j√° cadastrado!");
                 }
             }
             catch (Exception ex)
@@ -39,20 +39,20 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<ProdutoViewModel> AlterarProduto(ProdutoViewModel produto)
+        public async Task<ProdutoEntity> AlterarProduto(ProdutoEntity produto)
         {
             try
             {
                 if (produto == null)
                 {
-                    throw new ArgumentException("N„o foi possÌvel alterar o produto.");
+                    throw new ArgumentException("N√£o foi poss√≠vel alterar o produto.");
                 }
 
                 var produtoAntigo = (await ObterProdutoPeloId(produto.idProduto)).FirstOrDefault();
 
                 if (produtoAntigo == null)
                 {
-                    throw new ArgumentException("Produto n„o encontrado para alteraÁ„o!");
+                    throw new ArgumentException("Produto n√£o encontrado para altera√ß√£o!");
                 }
 
                 var produtoAlterado = await _repository.AlterarProduto(produto);
@@ -64,13 +64,13 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<ProdutoViewModel> ExcluirProduto(int idProduto)
+        public async Task<ProdutoEntity> ExcluirProduto(int idProduto)
         {
             try
             {
                 if (idProduto == 0)
                 {
-                    throw new ArgumentException("ID do produto inv·lido.");
+                    throw new ArgumentException("ID do produto inv√°lido.");
                 }
 
                 var produtoExcluido = await _repository.ExcluirProduto(idProduto);
@@ -82,7 +82,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ProdutoViewModel>> ObterProdutos()
+        public async Task<List<ProdutoEntity>> ObterProdutos()
         {
             try
             {
@@ -95,13 +95,13 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ProdutoViewModel>> ObterProdutoPeloNome(string nome)
+        public async Task<List<ProdutoEntity>> ObterProdutoPeloNome(string nome)
         {
             try
             {
                 if (string.IsNullOrEmpty(nome))
                 {
-                    throw new ArgumentException("Nome do produto n„o pode ser nulo ou vazio.");
+                    throw new ArgumentException("Nome do produto n√£o pode ser nulo ou vazio.");
                 }
 
                 var produtos = await _repository.ObterProdutoPeloNome(nome);
@@ -113,7 +113,7 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ProdutoViewModel>> ObterProdutoPeloId(int idProduto)
+        public async Task<List<ProdutoEntity>> ObterProdutoPeloId(int idProduto)
         {
             try
             {

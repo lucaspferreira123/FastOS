@@ -1,4 +1,4 @@
-﻿using FastOS.Domain.Entities;
+using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -14,18 +14,18 @@ public class UsuarioRepository
         _context = context;
     }
 
-    public List<UsuarioViewModel> GetAll()
+    public List<UsuarioEntity> GetAll()
     {
         return _context.Usuario.ToList();
     }
 
-    public async Task<List<UsuarioViewModel>> ObterUsuarioPeloLoginESenha(string email, string senha)
+    public async Task<List<UsuarioEntity>> ObterUsuarioPeloLoginESenha(string email, string senha)
     {
         try
         {
             return await _context.Usuario
                 .Where(u => u.Ativo && u.Email == email)
-                .Select(u => new UsuarioViewModel
+                .Select(u => new UsuarioEntity
                 {
                     idUsuario = u.idUsuario,
                     Nome = u.Nome,
@@ -41,7 +41,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<UsuarioViewModel> CadastrarUsuario(UsuarioViewModel usuario)
+    public async Task<UsuarioEntity> CadastrarUsuario(UsuarioEntity usuario)
     {
         try
         {
@@ -56,7 +56,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<List<UsuarioViewModel>> ObterTodosUsuarios()
+    public async Task<List<UsuarioEntity>> ObterTodosUsuarios()
     {
         try
         {
@@ -68,7 +68,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<List<UsuarioViewModel>> ObterUsuarioPeloNome(string nome)
+    public async Task<List<UsuarioEntity>> ObterUsuarioPeloNome(string nome)
     {
         try
         {
@@ -81,7 +81,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<List<UsuarioViewModel>> ObterUsuarioPeloId(int idUsuario)
+    public async Task<List<UsuarioEntity>> ObterUsuarioPeloId(int idUsuario)
     {
         try
         {
@@ -94,7 +94,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<UsuarioViewModel> AlterarUsuario(UsuarioViewModel dadosAtualizados)
+    public async Task<UsuarioEntity> AlterarUsuario(UsuarioEntity dadosAtualizados)
     {
         try
         {
@@ -119,7 +119,7 @@ public class UsuarioRepository
         }
     }
 
-    public async Task<UsuarioViewModel> ExcluirUsuario(int idUsuario)
+    public async Task<UsuarioEntity> ExcluirUsuario(int idUsuario)
     {
         try
         {

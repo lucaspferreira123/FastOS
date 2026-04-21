@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "cliente",
-        "Type": "FastOS.Domain.Entities.ClienteViewModel",
+        "Type": "FastOS.Domain.Entities.ClienteEntity",
         "IsRequired": true
       }
     ],
@@ -25,7 +25,7 @@
     "Parameters": [
       {
         "Name": "cliente",
-        "Type": "FastOS.Domain.Entities.ClienteViewModel",
+        "Type": "FastOS.Domain.Entities.ClienteEntity",
         "IsRequired": true
       }
     ],
@@ -99,7 +99,7 @@
     "Parameters": [
       {
         "Name": "itens",
-        "Type": "System.Collections.Generic.List\u00601[[FastOS.Domain.Entities.ItemOrdemServicoViewModel, FastOS.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[FastOS.Domain.Entities.ItemOrdemServicoEntity, FastOS.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],
@@ -157,7 +157,7 @@
     "Parameters": [
       {
         "Name": "orcamento",
-        "Type": "FastOS.Domain.Entities.OrcamentoViewModel",
+        "Type": "FastOS.Domain.Entities.OrcamentoEntity",
         "IsRequired": true
       }
     ],
@@ -189,7 +189,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "FastOS.Domain.Entities.OrdemServicoViewModel",
+        "Type": "FastOS.Domain.Entities.OrdemServicoEntity",
         "IsRequired": true
       }
     ],
@@ -226,7 +226,7 @@
     "Parameters": [
       {
         "Name": "ordem",
-        "Type": "FastOS.Domain.Entities.OrdemServicoViewModel",
+        "Type": "FastOS.Domain.Entities.OrdemServicoEntity",
         "IsRequired": true
       }
     ],
@@ -268,7 +268,7 @@
     "Parameters": [
       {
         "Name": "produto",
-        "Type": "FastOS.Domain.Entities.ProdutoViewModel",
+        "Type": "FastOS.Domain.Entities.ProdutoEntity",
         "IsRequired": true
       }
     ],
@@ -284,7 +284,7 @@
     "Parameters": [
       {
         "Name": "produto",
-        "Type": "FastOS.Domain.Entities.ProdutoViewModel",
+        "Type": "FastOS.Domain.Entities.ProdutoEntity",
         "IsRequired": true
       }
     ],
@@ -358,7 +358,7 @@
     "Parameters": [
       {
         "Name": "usuario",
-        "Type": "FastOS.Domain.Entities.UsuarioViewModel",
+        "Type": "FastOS.Domain.Entities.UsuarioEntity",
         "IsRequired": true
       }
     ],
@@ -374,7 +374,7 @@
     "Parameters": [
       {
         "Name": "usuario",
-        "Type": "FastOS.Domain.Entities.UsuarioViewModel",
+        "Type": "FastOS.Domain.Entities.UsuarioEntity",
         "IsRequired": true
       }
     ],

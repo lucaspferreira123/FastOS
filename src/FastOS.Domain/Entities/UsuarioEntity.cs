@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastOS.Domain.Entities;
 
-public class UsuarioViewModel
+public class UsuarioEntity
 {
     [Key]
     public int idUsuario { get; set; }

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TesteMVC.Migrations
+namespace FastOS.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class tabelaOrcamento : Migration

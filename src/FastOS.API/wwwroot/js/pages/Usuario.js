@@ -44,13 +44,13 @@ function configurarEventos() {
             contentType: 'application/json',
             data: JSON.stringify(usuario)
         }).done(function () {
-            Swal.fire('Sucesso!', 'Usuário cadastrado com sucesso.', 'success');
+            Swal.fire('Sucesso!', 'Usuario cadastrado com sucesso.', 'success');
             $('#formCadastroUsuario')[0].reset();
             $('#ativoUsuario').prop('checked', true);
             bootstrap.Modal.getInstance(document.getElementById('modalCadastroUsuario')).hide();
             carregarUsuarios();
         }).fail(function () {
-            Swal.fire('Erro!', 'Não foi possível cadastrar o usuário.', 'error');
+            Swal.fire('Erro!', 'Nao foi possivel cadastrar o usuario.', 'error');
         });
     });
 
@@ -68,11 +68,11 @@ function configurarEventos() {
             contentType: 'application/json',
             data: JSON.stringify(usuario)
         }).done(function () {
-            Swal.fire('Sucesso!', 'Usuário alterado com sucesso.', 'success');
+            Swal.fire('Sucesso!', 'Usuario alterado com sucesso.', 'success');
             bootstrap.Modal.getInstance(document.getElementById('modalEditarUsuario')).hide();
             carregarUsuarios();
         }).fail(function () {
-            Swal.fire('Erro!', 'Não foi possível alterar o usuário.', 'error');
+            Swal.fire('Erro!', 'Nao foi possivel alterar o usuario.', 'error');
         });
     });
 
@@ -85,12 +85,12 @@ function configurarEventos() {
             url: `/Usuario/ExcluirUsuario/${idUsuarioExclusao}`,
             type: 'DELETE'
         }).done(function () {
-            Swal.fire('Sucesso!', 'Usuário excluído com sucesso.', 'success');
+            Swal.fire('Sucesso!', 'Usuario excluido com sucesso.', 'success');
             bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao')).hide();
             idUsuarioExclusao = 0;
             carregarUsuarios();
         }).fail(function () {
-            Swal.fire('Erro!', 'Não foi possível excluir o usuário.', 'error');
+            Swal.fire('Erro!', 'Nao foi possivel excluir o usuario.', 'error');
         });
     });
 }
@@ -103,7 +103,7 @@ function carregarUsuarios() {
         usuarios = response || [];
         aplicarFiltro();
     }).fail(function () {
-        Swal.fire('Erro!', 'Não foi possível carregar os usuários.', 'error');
+        Swal.fire('Erro!', 'Nao foi possivel carregar os usuarios.', 'error');
     });
 }
 
@@ -114,6 +114,7 @@ function aplicarFiltro() {
         const status = usuario.ativo ? 'ativo' : 'inativo';
         return usuario.nome.toLowerCase().includes(termo) ||
             usuario.email.toLowerCase().includes(termo) ||
+            (usuario.cargo || '').toLowerCase().includes(termo) ||
             status.includes(termo);
     });
 
@@ -127,7 +128,7 @@ function renderizarTabela() {
     if (usuariosFiltrados.length === 0) {
         tbody.append(`
             <tr>
-                <td colspan="4" class="text-center text-muted py-4">Nenhum usuário encontrado.</td>
+                <td colspan="5" class="text-center text-muted py-4">Nenhum usuario encontrado.</td>
             </tr>
         `);
         $('#pagination').empty();
@@ -147,12 +148,13 @@ function renderizarTabela() {
             <tr>
                 <td>${escapeHtml(usuario.nome)}</td>
                 <td>${escapeHtml(usuario.email)}</td>
+                <td>${escapeHtml(usuario.cargo || '-')}</td>
                 <td>${badgeStatus}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicao(${usuario.idUsuario})">
+                    <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicao(${usuario.id})">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="abrirModalExclusao(${usuario.idUsuario}, '${escapeJs(usuario.nome)}')">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="abrirModalExclusao(${usuario.id}, '${escapeJs(usuario.nome)}')">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -189,18 +191,19 @@ function irParaPagina(pagina) {
 
 function abrirModalEdicao(idUsuario) {
     const usuario = usuarios.find(function (item) {
-        return item.idUsuario === idUsuario;
+        return item.id === idUsuario;
     });
 
     if (!usuario) {
-        Swal.fire('Erro!', 'Usuário não encontrado.', 'error');
+        Swal.fire('Erro!', 'Usuario nao encontrado.', 'error');
         return;
     }
 
     limparFormularioEdicao();
-    $('#editIdUsuario').val(usuario.idUsuario);
+    $('#editIdUsuario').val(usuario.id);
     $('#editNomeUsuario').val(usuario.nome);
     $('#editEmailUsuario').val(usuario.email);
+    $('#editCargoUsuario').val(usuario.cargo || '');
     $('#editSenhaUsuario').val('');
     $('#editConfirmarSenhaUsuario').val('');
     $('#editAtivoUsuario').prop('checked', usuario.ativo);
@@ -222,43 +225,45 @@ function obterDadosCadastro() {
         nome: $('#nomeUsuario').val().trim(),
         email: $('#emailUsuario').val().trim(),
         senha: $('#senhaUsuario').val(),
+        cargo: ($('#cargoUsuario').val() || '').trim() || null,
         ativo: $('#ativoUsuario').is(':checked')
     };
 }
 
 function obterDadosEdicao() {
     return {
-        idUsuario: parseInt($('#editIdUsuario').val(), 10),
+        id: parseInt($('#editIdUsuario').val(), 10),
         nome: $('#editNomeUsuario').val().trim(),
         email: $('#editEmailUsuario').val().trim(),
         senha: $('#editSenhaUsuario').val(),
+        cargo: ($('#editCargoUsuario').val() || '').trim() || null,
         ativo: $('#editAtivoUsuario').is(':checked')
     };
 }
 
 function validarUsuario(usuario, confirmarSenha, senhaObrigatoria) {
     if (!usuario.nome) {
-        Swal.fire('Atenção!', 'Preencha o nome do usuário.', 'warning');
+        Swal.fire('Atencao!', 'Preencha o nome do usuario.', 'warning');
         return false;
     }
 
     if (!usuario.email) {
-        Swal.fire('Atenção!', 'Preencha o email do usuário.', 'warning');
+        Swal.fire('Atencao!', 'Preencha o email do usuario.', 'warning');
         return false;
     }
 
     if (senhaObrigatoria && !usuario.senha) {
-        Swal.fire('Atenção!', 'Preencha a senha do usuário.', 'warning');
+        Swal.fire('Atencao!', 'Preencha a senha do usuario.', 'warning');
         return false;
     }
 
     if (usuario.senha && usuario.senha.length < 4) {
-        Swal.fire('Atenção!', 'A senha deve ter pelo menos 4 caracteres.', 'warning');
+        Swal.fire('Atencao!', 'A senha deve ter pelo menos 4 caracteres.', 'warning');
         return false;
     }
 
     if (usuario.senha !== confirmarSenha) {
-        Swal.fire('Atenção!', 'A confirmação de senha não confere.', 'warning');
+        Swal.fire('Atencao!', 'A confirmacao de senha nao confere.', 'warning');
         return false;
     }
 
@@ -286,5 +291,6 @@ function limparFormularioCadastro() {
 function limparFormularioEdicao() {
     $('#formEditarUsuario')[0].reset();
     $('#editIdUsuario').val('');
+    $('#editCargoUsuario').val('');
     $('#editAtivoUsuario').prop('checked', false);
 }

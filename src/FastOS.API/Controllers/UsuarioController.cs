@@ -28,10 +28,12 @@ namespace FastOS.API.Controllers
 
                 return Ok(usuarios.Select(u => new
                 {
-                    u.idUsuario,
+                    u.Id,
                     u.Nome,
                     u.Email,
-                    u.Ativo
+                    u.Ativo,
+                    u.Excluido,
+                    u.Cargo
                 }));
             }
             catch (Exception)
@@ -55,10 +57,12 @@ namespace FastOS.API.Controllers
 
                 return Ok(new
                 {
-                    usuario.idUsuario,
+                    usuario.Id,
                     usuario.Nome,
                     usuario.Email,
-                    usuario.Ativo
+                    usuario.Ativo,
+                    usuario.Excluido,
+                    usuario.Cargo
                 });
             }
             catch (Exception)

@@ -960,15 +960,17 @@
       "UsuarioEntity": {
         "type": "object",
         "properties": {
-          "idUsuario": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
           "nome": {
+            "maxLength": 200,
             "type": "string",
             "nullable": true
           },
           "email": {
+            "maxLength": 200,
             "type": "string",
             "nullable": true
           },
@@ -978,6 +980,14 @@
           },
           "ativo": {
             "type": "boolean"
+          },
+          "excluido": {
+            "type": "boolean"
+          },
+          "cargo": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

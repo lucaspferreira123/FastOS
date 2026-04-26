@@ -115,6 +115,7 @@ namespace FastOS.Application.Services
                     var passwordHasher = new PasswordHasher<UsuarioEntity>();
 
                     usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
+                    usuario.Excluido = false;
                     
                     var usuariosCadastrados = await _repository.CadastrarUsuario(usuario);
 
@@ -160,7 +161,7 @@ namespace FastOS.Application.Services
                     throw new ArgumentException("Não foi possivel alterar o usuario.");
                 }
 
-                var usuarioAntigo = ObterUsuarioPeloId(usuario.idUsuario).Result.FirstOrDefault();
+                var usuarioAntigo = ObterUsuarioPeloId(usuario.Id).Result.FirstOrDefault();
 
                 if (usuarioAntigo == null)
                 {
@@ -177,6 +178,8 @@ namespace FastOS.Application.Services
                         var passwordHasher = new PasswordHasher<UsuarioEntity>();
                         usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
                     }
+
+                    usuario.Excluido = usuarioAntigo.Excluido;
 
                     var usuarioAlterado = await _repository.AlterarUsuario(usuario);
 

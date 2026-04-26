@@ -16,7 +16,9 @@ public class UsuarioRepository
 
     public List<UsuarioEntity> GetAll()
     {
-        return _context.Usuario.ToList();
+        return _context.Usuario
+            .Where(u => !u.Excluido)
+            .ToList();
     }
 
     public async Task<List<UsuarioEntity>> ObterUsuarioPeloLoginESenha(string email, string senha)
@@ -24,20 +26,22 @@ public class UsuarioRepository
         try
         {
             return await _context.Usuario
-                .Where(u => u.Ativo && u.Email == email)
+                .Where(u => u.Ativo && !u.Excluido && u.Email == email)
                 .Select(u => new UsuarioEntity
                 {
-                    idUsuario = u.idUsuario,
+                    Id = u.Id,
                     Nome = u.Nome,
                     Email = u.Email,
                     Senha = u.Senha,
-                    Ativo = u.Ativo
+                    Ativo = u.Ativo,
+                    Excluido = u.Excluido,
+                    Cargo = u.Cargo
                 })
                 .ToListAsync();
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao buscar usuário pelo login e senha", ex);
+            throw new Exception("Erro ao buscar usuario pelo login e senha", ex);
         }
     }
 
@@ -60,7 +64,9 @@ public class UsuarioRepository
     {
         try
         {
-            return await _context.Usuario.FromSqlRaw(@" SELECT * FROM Usuario").ToListAsync();
+            return await _context.Usuario
+                .Where(u => !u.Excluido)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -73,7 +79,10 @@ public class UsuarioRepository
         try
         {
             var param = new SqlParameter("@nome", nome);
-            return await _context.Usuario.FromSqlRaw("SELECT * FROM Usuario WHERE Nome = @nome", param).ToListAsync();
+            return await _context.Usuario
+                .FromSqlRaw("SELECT * FROM Usuario WHERE Nome = @nome", param)
+                .Where(u => !u.Excluido)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -86,7 +95,10 @@ public class UsuarioRepository
         try
         {
             var param = new SqlParameter("@idUsuario", idUsuario);
-            return await _context.Usuario.FromSqlRaw("SELECT * FROM Usuario WHERE idUsuario = @idUsuario", param).ToListAsync();
+            return await _context.Usuario
+                .FromSqlRaw("SELECT * FROM Usuario WHERE Id = @idUsuario", param)
+                .Where(u => !u.Excluido)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -98,16 +110,20 @@ public class UsuarioRepository
     {
         try
         {
-            var usuarioExistente = await _context.Usuario.FromSqlRaw("SELECT * FROM Usuario WHERE idUsuario = @idUsuario",
-                new SqlParameter("@idUsuario", dadosAtualizados.idUsuario)).FirstOrDefaultAsync();
+            var usuarioExistente = await _context.Usuario
+                .FirstOrDefaultAsync(u => u.Id == dadosAtualizados.Id && !u.Excluido);
 
             if (usuarioExistente == null)
-                throw new Exception("Usuário não encontrado.");
+            {
+                throw new Exception("Usuario nao encontrado.");
+            }
 
             usuarioExistente.Nome = dadosAtualizados.Nome;
             usuarioExistente.Email = dadosAtualizados.Email;
             usuarioExistente.Senha = dadosAtualizados.Senha;
             usuarioExistente.Ativo = dadosAtualizados.Ativo;
+            usuarioExistente.Excluido = dadosAtualizados.Excluido;
+            usuarioExistente.Cargo = dadosAtualizados.Cargo;
 
             _context.Usuario.Update(usuarioExistente);
             await _context.SaveChangesAsync();
@@ -115,7 +131,7 @@ public class UsuarioRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao atualizar usuário", ex);
+            throw new Exception("Erro ao atualizar usuario", ex);
         }
     }
 
@@ -123,11 +139,14 @@ public class UsuarioRepository
     {
         try
         {
-            var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.idUsuario == idUsuario);
+            var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.Id == idUsuario && !u.Excluido);
             if (usuario == null)
-                throw new Exception("Usuario não encontrado.");
+            {
+                throw new Exception("Usuario nao encontrado.");
+            }
 
             usuario.Ativo = false;
+            usuario.Excluido = true;
             _context.Usuario.Update(usuario);
             await _context.SaveChangesAsync();
             return usuario;

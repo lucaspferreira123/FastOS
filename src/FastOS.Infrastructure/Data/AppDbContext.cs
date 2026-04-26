@@ -48,7 +48,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
 
         modelBuilder.Entity<ClienteEntity>().ToTable("Cliente");
         modelBuilder.Entity<ProdutoEntity>().ToTable("Produto");
-        modelBuilder.Entity<UsuarioEntity>().ToTable("Usuario");
+        modelBuilder.Entity<UsuarioEntity>(entity =>
+        {
+            entity.ToTable("Usuario");
+            entity.Property(u => u.Ativo).HasDefaultValue(false);
+            entity.Property(u => u.Excluido).HasDefaultValue(false);
+        });
         modelBuilder.Entity<StatusEntity>().ToTable("Status");
     }
 }

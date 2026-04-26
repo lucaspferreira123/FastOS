@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TesteMVC.Migrations
+namespace FastOS.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class AlteracoesNasModels : Migration

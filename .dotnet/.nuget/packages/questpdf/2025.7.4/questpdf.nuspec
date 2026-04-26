@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>QuestPDF</id>
+    <version>2025.7.4</version>
+    <authors>MarcinZiabek</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">PackageLicense.md</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <icon>Logo.png</icon>
+    <readme>README.md</readme>
+    <projectUrl>https://www.questpdf.com/</projectUrl>
+    <iconUrl>https://www.questpdf.com/images/package-logo.png</iconUrl>
+    <description>Generate and edit PDF documents in your .NET applications using the open-source QuestPDF library and its C# Fluent API. Build invoices, reports and data exports with ease.</description>
+    <releaseNotes>- Fixed the DocumentOperation.ExtendMetadata operation to preserve /Metadata tag attributes (/Subtype /XML) and improve compatibility with the Mustang validation tool for ZUGFeRD files.</releaseNotes>
+    <copyright>Marcin Ziąbek, QuestPDF contributors</copyright>
+    <tags>pdf generation creation export merge edit html</tags>
+    <repository type="git" url="https://github.com/QuestPDF/library.git" commit="451546b48bf9ec09bd6f98d0c8a863a8f51da25f" />
+    <dependencies>
+      <group targetFramework="net6.0" />
+      <group targetFramework="net8.0" />
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Numerics.Vectors" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -19,8 +19,4 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Data\\Migrations\\**\\*.cs" />
-    <None Include="Data\\Migrations\\**\\*.cs" />
-  </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using FastOS.Domain.Enums;
 
 namespace FastOS.Domain.Entities
 {
@@ -12,7 +13,7 @@ namespace FastOS.Domain.Entities
         public string? Endereco { get; set; }
         public bool Ativo { get; set; }
         public bool Excluido { get; set; }
-        public int TipoCliente { get; set; }
+        public TipoClienteEnum TipoCliente { get; set; }
         public string? CNPJ { get; set; }
         public string? CPF { get; set; }
     }

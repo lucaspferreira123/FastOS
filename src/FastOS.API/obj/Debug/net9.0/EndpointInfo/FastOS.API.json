@@ -741,8 +741,7 @@
             "type": "boolean"
           },
           "tipoCliente": {
-            "type": "integer",
-            "format": "int32"
+            "$ref": "#/components/schemas/TipoClienteEnum"
           },
           "cnpj": {
             "type": "string",
@@ -967,6 +966,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "TipoClienteEnum": {
+        "enum": [
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "UsuarioEntity": {
         "type": "object",

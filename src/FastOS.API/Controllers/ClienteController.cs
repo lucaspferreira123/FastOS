@@ -1,7 +1,6 @@
 using FastOS.Application.Services;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
 using FastOS.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FastOS.API.Controllers
 {
@@ -87,8 +86,11 @@ namespace FastOS.API.Controllers
             try
             {
                 var clienteCadastrado = await _clienteBusiness.CadastrarCliente(cliente);
-
                 return Ok(clienteCadastrado);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -103,8 +105,11 @@ namespace FastOS.API.Controllers
             try
             {
                 var clienteAlterado = await _clienteBusiness.AlterarCliente(cliente);
-
                 return Ok(clienteAlterado);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -118,8 +123,11 @@ namespace FastOS.API.Controllers
             try
             {
                 var clienteExcluido = await _clienteBusiness.ExcluirCliente(idCliente);
-
                 return Ok(clienteExcluido);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -128,5 +136,3 @@ namespace FastOS.API.Controllers
         }
     }
 }
-
-

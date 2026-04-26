@@ -1,7 +1,7 @@
 using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastOS.Infrastructure.Repositories;
 
@@ -34,7 +34,9 @@ public class ClienteRepository
         try
         {
             return await _context.Cliente
-                .Where(c => c.Ativo && !c.Excluido)
+                .Where(c => !c.Excluido)
+                .OrderByDescending(c => c.Ativo)
+                .ThenBy(c => c.Nome)
                 .ToListAsync();
         }
         catch (Exception ex)
@@ -77,11 +79,15 @@ public class ClienteRepository
     {
         try
         {
-            var clienteExistente = await _context.Cliente.FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente AND excluido = 0",
-                new SqlParameter("@idCliente", dadosAtualizados.idCliente)).FirstOrDefaultAsync();
+            var clienteExistente = await _context.Cliente
+                .FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente AND excluido = 0",
+                    new SqlParameter("@idCliente", dadosAtualizados.idCliente))
+                .FirstOrDefaultAsync();
 
             if (clienteExistente == null)
-                throw new Exception("Cliente não encontrado.");
+            {
+                throw new Exception("Cliente nao encontrado.");
+            }
 
             clienteExistente.Nome = dadosAtualizados.Nome;
             clienteExistente.Email = dadosAtualizados.Email;
@@ -110,7 +116,9 @@ public class ClienteRepository
             var cliente = await _context.Cliente.FirstOrDefaultAsync(c => c.idCliente == idCliente && !c.Excluido);
 
             if (cliente == null)
-                throw new Exception("Cliente não encontrado.");
+            {
+                throw new Exception("Cliente nao encontrado.");
+            }
 
             cliente.Ativo = false;
             cliente.Excluido = true;

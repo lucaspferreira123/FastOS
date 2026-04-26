@@ -1,7 +1,9 @@
+const TIPO_CLIENTE = {
+    PESSOA_FISICA: 1,
+    PESSOA_JURIDICA: 2
+};
+
 let clientes = [];
-let clientesFiltrados = [];
-let paginaAtualCliente = 1;
-let linhasPorPaginaCliente = 5;
 let idClienteExclusao = 0;
 
 $(document).ready(function () {
@@ -12,6 +14,7 @@ $(document).ready(function () {
 function configurarEventosCliente() {
     $('#modalCadastroCliente').on('show.bs.modal', function () {
         limparFormularioCadastroCliente();
+        alternarCamposDocumentoCadastro();
     });
 
     $('#modalEditarCliente').on('hidden.bs.modal', function () {
@@ -19,16 +22,11 @@ function configurarEventosCliente() {
     });
 
     $('#searchInput').on('input', function () {
-        paginaAtualCliente = 1;
-        aplicarFiltroCliente();
+        renderizarTabelasClientes();
     });
 
-    $('#rowsPerPageSelect').on('change', function () {
-        const valor = $(this).val();
-        linhasPorPaginaCliente = valor === 'all' ? 'all' : parseInt(valor, 10);
-        paginaAtualCliente = 1;
-        renderizarTabelaClientes();
-    });
+    $('#tipoClienteCadastro').on('change', function () { alternarCamposDocumentoCadastro(true); });
+    $('#editTipoCliente').on('change', function () { alternarCamposDocumentoEdicao(true); });
 
     $('#formCadastroCliente').on('submit', async function (event) {
         event.preventDefault();
@@ -47,8 +45,8 @@ function configurarEventosCliente() {
             Swal.fire('Sucesso!', 'Cliente cadastrado com sucesso.', 'success');
             bootstrap.Modal.getInstance(document.getElementById('modalCadastroCliente')).hide();
             carregarClientes();
-        }).fail(function () {
-            Swal.fire('Erro!', 'Nao foi possivel cadastrar o cliente.', 'error');
+        }).fail(function (xhr) {
+            Swal.fire('Erro!', obterMensagemErro(xhr, 'Nao foi possivel cadastrar o cliente.'), 'error');
         });
     });
 
@@ -69,8 +67,8 @@ function configurarEventosCliente() {
             Swal.fire('Sucesso!', 'Cliente alterado com sucesso.', 'success');
             bootstrap.Modal.getInstance(document.getElementById('modalEditarCliente')).hide();
             carregarClientes();
-        }).fail(function () {
-            Swal.fire('Erro!', 'Nao foi possivel alterar o cliente.', 'error');
+        }).fail(function (xhr) {
+            Swal.fire('Erro!', obterMensagemErro(xhr, 'Nao foi possivel alterar o cliente.'), 'error');
         });
     });
 
@@ -87,8 +85,8 @@ function configurarEventosCliente() {
             bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao')).hide();
             idClienteExclusao = 0;
             carregarClientes();
-        }).fail(function () {
-            Swal.fire('Erro!', 'Nao foi possivel excluir o cliente.', 'error');
+        }).fail(function (xhr) {
+            Swal.fire('Erro!', obterMensagemErro(xhr, 'Nao foi possivel excluir o cliente.'), 'error');
         });
     });
 }
@@ -99,57 +97,48 @@ function carregarClientes() {
         type: 'GET'
     }).done(function (response) {
         clientes = response || [];
-        aplicarFiltroCliente();
+        renderizarTabelasClientes();
     }).fail(function () {
         Swal.fire('Erro!', 'Nao foi possivel carregar os clientes.', 'error');
     });
 }
 
-function aplicarFiltroCliente() {
+function renderizarTabelasClientes() {
     const termo = ($('#searchInput').val() || '').trim().toLowerCase();
-
-    clientesFiltrados = clientes.filter(function (cliente) {
-        return (cliente.nome || '').toLowerCase().includes(termo) ||
-            (cliente.email || '').toLowerCase().includes(termo) ||
-            (cliente.telefone || '').toLowerCase().includes(termo);
+    const clientesFiltrados = clientes.filter(function (cliente) {
+        const documento = obterDocumentoCliente(cliente).toLowerCase();
+        return (cliente.nome || '').toLowerCase().includes(termo) || documento.includes(termo);
     });
 
-    renderizarTabelaClientes();
+    const clientesAtivos = clientesFiltrados.filter(function (cliente) {
+        return !!cliente.ativo;
+    });
+
+    const clientesInativos = clientesFiltrados.filter(function (cliente) {
+        return !cliente.ativo;
+    });
+
+    renderizarTabela('#tabelaClientesAtivos tbody', clientesAtivos);
+    renderizarTabela('#tabelaClientesInativos tbody', clientesInativos);
 }
 
-function renderizarTabelaClientes() {
-    const tbody = $('#tabelaClientes tbody');
+function renderizarTabela(selector, lista) {
+    const tbody = $(selector);
     tbody.empty();
 
-    if (clientesFiltrados.length === 0) {
+    if (lista.length === 0) {
         tbody.append(`
             <tr>
-                <td colspan="5" class="text-center text-muted py-4">Nenhum cliente encontrado.</td>
+                <td colspan="2" class="text-center text-muted py-4">Nenhum cliente encontrado.</td>
             </tr>
         `);
-        $('#pagination').empty();
         return;
     }
 
-    const totalPaginas = linhasPorPaginaCliente === 'all'
-        ? 1
-        : Math.max(1, Math.ceil(clientesFiltrados.length / linhasPorPaginaCliente));
-
-    if (paginaAtualCliente > totalPaginas) {
-        paginaAtualCliente = totalPaginas;
-    }
-
-    const inicio = linhasPorPaginaCliente === 'all' ? 0 : (paginaAtualCliente - 1) * linhasPorPaginaCliente;
-    const fim = linhasPorPaginaCliente === 'all' ? clientesFiltrados.length : inicio + linhasPorPaginaCliente;
-    const pagina = clientesFiltrados.slice(inicio, fim);
-
-    pagina.forEach(function (cliente) {
+    lista.forEach(function (cliente) {
         tbody.append(`
             <tr>
-                <td>${escapeHtml(cliente.nome)}</td>
-                <td>${escapeHtml(cliente.email)}</td>
-                <td>${escapeHtml(cliente.telefone)}</td>
-                <td>${escapeHtml(cliente.endereco)}</td>
+                <td>${escapeHtml(cliente.nome)} - ${escapeHtml(formatarDocumento(obterDocumentoCliente(cliente), cliente.tipoCliente))}</td>
                 <td class="text-center">
                     <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicaoCliente(${cliente.idCliente})">
                         <i class="bi bi-pencil-square"></i>
@@ -161,30 +150,6 @@ function renderizarTabelaClientes() {
             </tr>
         `);
     });
-
-    renderizarPaginacaoCliente(totalPaginas);
-}
-
-function renderizarPaginacaoCliente(totalPaginas) {
-    const pagination = $('#pagination');
-    pagination.empty();
-
-    if (linhasPorPaginaCliente === 'all') {
-        return;
-    }
-
-    for (let i = 1; i <= totalPaginas; i++) {
-        pagination.append(`
-            <li class="page-item ${i === paginaAtualCliente ? 'active' : ''}">
-                <button class="page-link" type="button" onclick="irParaPaginaCliente(${i})">${i}</button>
-            </li>
-        `);
-    }
-}
-
-function irParaPaginaCliente(pagina) {
-    paginaAtualCliente = pagina;
-    renderizarTabelaClientes();
 }
 
 function abrirModalEdicaoCliente(idCliente) {
@@ -199,10 +164,15 @@ function abrirModalEdicaoCliente(idCliente) {
 
     limparFormularioEdicaoCliente();
     $('#editNomeCliente').val(cliente.nome);
+    $('#editTipoCliente').val(cliente.tipoCliente);
     $('#editEmailCliente').val(cliente.email);
     $('#editTelefoneCliente').val(cliente.telefone);
     $('#editEnderecoCliente').val(cliente.endereco);
+    $('#editAtivoCliente').val(String(cliente.ativo));
+    $('#editCpfCliente').val(formatarDocumento(cliente.cpf, TIPO_CLIENTE.PESSOA_FISICA));
+    $('#editCnpjCliente').val(formatarDocumento(cliente.cnpj, TIPO_CLIENTE.PESSOA_JURIDICA));
     $('#formEditarCliente').data('id-cliente', cliente.idCliente);
+    alternarCamposDocumentoEdicao(false);
 
     new bootstrap.Modal(document.getElementById('modalEditarCliente')).show();
 }
@@ -210,36 +180,41 @@ function abrirModalEdicaoCliente(idCliente) {
 function abrirModalExclusaoCliente(idCliente, nomeCliente) {
     idClienteExclusao = idCliente;
     $('#nomeClienteExclusao').text(nomeCliente);
-
     new bootstrap.Modal(document.getElementById('modalConfirmarExclusao')).show();
 }
 
 function obterDadosCadastroCliente() {
+    const tipoCliente = parseInt($('#tipoClienteCadastro').val(), 10);
     return {
         nome: $('#nomeCliente').val().trim(),
+        tipoCliente: tipoCliente,
         email: $('#emailCliente').val().trim(),
         telefone: $('#telefoneCliente').val().trim(),
         endereco: $('#enderecoCliente').val().trim(),
-        senha: '',
-        ativo: true
+        ativo: $('#ativoClienteCadastro').val() === 'true',
+        cpf: tipoCliente === TIPO_CLIENTE.PESSOA_FISICA ? $('#cpfCliente').val().trim() : null,
+        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? $('#cnpjCliente').val().trim() : null
     };
 }
 
 function obterDadosEdicaoCliente() {
+    const tipoCliente = parseInt($('#editTipoCliente').val(), 10);
     return {
         idCliente: parseInt($('#formEditarCliente').data('id-cliente'), 10),
         nome: $('#editNomeCliente').val().trim(),
+        tipoCliente: tipoCliente,
         email: $('#editEmailCliente').val().trim(),
         telefone: $('#editTelefoneCliente').val().trim(),
         endereco: $('#editEnderecoCliente').val().trim(),
-        senha: '',
-        ativo: true
+        ativo: $('#editAtivoCliente').val() === 'true',
+        cpf: tipoCliente === TIPO_CLIENTE.PESSOA_FISICA ? $('#editCpfCliente').val().trim() : null,
+        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? $('#editCnpjCliente').val().trim() : null
     };
 }
 
 function validarCliente(cliente) {
     if (!cliente.nome) {
-        Swal.fire('Atencao!', 'Preencha o nome do cliente.', 'warning');
+        Swal.fire('Atencao!', 'Preencha a razao social do cliente.', 'warning');
         return false;
     }
 
@@ -253,16 +228,103 @@ function validarCliente(cliente) {
         return false;
     }
 
+    if (cliente.tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA) {
+        const cnpj = normalizarDocumento(cliente.cnpj);
+        if (!cnpj) {
+            Swal.fire('Atencao!', 'Informe o CNPJ do cliente.', 'warning');
+            return false;
+        }
+
+        if (cnpj.length !== 14) {
+            Swal.fire('Atencao!', 'O CNPJ deve conter 14 numeros.', 'warning');
+            return false;
+        }
+    } else {
+        const cpf = normalizarDocumento(cliente.cpf);
+        if (!cpf) {
+            Swal.fire('Atencao!', 'Informe o CPF do cliente.', 'warning');
+            return false;
+        }
+
+        if (cpf.length !== 11) {
+            Swal.fire('Atencao!', 'O CPF deve conter 11 numeros.', 'warning');
+            return false;
+        }
+    }
+
     return true;
+}
+
+function alternarCamposDocumentoCadastro(limparCampoInativo) {
+    const tipoCliente = parseInt($('#tipoClienteCadastro').val(), 10);
+    const pessoaJuridica = tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA;
+
+    $('.campo-documento-cadastro[data-tipo="cpf"]').toggleClass('d-none', pessoaJuridica);
+    $('.campo-documento-cadastro[data-tipo="cnpj"]').toggleClass('d-none', !pessoaJuridica);
+
+    if (limparCampoInativo && pessoaJuridica) {
+        $('#cpfCliente').val('');
+    } else if (limparCampoInativo) {
+        $('#cnpjCliente').val('');
+    }
+}
+
+function alternarCamposDocumentoEdicao(limparCampoInativo) {
+    const tipoCliente = parseInt($('#editTipoCliente').val(), 10);
+    const pessoaJuridica = tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA;
+
+    $('.campo-documento-edicao[data-tipo="cpf"]').toggleClass('d-none', pessoaJuridica);
+    $('.campo-documento-edicao[data-tipo="cnpj"]').toggleClass('d-none', !pessoaJuridica);
+
+    if (limparCampoInativo && pessoaJuridica) {
+        $('#editCpfCliente').val('');
+    } else if (limparCampoInativo) {
+        $('#editCnpjCliente').val('');
+    }
 }
 
 function limparFormularioCadastroCliente() {
     $('#formCadastroCliente')[0].reset();
+    $('#tipoClienteCadastro').val(String(TIPO_CLIENTE.PESSOA_FISICA));
+    $('#ativoClienteCadastro').val('true');
 }
 
 function limparFormularioEdicaoCliente() {
     $('#formEditarCliente')[0].reset();
     $('#formEditarCliente').removeData('id-cliente');
+    $('#editTipoCliente').val(String(TIPO_CLIENTE.PESSOA_FISICA));
+    $('#editAtivoCliente').val('true');
+    alternarCamposDocumentoEdicao(false);
+}
+
+function obterDocumentoCliente(cliente) {
+    return cliente.tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? (cliente.cnpj || '') : (cliente.cpf || '');
+}
+
+function normalizarDocumento(valor) {
+    return String(valor || '').replace(/\D/g, '');
+}
+
+function formatarDocumento(valor, tipoCliente) {
+    const documento = normalizarDocumento(valor);
+
+    if (!documento) {
+        return '';
+    }
+
+    if (tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA && documento.length === 14) {
+        return documento.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+    }
+
+    if (tipoCliente === TIPO_CLIENTE.PESSOA_FISICA && documento.length === 11) {
+        return documento.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+    }
+
+    return documento;
+}
+
+function obterMensagemErro(xhr, mensagemPadrao) {
+    return xhr && xhr.responseText ? xhr.responseText : mensagemPadrao;
 }
 
 function escapeHtml(valor) {

@@ -1,7 +1,7 @@
-using FastOS.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using FastOS.Domain.Entities;
+using FastOS.Domain.Enums;
+using FastOS.Infrastructure.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FastOS.Application.Services
 {
@@ -20,21 +20,22 @@ namespace FastOS.Application.Services
             {
                 if (cliente == null)
                 {
-                    throw new ArgumentException("Não foi possivel cadastrar o cliente.");
+                    throw new ArgumentException("Nao foi possivel cadastrar o cliente.");
                 }
 
+                PrepararCliente(cliente);
                 var clientes = await ObterClientePeloNome(cliente.Nome);
 
                 if (clientes == null || !clientes.Any())
                 {
-                    var clientesCadastrados = await _repository.CadastrarCliente(cliente);
+                    return await _repository.CadastrarCliente(cliente);
+                }
 
-                    return clientesCadastrados;
-                }
-                else
-                {
-                    throw new ArgumentException("Cliente já cadastrado!");
-                }
+                throw new ArgumentException("Cliente ja cadastrado.");
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -48,21 +49,22 @@ namespace FastOS.Application.Services
             {
                 if (cliente == null)
                 {
-                    throw new ArgumentException("Não foi possivel alterar o cliente.");
+                    throw new ArgumentException("Nao foi possivel alterar o cliente.");
                 }
 
-                var clienteAntigo = ObterClientePeloId(cliente.idCliente).Result.FirstOrDefault();
+                var clienteAntigo = (await ObterClientePeloId(cliente.idCliente)).FirstOrDefault();
 
                 if (clienteAntigo == null)
                 {
-                    throw new ArgumentException("Cliente não encontrado para alteração!");
+                    throw new ArgumentException("Cliente nao encontrado para alteracao.");
                 }
-                else
-                {
-                    var clienteAlterado = await _repository.AlterarCliente(cliente);
 
-                    return clienteAlterado;
-                }
+                PrepararCliente(cliente);
+                return await _repository.AlterarCliente(cliente);
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -76,17 +78,14 @@ namespace FastOS.Application.Services
             {
                 if (nome.IsNullOrEmpty())
                 {
-                    throw new Exception("Erro ao obter o Cliente");
+                    throw new Exception("Erro ao obter o cliente");
                 }
 
-                var cliente = await _repository.ObterClientePeloNome(nome);
-
-                return cliente;
-
+                return await _repository.ObterClientePeloNome(nome);
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter o Cliente", ex);
+                throw new Exception("Erro ao obter o cliente", ex);
             }
         }
 
@@ -94,15 +93,11 @@ namespace FastOS.Application.Services
         {
             try
             {
-
-                var cliente = await _repository.ObterClientePeloId(idCliente);
-
-                return cliente;
-
+                return await _repository.ObterClientePeloId(idCliente);
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter o Cliente", ex);
+                throw new Exception("Erro ao obter o cliente", ex);
             }
         }
 
@@ -110,13 +105,11 @@ namespace FastOS.Application.Services
         {
             try
             {
-                var clientes = await _repository.ObterTodosClientes();
-
-                return clientes;
+                return await _repository.ObterTodosClientes();
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao cadastrar cliente", ex);
+                throw new Exception("Erro ao obter clientes", ex);
             }
         }
 
@@ -126,17 +119,87 @@ namespace FastOS.Application.Services
             {
                 if (idCliente == 0)
                 {
-                    throw new Exception("Erro ao cadastrar cliente");
+                    throw new ArgumentException("Cliente invalido.");
                 }
 
-                var clienteExcluido = await _repository.ExcluirCliente(idCliente);
-
-                return clienteExcluido;
+                return await _repository.ExcluirCliente(idCliente);
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao excluir cliente", ex);
             }
+        }
+
+        private static void PrepararCliente(ClienteEntity cliente)
+        {
+            cliente.Nome = cliente.Nome?.Trim() ?? string.Empty;
+            cliente.Email = cliente.Email?.Trim() ?? string.Empty;
+            cliente.Telefone = cliente.Telefone?.Trim() ?? string.Empty;
+            cliente.Endereco = string.IsNullOrWhiteSpace(cliente.Endereco) ? null : cliente.Endereco.Trim();
+            cliente.CPF = NormalizarDocumento(cliente.CPF);
+            cliente.CNPJ = NormalizarDocumento(cliente.CNPJ);
+
+            if (string.IsNullOrWhiteSpace(cliente.Nome))
+            {
+                throw new ArgumentException("Preencha a razao social do cliente.");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Email))
+            {
+                throw new ArgumentException("Preencha o email do cliente.");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Telefone))
+            {
+                throw new ArgumentException("Preencha o telefone do cliente.");
+            }
+
+            if (cliente.TipoCliente == TipoClienteEnum.PessoaJuridica)
+            {
+                if (string.IsNullOrWhiteSpace(cliente.CNPJ))
+                {
+                    throw new ArgumentException("Informe o CNPJ para cliente pessoa juridica.");
+                }
+
+                if (cliente.CNPJ.Length != 14)
+                {
+                    throw new ArgumentException("O CNPJ deve conter 14 numeros.");
+                }
+
+                cliente.CPF = null;
+                return;
+            }
+
+            if (cliente.TipoCliente != TipoClienteEnum.PessoaFisica)
+            {
+                throw new ArgumentException("Tipo de cliente invalido.");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.CPF))
+            {
+                throw new ArgumentException("Informe o CPF para cliente pessoa fisica.");
+            }
+
+            if (cliente.CPF.Length != 11)
+            {
+                throw new ArgumentException("O CPF deve conter 11 numeros.");
+            }
+
+            cliente.CNPJ = null;
+        }
+
+        private static string? NormalizarDocumento(string? documento)
+        {
+            if (string.IsNullOrWhiteSpace(documento))
+            {
+                return null;
+            }
+
+            return new string(documento.Where(char.IsDigit).ToArray());
         }
     }
 }

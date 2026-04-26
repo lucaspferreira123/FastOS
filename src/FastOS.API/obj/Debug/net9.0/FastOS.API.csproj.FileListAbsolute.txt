@@ -119,7 +119,6 @@ C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\scopedcss\bundle\Fa
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\scopedcss\projectbundle\FastOS.API.bundle.scp.css
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\v8ik2m2ya6-{0}-54iajr2wns-54iajr2wns.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\v0jxmjdg6v-{0}-61n19gt1b8-61n19gt1b8.gz
-C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ub57xjxgjj-{0}-2lrj7zm66e-2lrj7zm66e.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\wbk11znvn5-{0}-8p6eyc226m-8p6eyc226m.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\vi2fhnprov-{0}-mm281r82cp-mm281r82cp.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\zn5tassk54-{0}-hm7h4wpo3w-hm7h4wpo3w.gz
@@ -283,3 +282,5 @@ C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\ru\Microsoft.CodeAn
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ub57xjxgjj-{0}-3hw16mt9l8-3hw16mt9l8.gz
+C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

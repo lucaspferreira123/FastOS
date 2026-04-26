@@ -9,12 +9,15 @@ CREATE SCHEMA dbo;
 
 CREATE TABLE Pizzalizya.dbo.Cliente (
 	idCliente int IDENTITY(1,1) NOT NULL,
-	Nome nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
-	Email nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
-	Senha nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
-	Telefone nvarchar(MAX) COLLATE Latin1_General_CI_AS NOT NULL,
-	Endereco nvarchar(MAX) COLLATE Latin1_General_CI_AS NULL,
-	Ativo bit NOT NULL,
+	Nome varchar(200) COLLATE Latin1_General_CI_AS NOT NULL,
+	Email varchar(200) COLLATE Latin1_General_CI_AS NOT NULL,
+	Telefone varchar(100) COLLATE Latin1_General_CI_AS NOT NULL,
+	Endereco varchar(1000) COLLATE Latin1_General_CI_AS NULL,
+	Ativo bit DEFAULT 0 NOT NULL,
+	Excluido bit DEFAULT 0 NOT NULL,
+	TipoCliente int NOT NULL,
+	CNPJ varchar(50) COLLATE Latin1_General_CI_AS NULL,
+	CPF varchar(50) COLLATE Latin1_General_CI_AS NULL,
 	CONSTRAINT PK_Cliente PRIMARY KEY (idCliente)
 );
 

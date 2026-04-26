@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastOS.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62eb3212dd8d80691db45911bc98a2ff27c12404")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c60ff44b1231c557fa5bcf9a719c6972f98e6710")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastOS.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastOS.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -46,7 +46,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<ClienteEntity>().ToTable("Cliente");
+        modelBuilder.Entity<ClienteEntity>(entity =>
+        {
+            entity.ToTable("Cliente");
+            entity.Property(c => c.Nome).HasMaxLength(200).HasColumnType("varchar(200)");
+            entity.Property(c => c.Email).HasMaxLength(200).HasColumnType("varchar(200)");
+            entity.Property(c => c.Telefone).HasMaxLength(100).HasColumnType("varchar(100)");
+            entity.Property(c => c.Endereco).HasMaxLength(1000).HasColumnType("varchar(1000)");
+            entity.Property(c => c.Ativo).HasDefaultValue(false);
+            entity.Property(c => c.Excluido).HasDefaultValue(false);
+            entity.Property(c => c.CNPJ).HasMaxLength(50).HasColumnType("varchar(50)");
+            entity.Property(c => c.CPF).HasMaxLength(50).HasColumnType("varchar(50)");
+        });
         modelBuilder.Entity<ProdutoEntity>().ToTable("Produto");
         modelBuilder.Entity<UsuarioEntity>(entity =>
         {

@@ -34,7 +34,11 @@ namespace FastOS.API.Controllers
                     c.Email,
                     c.Telefone,
                     c.Endereco,
-                    c.Ativo
+                    c.Ativo,
+                    c.Excluido,
+                    c.TipoCliente,
+                    c.CNPJ,
+                    c.CPF
                 }));
             }
             catch (Exception)
@@ -63,7 +67,11 @@ namespace FastOS.API.Controllers
                     cliente.Email,
                     cliente.Telefone,
                     cliente.Endereco,
-                    cliente.Ativo
+                    cliente.Ativo,
+                    cliente.Excluido,
+                    cliente.TipoCliente,
+                    cliente.CNPJ,
+                    cliente.CPF
                 });
             }
             catch (Exception)

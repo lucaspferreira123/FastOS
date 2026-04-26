@@ -220,8 +220,11 @@ function obterDadosCadastroCliente() {
         email: $('#emailCliente').val().trim(),
         telefone: $('#telefoneCliente').val().trim(),
         endereco: $('#enderecoCliente').val().trim(),
-        senha: '',
-        ativo: true
+        ativo: true,
+        excluido: false,
+        tipoCliente: 0,
+        cnpj: '',
+        cpf: ''
     };
 }
 
@@ -232,8 +235,11 @@ function obterDadosEdicaoCliente() {
         email: $('#editEmailCliente').val().trim(),
         telefone: $('#editTelefoneCliente').val().trim(),
         endereco: $('#editEnderecoCliente').val().trim(),
-        senha: '',
-        ativo: true
+        ativo: true,
+        excluido: false,
+        tipoCliente: 0,
+        cnpj: '',
+        cpf: ''
     };
 }
 

@@ -726,10 +726,6 @@
             "type": "string",
             "nullable": true
           },
-          "senha": {
-            "type": "string",
-            "nullable": true
-          },
           "telefone": {
             "type": "string",
             "nullable": true
@@ -740,6 +736,21 @@
           },
           "ativo": {
             "type": "boolean"
+          },
+          "excluido": {
+            "type": "boolean"
+          },
+          "tipoCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

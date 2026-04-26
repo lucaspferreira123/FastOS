@@ -33,7 +33,9 @@ public class ClienteRepository
     {
         try
         {
-            return await _context.Cliente.FromSqlRaw(@" SELECT * FROM Cliente WHERE ativo = 1").ToListAsync();
+            return await _context.Cliente
+                .Where(c => c.Ativo && !c.Excluido)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -46,7 +48,9 @@ public class ClienteRepository
         try
         {
             var param = new SqlParameter("@nome", nome);
-            return await _context.Cliente.FromSqlRaw("SELECT * FROM Cliente WHERE nome = @nome", param).ToListAsync();
+            return await _context.Cliente
+                .FromSqlRaw("SELECT * FROM Cliente WHERE nome = @nome AND excluido = 0", param)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -59,7 +63,9 @@ public class ClienteRepository
         try
         {
             var param = new SqlParameter("@idCliente", idCliente);
-            return await _context.Cliente.FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente", param).ToListAsync();
+            return await _context.Cliente
+                .FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente AND excluido = 0", param)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -71,7 +77,7 @@ public class ClienteRepository
     {
         try
         {
-            var clienteExistente = await _context.Cliente.FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente",
+            var clienteExistente = await _context.Cliente.FromSqlRaw("SELECT * FROM Cliente WHERE idCliente = @idCliente AND excluido = 0",
                 new SqlParameter("@idCliente", dadosAtualizados.idCliente)).FirstOrDefaultAsync();
 
             if (clienteExistente == null)
@@ -79,9 +85,12 @@ public class ClienteRepository
 
             clienteExistente.Nome = dadosAtualizados.Nome;
             clienteExistente.Email = dadosAtualizados.Email;
-            clienteExistente.Senha = dadosAtualizados.Senha;
             clienteExistente.Telefone = dadosAtualizados.Telefone;
             clienteExistente.Endereco = dadosAtualizados.Endereco;
+            clienteExistente.Ativo = dadosAtualizados.Ativo;
+            clienteExistente.TipoCliente = dadosAtualizados.TipoCliente;
+            clienteExistente.CNPJ = dadosAtualizados.CNPJ;
+            clienteExistente.CPF = dadosAtualizados.CPF;
 
             _context.Cliente.Update(clienteExistente);
             await _context.SaveChangesAsync();
@@ -98,12 +107,13 @@ public class ClienteRepository
     {
         try
         {
-            var cliente = await _context.Cliente.FirstOrDefaultAsync(c => c.idCliente == idCliente);
+            var cliente = await _context.Cliente.FirstOrDefaultAsync(c => c.idCliente == idCliente && !c.Excluido);
 
             if (cliente == null)
                 throw new Exception("Cliente não encontrado.");
 
             cliente.Ativo = false;
+            cliente.Excluido = true;
             _context.Cliente.Update(cliente);
             await _context.SaveChangesAsync();
 

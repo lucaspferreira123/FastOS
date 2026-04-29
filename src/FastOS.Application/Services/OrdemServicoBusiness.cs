@@ -1,15 +1,12 @@
-using FastOS.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using FastOS.Domain.ValueObjects;
-using FastOS.Domain.Interfaces;
 using FastOS.Domain.Entities;
+using FastOS.Domain.Interfaces;
+using FastOS.Domain.ValueObjects;
 
 namespace FastOS.Application.Services
 {
     public class OrdemServicoBusiness
     {
+        private static readonly SemaphoreSlim CadastrarOrdemMutex = new(1, 1);
         private readonly IOrdemServicoRepository _repository;
 
         public OrdemServicoBusiness(IOrdemServicoRepository repository)
@@ -19,11 +16,12 @@ namespace FastOS.Application.Services
 
         public async Task<OrdemServicoEntity> CadastrarOrdem(OrdemServicoEntity ordem)
         {
+            await CadastrarOrdemMutex.WaitAsync();
             try
             {
                 if (ordem == null)
                 {
-                    throw new ArgumentException("Não foi possivel cadastrar a ordem.");
+                    throw new ArgumentException("Nao foi possivel cadastrar a ordem.");
                 }
 
                 var ordemCadastrada = await _repository.CadastrarOrdem(ordem);
@@ -34,8 +32,12 @@ namespace FastOS.Application.Services
             {
                 throw new Exception("Erro ao cadastrar a ordem", ex);
             }
+            finally
+            {
+                CadastrarOrdemMutex.Release();
+            }
         }
-        
+
         public async Task<List<OrdemServicoDto>> ObterTodasOrdens()
         {
             try
@@ -85,13 +87,14 @@ namespace FastOS.Application.Services
                 var ordem = await _repository.GetByIdAsync(idOrdem);
 
                 if (ordem == null)
-                    return; 
+                    return;
 
                 if (idStatus == 5)
                 {
                     ordem.Pago = true;
                 }
-                    ordem.idStatus = idStatus;
+
+                ordem.idStatus = idStatus;
 
                 await _repository.UpdateAsync(ordem);
             }
@@ -100,6 +103,5 @@ namespace FastOS.Application.Services
                 throw new Exception("Erro ao alterar a ordem", ex);
             }
         }
-
     }
 }

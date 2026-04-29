@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mutex no Endpoint CadastrarOrdem</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --paper: #fffdf8;
+            --ink: #1f2933;
+            --muted: #52606d;
+            --accent: #8b5e34;
+            --line: #d9cbb8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Georgia", "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top left, #efe7db 0, transparent 32%),
+                linear-gradient(180deg, #f5efe4 0%, var(--bg) 100%);
+            color: var(--ink);
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 18mm 16mm 20mm;
+            background: var(--paper);
+        }
+
+        h1, h2 {
+            margin: 0 0 10px;
+            line-height: 1.15;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--accent);
+        }
+
+        h2 {
+            margin-top: 22px;
+            padding-bottom: 6px;
+            font-size: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        p, li {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--ink);
+        }
+
+        .subtitle {
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .callout {
+            margin: 16px 0;
+            padding: 12px 14px;
+            border-left: 4px solid var(--accent);
+            background: #f7f1e8;
+        }
+
+        code, pre {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        pre {
+            margin: 12px 0;
+            padding: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border: 1px solid var(--line);
+            background: #fbf8f2;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        ul {
+            margin: 8px 0 0 18px;
+            padding: 0;
+        }
+
+        .footer {
+            margin-top: 28px;
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <h1>Logica de Mutex no Endpoint CadastrarOrdem</h1>
+        <p class="subtitle">Documento tecnico sobre o uso de exclusao mutua na criacao de ordens no projeto FastOS.</p>
+        <p><strong>Integrantes:</strong> Lucas Panhossi Ferreria, Lucas da Silva Pinto e Luis Felipe Gomes Sobreira.</p>
+
+        <h2>1. O que e mutex</h2>
+        <p>
+            Mutex e uma estrategia de sincronizacao usada para garantir que apenas uma execucao por vez entre em uma secao critica do codigo.
+            Em cenarios com multiplas requisicoes concorrentes, essa protecao evita que duas operacoes tentem alterar o mesmo recurso ao mesmo tempo
+            sem controle.
+        </p>
+
+        <div class="callout">
+            <p>
+                No projeto, a secao critica escolhida foi o cadastro de ordem, porque esse ponto concentra a gravacao inicial da entidade e pode ser
+                sensivel quando varias chamadas chegam juntas.
+            </p>
+        </div>
+
+        <h2>2. Como a logica foi aplicada</h2>
+        <p>
+            A implementacao foi feita dentro da classe <code>OrdemServicoBusiness</code>, no metodo <code>CadastrarOrdem</code>. Foi adicionado um
+            <code>SemaphoreSlim</code> estatico com capacidade <code>1</code>, funcionando como um mutex assíncrono para esse fluxo.
+        </p>
+
+        <pre>private static readonly SemaphoreSlim CadastrarOrdemMutex = new(1, 1);
+
+public async Task&lt;OrdemServicoEntity&gt; CadastrarOrdem(OrdemServicoEntity ordem)
+{
+    await CadastrarOrdemMutex.WaitAsync();
+    try
+    {
+        if (ordem == null)
+        {
+            throw new ArgumentException("Nao foi possivel cadastrar a ordem.");
+        }
+
+        var ordemCadastrada = await _repository.CadastrarOrdem(ordem);
+        return ordemCadastrada;
+    }
+    finally
+    {
+        CadastrarOrdemMutex.Release();
+    }
+}</pre>
+
+        <p>
+            O efeito pratico e simples: enquanto uma requisicao estiver dentro do cadastro de ordem, as demais chamadas para esse mesmo metodo aguardam
+            a liberacao da trava antes de continuar.
+        </p>
+
+        <h2>3. Por que aplicar apenas no CadastrarOrdem</h2>
+        <p>
+            A decisao de limitar a trava ao endpoint <code>Ordem/CadastrarOrdem</code> reduz o impacto da mudanca e preserva o comportamento dos demais
+            endpoints. Isso permite tratar o ponto mais sensivel agora, sem serializar leitura, atualizacao de status ou outras operacoes que nao
+            precisam da mesma protecao neste momento.
+        </p>
+
+        <ul>
+            <li>Menor risco de regressao em outras rotas.</li>
+            <li>Implementacao mais localizada e facil de revisar.</li>
+            <li>Controle direto sobre o fluxo de criacao da ordem.</li>
+        </ul>
+
+        <h2>4. Beneficios para o projeto FastOS</h2>
+        <ul>
+            <li>Evita concorrencia desordenada na criacao de ordens quando varias requisicoes chegam ao mesmo tempo.</li>
+            <li>Reduz a chance de efeitos colaterais em operacoes criticas de persistencia.</li>
+            <li>Centraliza a protecao em uma camada de negocio, sem espalhar regras de sincronizacao pelo controller.</li>
+            <li>Facilita evolucoes futuras, como transformar a trava global em trava por cliente, por loja ou por chave de negocio.</li>
+        </ul>
+
+        <h2>5. Limites da abordagem atual</h2>
+        <p>
+            O mutex aplicado hoje protege apenas a instancia atual da aplicacao. Se o sistema estiver rodando em mais de um processo, container ou
+            servidor, cada instancia tera sua propria trava local. Nessa situacao, a sincronizacao deixa de ser global.
+        </p>
+
+        <ul>
+            <li>Serve bem para ambiente simples ou instancia unica.</li>
+            <li>Nao substitui constraint de banco, transacao ou lock distribuido em arquitetura escalada.</li>
+            <li>Pode aumentar o tempo de espera se houver muitas criacoes simultaneas.</li>
+        </ul>
+
+        <h2>6. Conclusao</h2>
+        <p>
+            A aplicacao da logica de mutex no endpoint <code>CadastrarOrdem</code> e uma medida pragmatica para organizar concorrencia no ponto de entrada
+            da criacao de ordens. Ela melhora a previsibilidade do fluxo, reduz risco de disputa durante a gravacao e cria uma base segura para evoluir
+            a estrategia de sincronizacao do FastOS conforme o projeto crescer.
+        </p>
+
+        <p class="footer">FastOS - Documento gerado automaticamente em 28/04/2026.</p>
+    </main>
+</body>
+</html>

@@ -282,5 +282,5 @@ C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\ru\Microsoft.CodeAn
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ub57xjxgjj-{0}-3hw16mt9l8-3hw16mt9l8.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ub57xjxgjj-{0}-7uzqzkvezf-7uzqzkvezf.gz

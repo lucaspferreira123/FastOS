@@ -27,6 +27,12 @@ function configurarEventosCliente() {
 
     $('#tipoClienteCadastro').on('change', function () { alternarCamposDocumentoCadastro(true); });
     $('#editTipoCliente').on('change', function () { alternarCamposDocumentoEdicao(true); });
+    $('#telefoneCliente, #editTelefoneCliente').on('input', function () {
+        $(this).val(formatarTelefone($(this).val()));
+    });
+    $('#cnpjCliente, #editCnpjCliente').on('input', function () {
+        $(this).val(formatarCnpj($(this).val()));
+    });
 
     $('#formCadastroCliente').on('submit', async function (event) {
         event.preventDefault();
@@ -110,16 +116,16 @@ function renderizarTabelasClientes() {
         return (cliente.nome || '').toLowerCase().includes(termo) || documento.includes(termo);
     });
 
-    const clientesAtivos = clientesFiltrados.filter(function (cliente) {
-        return !!cliente.ativo;
+    const clientesPessoaFisica = clientesFiltrados.filter(function (cliente) {
+        return cliente.tipoCliente === TIPO_CLIENTE.PESSOA_FISICA;
     });
 
-    const clientesInativos = clientesFiltrados.filter(function (cliente) {
-        return !cliente.ativo;
+    const clientesPessoaJuridica = clientesFiltrados.filter(function (cliente) {
+        return cliente.tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA;
     });
 
-    renderizarTabela('#tabelaClientesAtivos tbody', clientesAtivos);
-    renderizarTabela('#tabelaClientesInativos tbody', clientesInativos);
+    renderizarTabela('#tabelaClientesPessoaFisica tbody', clientesPessoaFisica);
+    renderizarTabela('#tabelaClientesPessoaJuridica tbody', clientesPessoaJuridica);
 }
 
 function renderizarTabela(selector, lista) {
@@ -166,7 +172,7 @@ function abrirModalEdicaoCliente(idCliente) {
     $('#editNomeCliente').val(cliente.nome);
     $('#editTipoCliente').val(cliente.tipoCliente);
     $('#editEmailCliente').val(cliente.email);
-    $('#editTelefoneCliente').val(cliente.telefone);
+    $('#editTelefoneCliente').val(formatarTelefone(cliente.telefone));
     $('#editEnderecoCliente').val(cliente.endereco);
     $('#editAtivoCliente').val(String(cliente.ativo));
     $('#editCpfCliente').val(formatarDocumento(cliente.cpf, TIPO_CLIENTE.PESSOA_FISICA));
@@ -189,11 +195,11 @@ function obterDadosCadastroCliente() {
         nome: $('#nomeCliente').val().trim(),
         tipoCliente: tipoCliente,
         email: $('#emailCliente').val().trim(),
-        telefone: $('#telefoneCliente').val().trim(),
+        telefone: normalizarTelefone($('#telefoneCliente').val()),
         endereco: $('#enderecoCliente').val().trim(),
         ativo: $('#ativoClienteCadastro').val() === 'true',
         cpf: tipoCliente === TIPO_CLIENTE.PESSOA_FISICA ? $('#cpfCliente').val().trim() : null,
-        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? $('#cnpjCliente').val().trim() : null
+        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? normalizarDocumento($('#cnpjCliente').val()) : null
     };
 }
 
@@ -204,11 +210,11 @@ function obterDadosEdicaoCliente() {
         nome: $('#editNomeCliente').val().trim(),
         tipoCliente: tipoCliente,
         email: $('#editEmailCliente').val().trim(),
-        telefone: $('#editTelefoneCliente').val().trim(),
+        telefone: normalizarTelefone($('#editTelefoneCliente').val()),
         endereco: $('#editEnderecoCliente').val().trim(),
         ativo: $('#editAtivoCliente').val() === 'true',
         cpf: tipoCliente === TIPO_CLIENTE.PESSOA_FISICA ? $('#editCpfCliente').val().trim() : null,
-        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? $('#editCnpjCliente').val().trim() : null
+        cnpj: tipoCliente === TIPO_CLIENTE.PESSOA_JURIDICA ? normalizarDocumento($('#editCnpjCliente').val()) : null
     };
 }
 
@@ -225,6 +231,12 @@ function validarCliente(cliente) {
 
     if (!cliente.telefone) {
         Swal.fire('Atencao!', 'Preencha o telefone do cliente.', 'warning');
+        return false;
+    }
+
+    const telefone = normalizarTelefone(cliente.telefone);
+    if (telefone.length < 10 || telefone.length > 11) {
+        Swal.fire('Atencao!', 'O telefone deve conter 10 ou 11 numeros.', 'warning');
         return false;
     }
 
@@ -287,6 +299,7 @@ function limparFormularioCadastroCliente() {
     $('#formCadastroCliente')[0].reset();
     $('#tipoClienteCadastro').val(String(TIPO_CLIENTE.PESSOA_FISICA));
     $('#ativoClienteCadastro').val('true');
+    alternarCamposDocumentoCadastro(false);
 }
 
 function limparFormularioEdicaoCliente() {
@@ -305,6 +318,10 @@ function normalizarDocumento(valor) {
     return String(valor || '').replace(/\D/g, '');
 }
 
+function normalizarTelefone(valor) {
+    return normalizarDocumento(valor);
+}
+
 function formatarDocumento(valor, tipoCliente) {
     const documento = normalizarDocumento(valor);
 
@@ -321,6 +338,46 @@ function formatarDocumento(valor, tipoCliente) {
     }
 
     return documento;
+}
+
+function formatarTelefone(valor) {
+    const telefone = normalizarTelefone(valor).slice(0, 11);
+
+    if (telefone.length <= 2) {
+        return telefone.length ? `(${telefone}` : '';
+    }
+
+    if (telefone.length <= 6) {
+        return telefone.replace(/^(\d{2})(\d+)$/, '($1) $2');
+    }
+
+    if (telefone.length <= 10) {
+        return telefone.replace(/^(\d{2})(\d{4})(\d+)$/, '($1) $2-$3');
+    }
+
+    return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+}
+
+function formatarCnpj(valor) {
+    const cnpj = normalizarDocumento(valor).slice(0, 14);
+
+    if (cnpj.length <= 2) {
+        return cnpj;
+    }
+
+    if (cnpj.length <= 5) {
+        return cnpj.replace(/^(\d{2})(\d+)$/, '$1.$2');
+    }
+
+    if (cnpj.length <= 8) {
+        return cnpj.replace(/^(\d{2})(\d{3})(\d+)$/, '$1.$2.$3');
+    }
+
+    if (cnpj.length <= 12) {
+        return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d+)$/, '$1.$2.$3/$4');
+    }
+
+    return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d+)$/, '$1.$2.$3/$4-$5');
 }
 
 function obterMensagemErro(xhr, mensagemPadrao) {

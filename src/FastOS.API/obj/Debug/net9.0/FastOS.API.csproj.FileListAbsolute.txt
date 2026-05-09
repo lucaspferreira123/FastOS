@@ -120,10 +120,8 @@ C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\scopedcss\projectbu
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\v8ik2m2ya6-{0}-54iajr2wns-54iajr2wns.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\v0jxmjdg6v-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\wbk11znvn5-{0}-8p6eyc226m-8p6eyc226m.gz
-C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\vi2fhnprov-{0}-mm281r82cp-mm281r82cp.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\zn5tassk54-{0}-hm7h4wpo3w-hm7h4wpo3w.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\xeou51vr7y-{0}-c4qr5uho86-c4qr5uho86.gz
-C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\6y62df1vvd-{0}-1kg8pxi7e1-1kg8pxi7e1.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\4hht53phtn-{0}-t1cqhe9u97-t1cqhe9u97.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\xi1gid7h7m-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\u4w16es7hr-{0}-sejl45xvog-sejl45xvog.gz
@@ -284,3 +282,5 @@ C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hans\Microsoft.C
 C:\Projeto Integrador\FastOS\src\FastOS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ub57xjxgjj-{0}-7uzqzkvezf-7uzqzkvezf.gz
+C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\vi2fhnprov-{0}-xuwiz0gmwz-xuwiz0gmwz.gz
+C:\Projeto Integrador\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\6y62df1vvd-{0}-vufcqplr9m-vufcqplr9m.gz

@@ -4,3 +4,6 @@
 *.suo
 *.userosscache
 *.sln.docstates
+# Build folders
+bin/
+obj/

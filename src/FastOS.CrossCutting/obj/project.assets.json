@@ -670,6 +670,15 @@
           }
         }
       },
+      "QRCoder/1.6.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/QRCoder.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {}
+        }
+      },
       "QuestPDF/2025.7.4": {
         "type": "package",
         "compile": {
@@ -1273,6 +1282,7 @@
         "dependencies": {
           "FastOS.Domain": "1.0.0",
           "FastOS.Infrastructure": "1.0.0",
+          "QRCoder": "1.6.0",
           "QuestPDF": "2025.7.4"
         },
         "compile": {
@@ -2536,6 +2546,27 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "QRCoder/1.6.0": {
+      "sha512": "XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
+      "type": "package",
+      "path": "qrcoder/1.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/QRCoder.dll",
+        "lib/net40/QRCoder.dll",
+        "lib/net5.0-windows7.0/QRCoder.dll",
+        "lib/net5.0/QRCoder.dll",
+        "lib/net6.0-windows7.0/QRCoder.dll",
+        "lib/net6.0/QRCoder.dll",
+        "lib/netstandard1.3/QRCoder.dll",
+        "lib/netstandard2.0/QRCoder.dll",
+        "nuget-icon.png",
+        "nuget-readme.md",
+        "qrcoder.1.6.0.nupkg.sha512",
+        "qrcoder.nuspec"
+      ]
+    },
     "QuestPDF/2025.7.4": {
       "sha512": "XeiWilwLnqP2BIvDG+vh1+fjUoNWczPee5qifw8VppVOH7+vmxgoxG/KANcKftgqAfXiRQ++sXOSLPZRvXxD2g==",
       "type": "package",
@@ -3607,47 +3638,38 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\lucas\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\usuario\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.CrossCutting\\FastOS.CrossCutting.csproj",
+      "projectUniqueName": "C:\\Users\\usuario\\FastOS\\src\\FastOS.CrossCutting\\FastOS.CrossCutting.csproj",
       "projectName": "FastOS.CrossCutting",
-      "projectPath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.CrossCutting\\FastOS.CrossCutting.csproj",
-      "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-      "outputPath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.CrossCutting\\obj\\",
+      "projectPath": "C:\\Users\\usuario\\FastOS\\src\\FastOS.CrossCutting\\FastOS.CrossCutting.csproj",
+      "packagesPath": "C:\\Users\\usuario\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\usuario\\FastOS\\src\\FastOS.CrossCutting\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\usuario\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
-          "framework": "net9.0",
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Application\\FastOS.Application.csproj": {
-              "projectPath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Application\\FastOS.Application.csproj"
+            "C:\\Users\\usuario\\FastOS\\src\\FastOS.Application\\FastOS.Application.csproj": {
+              "projectPath": "C:\\Users\\usuario\\FastOS\\src\\FastOS.Application\\FastOS.Application.csproj"
             },
-            "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Domain\\FastOS.Domain.csproj": {
-              "projectPath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Domain\\FastOS.Domain.csproj"
+            "C:\\Users\\usuario\\FastOS\\src\\FastOS.Domain\\FastOS.Domain.csproj": {
+              "projectPath": "C:\\Users\\usuario\\FastOS\\src\\FastOS.Domain\\FastOS.Domain.csproj"
             },
-            "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj": {
-              "projectPath": "C:\\Projeto Integrador\\FastOS\\src\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj"
+            "C:\\Users\\usuario\\FastOS\\src\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\usuario\\FastOS\\src\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj"
             }
           }
         }
@@ -3662,11 +3684,10 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
-        "framework": "net9.0",
         "targetAlias": "net9.0",
         "dependencies": {
           "Swashbuckle.AspNetCore": {
@@ -3685,20 +3706,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[9.0.15, 9.0.15]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[9.0.15, 9.0.15]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[9.0.15, 9.0.15]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3707,7 +3714,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\usuario\\.dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

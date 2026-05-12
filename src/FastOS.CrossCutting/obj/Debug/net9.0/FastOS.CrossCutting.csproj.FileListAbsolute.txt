@@ -37,3 +37,42 @@ C:\Projeto Integrador\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.Cro
 C:\Projeto Integrador\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\refint\FastOS.CrossCutting.dll
 C:\Projeto Integrador\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.pdb
 C:\Projeto Integrador\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\ref\FastOS.CrossCutting.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Black.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-BlackItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Bold.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-BoldItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-ExtraBold.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-ExtraBoldItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-ExtraLight.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-ExtraLightItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Italic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Light.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-LightItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Medium.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-MediumItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Regular.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-SemiBold.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-SemiBoldItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-Thin.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\Lato-ThinItalic.ttf
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\LatoFont\OFL.txt
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.CrossCutting.deps.json
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.CrossCutting.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.CrossCutting.pdb
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Application.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Domain.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Infrastructure.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Application.pdb
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Domain.pdb
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\bin\Debug\net9.0\FastOS.Infrastructure.pdb
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.csproj.AssemblyReference.cache
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.AssemblyInfoInputs.cache
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.AssemblyInfo.cs
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.csproj.CoreCompileInputs.cache
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.sourcelink.json
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.C.C0CAF489.Up2Date
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\refint\FastOS.CrossCutting.dll
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\FastOS.CrossCutting.pdb
+C:\Users\usuario\FastOS\src\FastOS.CrossCutting\obj\Debug\net9.0\ref\FastOS.CrossCutting.dll

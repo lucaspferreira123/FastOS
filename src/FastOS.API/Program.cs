@@ -71,4 +71,8 @@ app.MapControllerRoute(
     pattern: "{controller=Login}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// ── Health check endpoint ────────────────────────────────────────────────
+app.MapGet("/health", () => Results.Ok(new { status = "online", timestamp = DateTime.Now }))
+   .AllowAnonymous();
+
 app.Run();

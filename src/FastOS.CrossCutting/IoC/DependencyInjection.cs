@@ -47,6 +47,7 @@ public static class DependencyInjection
         services.AddScoped<ItemOrdemServicoBusiness>();
         services.AddScoped<RelatorioBusiness>();
         services.AddScoped<OrcamentoBusiness>();
+        services.AddScoped<EmailService>();
 
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.AddScoped<UsuarioRepository>();

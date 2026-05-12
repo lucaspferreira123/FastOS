@@ -9,6 +9,8 @@
     }
 }
 
+<script src="~/js/reconnect.js" asp-append-version="true"></script>
+
 <button id="btnHamburger"
         class="btn btn-danger m-3"
         type="button"
@@ -48,6 +50,11 @@
                class="@GetItemClasses("usuario")"
                aria-current="@(currentController == "usuario" ? "page" : null)">
                 Cadastro de Usuarios
+            </a>
+            <a href="/Relatorio"
+               class="@GetItemClasses("relatorio")"
+               aria-current="@(currentController == "relatorio" ? "page" : null)">
+                Relatórios
             </a>
         </nav>
     </div>

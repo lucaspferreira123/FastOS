@@ -294,9 +294,14 @@ function GerarFuncoesPorStatus(o) {
                         <i class="bi bi-pencil"></i>
                     </button>
 
-                    <button class="btn btn-outline-dark btn-sm" title="Imprimir Boleto"
+                    <button class="btn btn-outline-dark btn-sm" title="Imprimir Recibo"
                         onclick="ImprimirBoleto(${o.idOrdemServico})">
                         <i class="bi bi-receipt"></i>
+                    </button>
+
+                    <button class="btn btn-outline-info btn-sm" title="Enviar Recibo por E-mail"
+                        onclick="EnviarReciboPorEmail(${o.idOrdemServico})">
+                        <i class="bi bi-envelope"></i>
                     </button>
 
                     <button class="btn btn-outline-success btn-sm" title="Confirmar Pagamento"
@@ -631,4 +636,43 @@ function CalcularValorOrcamento() {
 function ImprimirOrcamento(idOrdem) {
     const url = `/Relatorio/ImprimirRelatorioOrcamento/${idOrdem}`;
     window.open(url, '_blank');
+}
+
+function ImprimirBoleto(idOrdem) {
+    const url = `/Relatorio/ImprimirRecibo/${idOrdem}`;
+    window.open(url, '_blank');
+}
+
+function EnviarReciboPorEmail(idOrdem) {
+    Swal.fire({
+        title: 'Enviar Recibo',
+        text: 'Deseja enviar o recibo por e-mail para o cliente?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#0dcaf0',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="bi bi-envelope"></i> Enviar',
+        cancelButtonText: 'Cancelar'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        Swal.fire({
+            title: 'Enviando...',
+            text: 'Aguarde enquanto o e-mail é enviado.',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        $.ajax({
+            url: `/Relatorio/EnviarReciboPorEmail/${idOrdem}`,
+            type: 'POST',
+            success: function (response) {
+                Swal.fire('Enviado!', response.mensagem, 'success');
+            },
+            error: function (xhr) {
+                const msg = xhr.responseText || 'Não foi possível enviar o e-mail.';
+                Swal.fire('Erro!', msg, 'error');
+            }
+        });
+    });
 }

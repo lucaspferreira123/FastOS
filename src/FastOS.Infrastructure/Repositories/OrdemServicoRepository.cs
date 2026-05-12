@@ -38,6 +38,8 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                 .Select(o => new OrdemServicoDto
                 {
                     idOrdemServico = o.idOrdemServico,
+                    idCliente = o.idCliente,
+                    idStatus = o.idStatus,
                     ClienteNome = _context.Cliente.Where(c => c.idCliente == o.idCliente).Select(c => c.Nome).FirstOrDefault() ?? string.Empty,
                     StatusDescricao = _context.Status.Where(s => s.idStatus == o.idStatus).Select(s => s.Descricao).FirstOrDefault() ?? string.Empty,
                     Pago = o.Pago,

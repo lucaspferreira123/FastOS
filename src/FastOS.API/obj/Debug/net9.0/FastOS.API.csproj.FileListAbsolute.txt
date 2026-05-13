@@ -490,7 +490,6 @@ C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\zfccvjpe00-61
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\boe3ek53j9-xddrdxjt1k.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\75akdgkcaa-t5qwdy2bl6.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\xh6e6l5i59-y14rjnjtku.gz
-C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\pvfzsxi7j5-6qqb3rneqc.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\sx1ekt78sg-0hdhxpcyg3.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\4pw35vntiq-t1cqhe9u97.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\ngb6xhzvzp-c2jlpeoesf.gz
@@ -568,5 +567,6 @@ C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\FastOS.API.pdb
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\FastOS.API.genruntimeconfig.cache
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\ref\FastOS.API.dll
 C:\Users\usuario\FastOS\src\FastOS.API\bin\Debug\net9.0\QRCoder.dll
-C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\nz2jjs5lfj-51ddag4odh.gz
 C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\mv2odf2e0e-nc9ze1azsa.gz
+C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\nz2jjs5lfj-8dylbyy5bg.gz
+C:\Users\usuario\FastOS\src\FastOS.API\obj\Debug\net9.0\compressed\pvfzsxi7j5-j1eiqcsby8.gz

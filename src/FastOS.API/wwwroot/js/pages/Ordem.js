@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
-
     ObterOrdens();
+    InicializarFiltros();
 });
 
 tbody = $("#tabelaOrdens tbody");
@@ -21,7 +21,10 @@ function ObterOrdens() {
         type: 'GET',
         success: function (ordens) {
 
-            tabelaOrdensDT.clear(); 
+            todasOrdensCache = ordens;
+            PopularSelectsFiltro(ordens);
+
+            tabelaOrdensDT.clear();
 
             ordens.forEach(o => {
 
@@ -29,7 +32,7 @@ function ObterOrdens() {
 
                 tabelaOrdensDT.row.add([
                     o.idOrdemServico,
-                    o.clienteNome,
+                    `<a href="/Cliente/Perfil/${o.idCliente}" class="text-decoration-none fw-semibold text-danger" title="Ver perfil do cliente">${o.clienteNome}</a>`,
                     o.pago ? "Sim" : "Não",
                     o.statusDescricao,
                     formatarData(o.dataAbertura),
@@ -38,7 +41,7 @@ function ObterOrdens() {
                 ]);
             });
 
-            tabelaOrdensDT.draw(); // redesenha com os novos dados
+            tabelaOrdensDT.draw();
         }
     });
 }
@@ -164,9 +167,26 @@ function SalvarItens() {
         success: function () {
             Swal.fire("Sucesso!", "Itens salvos com sucesso!", "success");
             $("#modalAdicionarPecas").modal("hide");
+            ObterOrdens();
         },
-        error: function () {
-            Swal.fire("Erro!", "Não foi possível salvar os itens da ordem.", "error");
+        error: function (xhr) {
+            let msg = "Não foi possível salvar os itens da ordem.";
+            if (xhr.status === 400 && xhr.responseText) {
+                try {
+                    // tenta parsear se vier como JSON string
+                    msg = JSON.parse(xhr.responseText);
+                } catch {
+                    msg = xhr.responseText;
+                }
+                // remove aspas extras se vier como "mensagem"
+                msg = msg.replace(/^"|"$/g, '');
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Estoque insuficiente",
+                text: msg,
+                confirmButtonColor: "#dc3545"
+            });
         }
     });
 }
@@ -675,4 +695,133 @@ function EnviarReciboPorEmail(idOrdem) {
             }
         });
     });
+}
+
+// ── Filtros avançados ────────────────────────────────────────────────────
+
+function InicializarFiltros() {
+    // Injeta a barra de filtros antes da tabela
+    const barraHtml = `
+    <div id="barraFiltros" class="card border-0 shadow-sm mb-3 mx-3">
+        <div class="card-body py-2 px-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-12 col-md-3">
+                    <label class="form-label small fw-semibold mb-1">Status</label>
+                    <select id="filtroStatus" class="form-select form-select-sm">
+                        <option value="">Todos os status</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label small fw-semibold mb-1">Cliente</label>
+                    <select id="filtroCliente" class="form-select form-select-sm">
+                        <option value="">Todos os clientes</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label small fw-semibold mb-1">Pago</label>
+                    <select id="filtroPago" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                        <option value="Sim">Sim</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label small fw-semibold mb-1">Abertura de</label>
+                    <input type="date" id="filtroDataDe" class="form-control form-control-sm">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label small fw-semibold mb-1">Até</label>
+                    <input type="date" id="filtroDataAte" class="form-control form-control-sm">
+                </div>
+                <div class="col-6 col-md-auto d-flex gap-2 align-items-end">
+                    <button class="btn btn-danger btn-sm" onclick="AplicarFiltros()">
+                        <i class="bi bi-funnel-fill"></i> Filtrar
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="LimparFiltros()" title="Limpar filtros">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    $('.table-responsive').before(barraHtml);
+}
+
+function PopularSelectsFiltro(ordens) {
+    // Status únicos
+    const statusSet = [...new Set(ordens.map(o => o.statusDescricao))].sort();
+    const selStatus = $('#filtroStatus');
+    const valStatus = selStatus.val();
+    selStatus.find('option:not(:first)').remove();
+    statusSet.forEach(s => selStatus.append(`<option value="${s}">${s}</option>`));
+    if (valStatus) selStatus.val(valStatus);
+
+    // Clientes únicos
+    const clienteSet = [...new Set(ordens.map(o => o.clienteNome))].sort();
+    const selCliente = $('#filtroCliente');
+    const valCliente = selCliente.val();
+    selCliente.find('option:not(:first)').remove();
+    clienteSet.forEach(c => selCliente.append(`<option value="${c}">${c}</option>`));
+    if (valCliente) selCliente.val(valCliente);
+}
+
+// Guarda todas as ordens para filtrar client-side
+let todasOrdensCache = [];
+
+function AplicarFiltros() {
+    const status   = $('#filtroStatus').val().toLowerCase();
+    const cliente  = $('#filtroCliente').val().toLowerCase();
+    const pago     = $('#filtroPago').val().toLowerCase();
+    const dataDe   = $('#filtroDataDe').val();
+    const dataAte  = $('#filtroDataAte').val();
+
+    tabelaOrdensDT.clear();
+
+    const filtradas = todasOrdensCache.filter(o => {
+        if (status  && o.statusDescricao.toLowerCase() !== status)  return false;
+        if (cliente && o.clienteNome.toLowerCase()     !== cliente) return false;
+        if (pago === 'sim' && !o.pago)  return false;
+        if (pago === 'não' && o.pago)   return false;
+
+        if (dataDe || dataAte) {
+            const abertura = new Date(o.dataAbertura);
+            if (dataDe && abertura < new Date(dataDe)) return false;
+            if (dataAte && abertura > new Date(dataAte + 'T23:59:59')) return false;
+        }
+
+        return true;
+    });
+
+    filtradas.forEach(o => {
+        tabelaOrdensDT.row.add([
+            o.idOrdemServico,
+            `<a href="/Cliente/Perfil/${o.idCliente}" class="text-decoration-none fw-semibold text-danger" title="Ver perfil do cliente">${o.clienteNome}</a>`,
+            o.pago ? "Sim" : "Não",
+            o.statusDescricao,
+            formatarData(o.dataAbertura),
+            formatarData(o.previsaoEntrega),
+            GerarFuncoesPorStatus(o)
+        ]);
+    });
+
+    tabelaOrdensDT.draw();
+
+    // Badge com total filtrado
+    const total = filtradas.length;
+    const badge = total < todasOrdensCache.length
+        ? `<span class="badge bg-danger ms-2">${total} resultado${total !== 1 ? 's' : ''}</span>`
+        : '';
+    $('#badgeFiltro').remove();
+    if (badge) $('#barraFiltros').after(`<div id="badgeFiltro" class="mx-3 mb-2">${badge}</div>`);
+}
+
+function LimparFiltros() {
+    $('#filtroStatus').val('');
+    $('#filtroCliente').val('');
+    $('#filtroPago').val('');
+    $('#filtroDataDe').val('');
+    $('#filtroDataAte').val('');
+    $('#badgeFiltro').remove();
+    AplicarFiltros();
 }

@@ -30,6 +30,7 @@
                         <th>Nome</th>
                         <th>Email</th>
                         <th>Cargo</th>
+                        <th>Perfil</th>
                         <th>Status</th>
                         <th class="text-center">Acoes</th>
                     </tr>
@@ -84,6 +85,13 @@
                                 <input type="text" class="form-control" id="cargoUsuario" maxlength="100">
                             </div>
                             <div class="col-md-6">
+                                <label class="form-label" for="roleUsuario">Perfil de Acesso</label>
+                                <select class="form-select" id="roleUsuario">
+                                    <option value="Tecnico">Técnico</option>
+                                    <option value="Admin">Administrador</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label" for="confirmarSenhaUsuario">Confirmar Senha</label>
                                 <input type="password" class="form-control" id="confirmarSenhaUsuario" required>
                             </div>
@@ -129,6 +137,13 @@
                             <div class="col-md-6">
                                 <label class="form-label" for="editCargoUsuario">Cargo</label>
                                 <input type="text" class="form-control" id="editCargoUsuario" maxlength="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="editRoleUsuario">Perfil de Acesso</label>
+                                <select class="form-select" id="editRoleUsuario">
+                                    <option value="Tecnico">Técnico</option>
+                                    <option value="Admin">Administrador</option>
+                                </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="editConfirmarSenhaUsuario">Confirmar Nova Senha</label>

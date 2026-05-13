@@ -1,10 +1,12 @@
 using FastOS.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using FastOS.Application.Reports;
 
 namespace FastOS.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RelatorioController : Controller
     {
         private readonly RelatorioBusiness _relatorioBusiness;
@@ -39,6 +41,7 @@ namespace FastOS.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Tecnico")]
         [Route("Relatorio/ImprimirRelatorioOrcamento/{idOrdem}")]
         public async Task<IActionResult> ImprimirRelatorioOrcamento(int idOrdem)
         {
@@ -56,6 +59,7 @@ namespace FastOS.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Tecnico")]
         [Route("Relatorio/ImprimirRecibo/{idOrdem}")]
         public async Task<IActionResult> ImprimirRecibo(int idOrdem)
         {
@@ -73,6 +77,7 @@ namespace FastOS.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Tecnico")]
         [Route("Relatorio/EnviarReciboPorEmail/{idOrdem}")]
         public async Task<IActionResult> EnviarReciboPorEmail(int idOrdem)
         {

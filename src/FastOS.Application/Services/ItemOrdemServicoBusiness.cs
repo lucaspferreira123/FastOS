@@ -22,13 +22,13 @@ namespace FastOS.Application.Services
             try
             {
                 if (!itens.Any())
-                {
                     throw new ArgumentException("Não foi possivel salvar os itens da ordem.");
-                }
 
-                var cadastrarItens = await _repository.AlterarItensOrdemServico(itens);
-
-                return cadastrarItens;
+                return await _repository.AlterarItensOrdemServico(itens);
+            }
+            catch (InvalidOperationException)
+            {
+                throw; // estoque insuficiente — propaga com mensagem original
             }
             catch (Exception ex)
             {

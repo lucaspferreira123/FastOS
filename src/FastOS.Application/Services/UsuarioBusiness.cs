@@ -26,44 +26,43 @@ namespace FastOS.Application.Services
             var usuarioValidado = await ObterUsuarioPeloLoginESenha(email, senha);
 
             if (!usuarioValidado.Ativo)
-            {
                 throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
-            }
 
             var identityUser = await _userManager.FindByEmailAsync(usuarioValidado.Email);
             if (identityUser == null)
             {
                 identityUser = new ApplicationUser
                 {
-                    UserName = usuarioValidado.Email,
-                    Email = usuarioValidado.Email,
-                    Nome = usuarioValidado.Nome,
-                    Ativo = usuarioValidado.Ativo,
+                    UserName       = usuarioValidado.Email,
+                    Email          = usuarioValidado.Email,
+                    Nome           = usuarioValidado.Nome,
+                    Ativo          = usuarioValidado.Ativo,
                     EmailConfirmed = true
                 };
 
                 var resultadoCriacao = await _userManager.CreateAsync(identityUser);
                 if (!resultadoCriacao.Succeeded)
-                {
                     throw new InvalidOperationException("Não foi possível preparar o acesso do usuário.");
-                }
             }
             else
             {
                 identityUser.UserName = usuarioValidado.Email;
-                identityUser.Email = usuarioValidado.Email;
-                identityUser.Nome = usuarioValidado.Nome;
-                identityUser.Ativo = usuarioValidado.Ativo;
+                identityUser.Email    = usuarioValidado.Nome;
+                identityUser.Nome     = usuarioValidado.Nome;
+                identityUser.Ativo    = usuarioValidado.Ativo;
+                await _userManager.UpdateAsync(identityUser);
+            }
 
-                var resultadoAtualizacao = await _userManager.UpdateAsync(identityUser);
-                if (!resultadoAtualizacao.Succeeded)
-                {
-                    throw new InvalidOperationException("Não foi possível preparar o acesso do usuário.");
-                }
+            // Sincroniza a role do usuário
+            var role = string.IsNullOrWhiteSpace(usuarioValidado.Role) ? "Tecnico" : usuarioValidado.Role;
+            var rolesAtuais = await _userManager.GetRolesAsync(identityUser);
+            if (!rolesAtuais.Contains(role))
+            {
+                await _userManager.RemoveFromRolesAsync(identityUser, rolesAtuais);
+                await _userManager.AddToRoleAsync(identityUser, role);
             }
 
             await _signInManager.SignInAsync(identityUser, isPersistent: false);
-
             return "/Home/Index";
         }
 

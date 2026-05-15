@@ -1,6 +1,5 @@
 using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastOS.Infrastructure.Repositories;
@@ -38,7 +37,7 @@ public class ProdutoRepository
     {
         try
         {
-            return await _context.Produto.FromSqlRaw(@"SELECT * FROM Produto").ToListAsync();
+            return await _context.Produto.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -50,8 +49,9 @@ public class ProdutoRepository
     {
         try
         {
-            var param = new SqlParameter("@nome", nome);
-            return await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE NomeProduto = @nome", param).ToListAsync();
+            return await _context.Produto
+                .Where(p => p.NomeProduto == nome)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -63,8 +63,9 @@ public class ProdutoRepository
     {
         try
         {
-            var param = new SqlParameter("@idProduto", idProduto);
-            return await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE idProduto = @idProduto", param).ToListAsync();
+            return await _context.Produto
+                .Where(p => p.idProduto == idProduto)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -76,8 +77,8 @@ public class ProdutoRepository
     {
         try
         {
-            var produtoExistente = await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE idProduto = @idProduto",
-                new SqlParameter("@idProduto", dadosAtualizados.idProduto)).FirstOrDefaultAsync();
+            var produtoExistente = await _context.Produto
+                .FirstOrDefaultAsync(p => p.idProduto == dadosAtualizados.idProduto);
 
             if (produtoExistente == null)
                 throw new Exception("Produto não encontrado.");

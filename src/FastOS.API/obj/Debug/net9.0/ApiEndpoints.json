@@ -74,6 +74,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FastOS.API.Controllers.ClienteController",
+    "Method": "ObterPerfil",
+    "RelativePath": "Cliente/ObterPerfil/{idCliente}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FastOS.API.Controllers.ClienteController",
+    "Method": "Perfil",
+    "RelativePath": "Cliente/Perfil/{idCliente}",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FastOS.API.Controllers.DiagnosticoController",
     "Method": "ReceberDiagnostico",
     "RelativePath": "Diagnostico/ReceberDiagnostico",
@@ -88,6 +120,22 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Program\u002B\u003C\u003Ec",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_0",
+    "RelativePath": "health",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "FastOS.API.Controllers.ItemOrdemServicoController",
@@ -334,6 +382,38 @@
   },
   {
     "ContainingType": "FastOS.API.Controllers.RelatorioController",
+    "Method": "EnviarReciboPorEmail",
+    "RelativePath": "Relatorio/EnviarReciboPorEmail/{idOrdem}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FastOS.API.Controllers.RelatorioController",
+    "Method": "ImprimirRecibo",
+    "RelativePath": "Relatorio/ImprimirRecibo/{idOrdem}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idOrdem",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FastOS.API.Controllers.RelatorioController",
     "Method": "ImprimirRelatorioOrcamento",
     "RelativePath": "Relatorio/ImprimirRelatorioOrcamento/{idOrdem}",
     "HttpMethod": "GET",
@@ -346,6 +426,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FastOS.API.Controllers.RelatorioController",
+    "Method": "ObterDadosDashboard",
+    "RelativePath": "Relatorio/ObterDadosDashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

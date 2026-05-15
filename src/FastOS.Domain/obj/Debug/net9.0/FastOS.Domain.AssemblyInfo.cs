@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastOS.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1ecfad416d7d7b0dc7661b592931a5ef2ce5dd3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ddcfc5030905d4b24919ea5de6717be4c2e83d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastOS.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastOS.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

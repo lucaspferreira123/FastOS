@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddFastOsDependencies(builder.Configuration);
 

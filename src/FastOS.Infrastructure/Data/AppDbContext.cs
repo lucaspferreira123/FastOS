@@ -58,7 +58,17 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
             entity.Property(c => c.CNPJ).HasMaxLength(50).HasColumnType("varchar(50)");
             entity.Property(c => c.CPF).HasMaxLength(50).HasColumnType("varchar(50)");
         });
-        modelBuilder.Entity<ProdutoEntity>().ToTable("Produto");
+        modelBuilder.Entity<ProdutoEntity>(entity =>
+        {
+            entity.ToTable("Produto");
+            entity.Property(p => p.Descricao).HasMaxLength(300).HasColumnType("varchar(300)");
+            entity.Property(p => p.Codigo).HasMaxLength(20).HasColumnType("varchar(20)");
+            entity.Property(p => p.ValorCusto).HasColumnType("decimal(18,2)");
+            entity.Property(p => p.ValorVenda).HasColumnType("decimal(18,2)");
+            entity.Property(p => p.Quantidade).HasColumnType("decimal(18,2)");
+            entity.Property(p => p.QuantidadeMinimaEstoque).HasColumnType("decimal(18,2)");
+            entity.Property(p => p.Excluido).HasDefaultValue(false);
+        });
         modelBuilder.Entity<UsuarioEntity>(entity =>
         {
             entity.ToTable("Usuario");

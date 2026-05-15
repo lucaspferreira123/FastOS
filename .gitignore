@@ -4,6 +4,13 @@
 *.suo
 *.userosscache
 *.sln.docstates
-# Build folders
-bin/
-obj/
+
+# Build artifacts
+**/bin/
+**/obj/
+
+# .NET CLI local cache and telemetry
+.dotnet/
+
+# Local build logs
+*.log

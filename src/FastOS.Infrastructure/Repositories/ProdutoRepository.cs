@@ -1,6 +1,5 @@
 using FastOS.Domain.Entities;
 using FastOS.Infrastructure.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastOS.Infrastructure.Repositories;
@@ -16,7 +15,9 @@ public class ProdutoRepository
 
     public List<ProdutoEntity> GetAll()
     {
-        return _context.Produto.ToList();
+        return _context.Produto
+            .Where(p => !p.Excluido)
+            .ToList();
     }
 
     public async Task<ProdutoEntity> CadastrarProduto(ProdutoEntity produto)
@@ -38,7 +39,10 @@ public class ProdutoRepository
     {
         try
         {
-            return await _context.Produto.FromSqlRaw(@"SELECT * FROM Produto").ToListAsync();
+            return await _context.Produto
+                .Where(p => !p.Excluido)
+                .OrderBy(p => p.Descricao)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -46,16 +50,17 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<List<ProdutoEntity>> ObterProdutoPeloNome(string nome)
+    public async Task<List<ProdutoEntity>> ObterProdutoPeloCodigo(string codigo)
     {
         try
         {
-            var param = new SqlParameter("@nome", nome);
-            return await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE NomeProduto = @nome", param).ToListAsync();
+            return await _context.Produto
+                .Where(p => !p.Excluido && p.Codigo == codigo)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao obter produto pelo nome", ex);
+            throw new Exception("Erro ao obter produto pelo codigo", ex);
         }
     }
 
@@ -63,8 +68,9 @@ public class ProdutoRepository
     {
         try
         {
-            var param = new SqlParameter("@idProduto", idProduto);
-            return await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE idProduto = @idProduto", param).ToListAsync();
+            return await _context.Produto
+                .Where(p => !p.Excluido && p.Id == idProduto)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -76,17 +82,18 @@ public class ProdutoRepository
     {
         try
         {
-            var produtoExistente = await _context.Produto.FromSqlRaw("SELECT * FROM Produto WHERE idProduto = @idProduto",
-                new SqlParameter("@idProduto", dadosAtualizados.idProduto)).FirstOrDefaultAsync();
+            var produtoExistente = await _context.Produto
+                .FirstOrDefaultAsync(p => p.Id == dadosAtualizados.Id && !p.Excluido);
 
             if (produtoExistente == null)
                 throw new Exception("Produto não encontrado.");
 
-            produtoExistente.NomeProduto = dadosAtualizados.NomeProduto;
             produtoExistente.Descricao = dadosAtualizados.Descricao;
-            produtoExistente.PrecoUnitario = dadosAtualizados.PrecoUnitario;
-            produtoExistente.QuantidadeTotal = dadosAtualizados.QuantidadeTotal;
-            produtoExistente.Marca = dadosAtualizados.Marca;
+            produtoExistente.Codigo = dadosAtualizados.Codigo;
+            produtoExistente.ValorCusto = dadosAtualizados.ValorCusto;
+            produtoExistente.ValorVenda = dadosAtualizados.ValorVenda;
+            produtoExistente.Quantidade = dadosAtualizados.Quantidade;
+            produtoExistente.QuantidadeMinimaEstoque = dadosAtualizados.QuantidadeMinimaEstoque;
 
             _context.Produto.Update(produtoExistente);
             await _context.SaveChangesAsync();
@@ -102,11 +109,12 @@ public class ProdutoRepository
     {
         try
         {
-            var produto = await _context.Produto.FirstOrDefaultAsync(p => p.idProduto == idProduto);
+            var produto = await _context.Produto.FirstOrDefaultAsync(p => p.Id == idProduto && !p.Excluido);
             if (produto == null)
                 throw new Exception("Produto não encontrado.");
 
-            _context.Produto.Remove(produto);
+            produto.Excluido = true;
+            _context.Produto.Update(produto);
             await _context.SaveChangesAsync();
             return produto;
         }

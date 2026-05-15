@@ -940,29 +940,30 @@
       "ProdutoEntity": {
         "type": "object",
         "properties": {
-          "idProduto": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "nomeProduto": {
-            "type": "string",
-            "nullable": true
-          },
           "descricao": {
+            "maxLength": 300,
             "type": "string",
             "nullable": true
           },
-          "precoUnitario": {
+          "codigo": {
+            "maxLength": 20,
+            "type": "string",
+            "nullable": true
+          },
+          "quantidade": {
             "type": "number",
             "format": "double"
           },
-          "quantidadeTotal": {
-            "type": "integer",
-            "format": "int32"
+          "quantidadeMinimaEstoque": {
+            "type": "number",
+            "format": "double"
           },
-          "marca": {
-            "type": "string",
-            "nullable": true
+          "excluido": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

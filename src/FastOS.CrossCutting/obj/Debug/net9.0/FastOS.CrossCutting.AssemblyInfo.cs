@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastOS.CrossCutting")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f98ff136d34dadb5c1b5e39ad14d459c2ea2305")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97d4072994d4fda7d463b223330d185ce73988ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastOS.CrossCutting")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastOS.CrossCutting")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

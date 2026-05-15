@@ -1,5 +1,5 @@
-using FastOS.Infrastructure.Repositories;
 using FastOS.Domain.Entities;
+using FastOS.Infrastructure.Repositories;
 
 namespace FastOS.Application.Services
 {
@@ -21,17 +21,15 @@ namespace FastOS.Application.Services
                     throw new ArgumentException("Não foi possível cadastrar o produto.");
                 }
 
-                var produtosExistentes = await ObterProdutoPeloNome(produto.NomeProduto);
+                var produtosExistentes = await ObterProdutoPeloCodigo(produto.Codigo);
 
                 if (produtosExistentes == null || !produtosExistentes.Any())
                 {
                     var produtoCadastrado = await _repository.CadastrarProduto(produto);
                     return produtoCadastrado;
                 }
-                else
-                {
-                    throw new ArgumentException("Produto já cadastrado!");
-                }
+
+                throw new ArgumentException("Produto já cadastrado!");
             }
             catch (Exception ex)
             {
@@ -48,7 +46,7 @@ namespace FastOS.Application.Services
                     throw new ArgumentException("Não foi possível alterar o produto.");
                 }
 
-                var produtoAntigo = (await ObterProdutoPeloId(produto.idProduto)).FirstOrDefault();
+                var produtoAntigo = (await ObterProdutoPeloId(produto.Id)).FirstOrDefault();
 
                 if (produtoAntigo == null)
                 {
@@ -95,21 +93,21 @@ namespace FastOS.Application.Services
             }
         }
 
-        public async Task<List<ProdutoEntity>> ObterProdutoPeloNome(string nome)
+        public async Task<List<ProdutoEntity>> ObterProdutoPeloCodigo(string codigo)
         {
             try
             {
-                if (string.IsNullOrEmpty(nome))
+                if (string.IsNullOrWhiteSpace(codigo))
                 {
-                    throw new ArgumentException("Nome do produto não pode ser nulo ou vazio.");
+                    throw new ArgumentException("Código do produto não pode ser nulo ou vazio.");
                 }
 
-                var produtos = await _repository.ObterProdutoPeloNome(nome);
+                var produtos = await _repository.ObterProdutoPeloCodigo(codigo);
                 return produtos;
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter produto pelo nome", ex);
+                throw new Exception("Erro ao obter produto pelo código", ex);
             }
         }
 
@@ -127,4 +125,3 @@ namespace FastOS.Application.Services
         }
     }
 }
-

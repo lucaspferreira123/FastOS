@@ -109,9 +109,8 @@ function aplicarFiltroProduto() {
     const termo = ($('#searchInput').val() || '').trim().toLowerCase();
 
     produtosFiltrados = produtos.filter(function (produto) {
-        return (produto.nomeProduto || '').toLowerCase().includes(termo) ||
-            (produto.descricao || '').toLowerCase().includes(termo) ||
-            (produto.marca || '').toLowerCase().includes(termo);
+        return (produto.codigo || '').toLowerCase().includes(termo) ||
+            (produto.descricao || '').toLowerCase().includes(termo);
     });
 
     renderizarTabelaProdutos();
@@ -124,7 +123,7 @@ function renderizarTabelaProdutos() {
     if (produtosFiltrados.length === 0) {
         tbody.append(`
             <tr>
-                <td colspan="6" class="text-center text-muted py-4">Nenhum produto encontrado.</td>
+                <td colspan="7" class="text-center text-muted py-4">Nenhum produto encontrado.</td>
             </tr>
         `);
         $('#pagination').empty();
@@ -146,16 +145,17 @@ function renderizarTabelaProdutos() {
     pagina.forEach(function (produto) {
         tbody.append(`
             <tr>
-                <td>${escapeHtml(produto.nomeProduto)}</td>
+                <td>${escapeHtml(produto.codigo)}</td>
                 <td>${escapeHtml(produto.descricao)}</td>
-                <td>${escapeHtml(produto.marca)}</td>
-                <td>${formatarMoeda(produto.precoUnitario)}</td>
-                <td>${escapeHtml(produto.quantidadeTotal)}</td>
+                <td>${formatarDecimal(produto.valorCusto)}</td>
+                <td>${formatarDecimal(produto.valorVenda)}</td>
+                <td>${formatarDecimal(produto.quantidade)}</td>
+                <td>${formatarDecimal(produto.quantidadeMinimaEstoque)}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicaoProduto(${produto.idProduto})">
+                    <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicaoProduto(${produto.id})">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="abrirModalExclusaoProduto(${produto.idProduto}, '${escapeJs(produto.nomeProduto)}')">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="abrirModalExclusaoProduto(${produto.id}, '${escapeJs(produto.codigo)} - ${escapeJs(produto.descricao)}')">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -190,7 +190,7 @@ function irParaPaginaProduto(pagina) {
 
 function abrirModalEdicaoProduto(idProduto) {
     const produto = produtos.find(function (item) {
-        return item.idProduto === idProduto;
+        return item.id === idProduto;
     });
 
     if (!produto) {
@@ -199,12 +199,13 @@ function abrirModalEdicaoProduto(idProduto) {
     }
 
     limparFormularioEdicaoProduto();
-    $('#formEditarProduto').data('id-produto', produto.idProduto);
-    $('#editNomeProduto').val(produto.nomeProduto);
+    $('#formEditarProduto').data('id-produto', produto.id);
+    $('#editCodigoProduto').val(produto.codigo);
     $('#editDescricaoProduto').val(produto.descricao);
-    $('#editPrecoProduto').val(produto.precoUnitario);
-    $('#editQuantidadeProduto').val(produto.quantidadeTotal);
-    $('#editMarcaProduto').val(produto.marca);
+    $('#editValorCustoProduto').val(produto.valorCusto);
+    $('#editValorVendaProduto').val(produto.valorVenda);
+    $('#editQuantidadeProduto').val(produto.quantidade);
+    $('#editQuantidadeMinimaEstoqueProduto').val(produto.quantidadeMinimaEstoque);
 
     new bootstrap.Modal(document.getElementById('modalEditarProduto')).show();
 }
@@ -218,43 +219,62 @@ function abrirModalExclusaoProduto(idProduto, nomeProduto) {
 
 function obterDadosCadastroProduto() {
     return {
-        nomeProduto: $('#nomeProduto').val().trim(),
+        codigo: $('#codigoProduto').val().trim(),
         descricao: $('#descricaoProduto').val().trim(),
-        precoUnitario: parseFloat($('#precoProduto').val()) || 0,
-        quantidadeTotal: parseInt($('#quantidadeProduto').val(), 10) || 0,
-        marca: $('#marcaProduto').val().trim()
+        valorCusto: parseFloat($('#valorCustoProduto').val()) || 0,
+        valorVenda: parseFloat($('#valorVendaProduto').val()) || 0,
+        quantidade: parseFloat($('#quantidadeProduto').val()) || 0,
+        quantidadeMinimaEstoque: parseFloat($('#quantidadeMinimaEstoqueProduto').val()) || 0,
+        excluido: false
     };
 }
 
 function obterDadosEdicaoProduto() {
     return {
-        idProduto: parseInt($('#formEditarProduto').data('id-produto'), 10),
-        nomeProduto: $('#editNomeProduto').val().trim(),
+        id: parseInt($('#formEditarProduto').data('id-produto'), 10),
+        codigo: $('#editCodigoProduto').val().trim(),
         descricao: $('#editDescricaoProduto').val().trim(),
-        precoUnitario: parseFloat($('#editPrecoProduto').val()) || 0,
-        quantidadeTotal: parseInt($('#editQuantidadeProduto').val(), 10) || 0,
-        marca: $('#editMarcaProduto').val().trim()
+        valorCusto: parseFloat($('#editValorCustoProduto').val()) || 0,
+        valorVenda: parseFloat($('#editValorVendaProduto').val()) || 0,
+        quantidade: parseFloat($('#editQuantidadeProduto').val()) || 0,
+        quantidadeMinimaEstoque: parseFloat($('#editQuantidadeMinimaEstoqueProduto').val()) || 0,
+        excluido: false
     };
 }
 
 function validarProduto(produto) {
-    if (!produto.nomeProduto) {
-        Swal.fire('Atencao!', 'Preencha o nome do produto.', 'warning');
+    if (!produto.codigo) {
+        Swal.fire('Atencao!', 'Preencha o codigo do produto.', 'warning');
         return false;
     }
 
-    if (produto.precoUnitario <= 0) {
-        Swal.fire('Atencao!', 'Informe um preco valido.', 'warning');
+    if (!produto.descricao) {
+        Swal.fire('Atencao!', 'Preencha a descricao do produto.', 'warning');
         return false;
     }
 
-    if (produto.quantidadeTotal < 0) {
+    if (produto.descricao.length > 300) {
+        Swal.fire('Atencao!', 'A descricao deve ter no maximo 300 caracteres.', 'warning');
+        return false;
+    }
+
+    if (produto.quantidade < 0) {
         Swal.fire('Atencao!', 'Informe uma quantidade valida.', 'warning');
         return false;
     }
 
-    if (!produto.marca) {
-        Swal.fire('Atencao!', 'Preencha a marca do produto.', 'warning');
+    if (produto.valorCusto < 0) {
+        Swal.fire('Atencao!', 'Informe um valor de custo valido.', 'warning');
+        return false;
+    }
+
+    if (produto.valorVenda < 0) {
+        Swal.fire('Atencao!', 'Informe um valor de venda valido.', 'warning');
+        return false;
+    }
+
+    if (produto.quantidadeMinimaEstoque < 0) {
+        Swal.fire('Atencao!', 'Informe uma quantidade minima valida.', 'warning');
         return false;
     }
 
@@ -270,10 +290,10 @@ function limparFormularioEdicaoProduto() {
     $('#formEditarProduto').removeData('id-produto');
 }
 
-function formatarMoeda(valor) {
+function formatarDecimal(valor) {
     return Number(valor || 0).toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
 }
 

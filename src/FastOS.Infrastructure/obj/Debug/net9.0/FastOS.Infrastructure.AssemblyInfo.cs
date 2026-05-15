@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastOS.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97d4072994d4fda7d463b223330d185ce73988ef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+221daf2e18ce710358473513f566591543abb7e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastOS.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastOS.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,9 +1,23 @@
 # Visual Studio
 .vs/
+.vscode/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
-bin/
-obj/
-.vscode/
+
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/
+*.cache
+*.g.cs
+*.generated.cs
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache
+*.csproj.AssemblyReference.cache
+*.csproj.CoreCompileInputs.cache
+*.csproj.FileListAbsolute.txt
+*.csproj.Up2Date
+*.assets.cache
+*.sourcelink.json
+*.dswa.cache.json

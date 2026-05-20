@@ -10,6 +10,7 @@ namespace FastOS.Application.Reports
     public class RelatorioOrcamentoDocument : IDocument
     {
         public RelatorioOrcamentoDto Model { get; set; }
+
         public RelatorioOrcamentoDocument(RelatorioOrcamentoDto model)
         {
             QuestPDF.Settings.License = LicenseType.Community;
@@ -22,21 +23,19 @@ namespace FastOS.Application.Reports
             {
                 page.Margin(30);
 
-                page.Header().PaddingBottom(20).Text("OrÁamento").FontSize(24).Bold().AlignCenter();
+                page.Header().PaddingBottom(20).Text("Or√ßamento").FontSize(24).Bold().AlignCenter();
 
                 page.Content().Column(column =>
                 {
-                    column.Item().PaddingBottom(10).Text($"Numero da Ordem de ServiÁo: {Model.OrdemServico.idOrdemServico}");
+                    column.Item().PaddingBottom(10).Text($"Numero da Ordem de Servi√ßo: {Model.OrdemServico.idOrdemServico}");
                     column.Item().PaddingBottom(10).Text($"Cliente: {Model.OrdemServico.ClienteNome}");
-                    column.Item().PaddingBottom(10).Text($"Data de Abertura: {Model.OrdemServico.DataAbertura.ToString("f")}");
-                    column.Item().PaddingBottom(10).Text($"Previs„o de Entrega: {Model.OrdemServico.PrevisaoEntrega.ToString("f")}");
+                    column.Item().PaddingBottom(10).Text($"Data de Abertura: {Model.OrdemServico.DataAbertura:f}");
+                    column.Item().PaddingBottom(10).Text($"Previs√£o de Entrega: {Model.OrdemServico.PrevisaoEntrega:f}");
 
-                    column.Item().Element(HeaderCellStyleComponent).PaddingTop(10).Text($"DescriÁ„o ServiÁo");
+                    column.Item().Element(HeaderCellStyleComponent).PaddingTop(10).Text("Descri√ß√£o Servi√ßo");
+                    column.Item().PaddingBottom(10).Text(Model.OrdemServico.DescricaoServico);
 
-
-                    column.Item().PaddingBottom(10).Text($"{Model.OrdemServico.DescricaoServico}");
-                   
-                    if (Model.Itens.Any() || Model.Itens != null)
+                    if (Model.Itens != null && Model.Itens.Any())
                     {
                         column.Item().Table(table =>
                         {
@@ -50,10 +49,10 @@ namespace FastOS.Application.Reports
 
                             table.Header(header =>
                             {
-                                header.Cell().ColumnSpan(4).Element(HeaderCellStyleComponent).Text("Itens da Ordem de ServiÁo");
+                                header.Cell().ColumnSpan(4).Element(HeaderCellStyleComponent).Text("Itens da Ordem de Servi√ßo");
                                 header.Cell().ColumnSpan(1).Element(HeaderCellStyleTabela).Text("Codigo");
                                 header.Cell().ColumnSpan(1).Element(HeaderCellStyleTabela).Text("Quantidade");
-                                header.Cell().ColumnSpan(1).Element(HeaderCellStyleTabela).Text("DescriÁ„o");
+                                header.Cell().ColumnSpan(1).Element(HeaderCellStyleTabela).Text("Descri√ß√£o");
                                 header.Cell().ColumnSpan(1).Element(HeaderCellStyleTabela).Text("Valor Unitario");
                             });
 
@@ -62,69 +61,56 @@ namespace FastOS.Application.Reports
                                 table.Cell().ColumnSpan(1).Text($"{item.idProduto}");
                                 table.Cell().ColumnSpan(1).Text($"{item.quantidade}");
                                 table.Cell().ColumnSpan(1).Text($"{item.nomeProduto}");
-                                table.Cell().ColumnSpan(1).Text($"{item.valorUnitario}");
-                               
+                                table.Cell().ColumnSpan(1).Text($"R$ {item.valorUnitario:F2}");
                             }
                         });
-                    } else
+                    }
+                    else
                     {
-                        column.Item().PaddingBottom(10).Text($"N„o existem itens cadastrados nessa Ordem de ServiÁo");
+                        column.Item().PaddingBottom(10).Text("N√£o existem itens cadastrados nessa Ordem de Servi√ßo");
                     }
 
-                    column.Item().PaddingTop(10).Element(HeaderCellStyleComponent)
-      .Text("Resumo do OrÁamento");
+                    column.Item().PaddingTop(10).Element(HeaderCellStyleComponent).Text("Resumo do Or√ßamento");
 
                     column.Item().Column(col =>
                     {
-                        col.Item().PaddingBottom(6)
-                            .Text($"Valor da M„o de Obra: R$ {Model.Orcamento.MaoDeObra:F2}");
-
-                        col.Item().PaddingBottom(6)
-                            .Text($"Valor dos Materiais: R$ {Model.Orcamento.Materiais:F2}");
-
-                        col.Item().PaddingBottom(6)
-                            .Text($"Desconto: {Model.Orcamento.Desconto:F2}%");
-
-                        col.Item().PaddingBottom(6)
-                            .Text($"Taxas Extras: R$ {Model.Orcamento.TaxasExtras:F2}");
-
-                        col.Item().PaddingBottom(6)
-                            .Text($"Forma de Pagamento: {Model.Orcamento.FormaPagamento}");
-
-                        col.Item().PaddingBottom(6)
-                            .Text($"Valor Final do OrÁamento: R$ {Model.Orcamento.ValorFinal:F2}").Bold();
+                        col.Item().PaddingBottom(6).Text($"Valor da M√£o de Obra: R$ {Model.Orcamento.MaoDeObra:F2}");
+                        col.Item().PaddingBottom(6).Text($"Valor dos Materiais: R$ {Model.Orcamento.Materiais:F2}");
+                        col.Item().PaddingBottom(6).Text($"Desconto: {Model.Orcamento.Desconto:F2}%");
+                        col.Item().PaddingBottom(6).Text($"Taxas Extras: R$ {Model.Orcamento.TaxasExtras:F2}");
+                        col.Item().PaddingBottom(6).Text($"Forma de Pagamento: {Model.Orcamento.FormaPagamento}");
+                        col.Item().PaddingBottom(6).Text($"Valor Final do Or√ßamento: R$ {Model.Orcamento.ValorFinal:F2}").Bold();
                     });
 
-
-                    column.Item().Element(HeaderCellStyleComponent).PaddingTop(10).Text($"CondiÁıes comerciais");
+                    column.Item().Element(HeaderCellStyleComponent).PaddingTop(10).Text("Condi√ß√µes comerciais");
 
                     column.Item().Text(text =>
                     {
-                        text.Span("As condiÁıes abaixo fazem parte integrante do orÁamento emitido pela UTI do PC Inform·tica. Ao aprovar o serviÁo, o cliente declara ciÍncia e concord‚ncia com todos os termos apresentados.");
+                        text.Span("As condi√ß√µes abaixo fazem parte integrante do or√ßamento emitido pela UTI do PC Inform√°tica. Ao aprovar o servi√ßo, o cliente declara ci√™ncia e concord√¢ncia com todos os termos apresentados.");
                         text.EmptyLine();
 
-                        text.Span(" 1. Validade do OrÁamento: Este orÁamento È v·lido por 7 dias corridos apÛs a data de emiss„o.");
+                        text.Span(" 1. Validade do Or√ßamento: Este or√ßamento √© v√°lido por 7 dias corridos ap√≥s a data de emiss√£o.");
                         text.EmptyLine();
 
-                        text.Span(" 2. AutorizaÁ„o de ServiÁo: Somente apÛs a confirmaÁ„o do cliente iniciamos qualquer procedimento tÈcnico.");
+                        text.Span(" 2. Autoriza√ß√£o de Servi√ßo: Somente ap√≥s a confirma√ß√£o do cliente iniciamos qualquer procedimento t√©cnico.");
                         text.EmptyLine();
 
-                        text.Span(" 3. Prazos de ExecuÁ„o: O prazo informado no orÁamento È uma estimativa e poder· variar mediante complexidade ou necessidade de peÁas.");
+                        text.Span(" 3. Prazos de Execu√ß√£o: O prazo informado no or√ßamento √© uma estimativa e poder√° variar mediante complexidade ou necessidade de pe√ßas.");
                         text.EmptyLine();
 
-                        text.Span(" 4. PeÁas e Componentes: Caso sejam necess·rios componentes adicionais, estes ser„o previamente informados para aprovaÁ„o.");
+                        text.Span(" 4. Pe√ßas e Componentes: Caso sejam necess√°rios componentes adicionais, estes ser√£o previamente informados para aprova√ß√£o.");
                         text.EmptyLine();
 
-                        text.Span(" 5. Garantia: ServiÁos possuem garantia de 90 dias, exclusivamente sobre o reparo realizado, conforme previsto pelo CÛdigo de Defesa do Consumidor.");
+                        text.Span(" 5. Garantia: Servi√ßos possuem garantia de 90 dias, exclusivamente sobre o reparo realizado, conforme previsto pelo C√≥digo de Defesa do Consumidor.");
                         text.EmptyLine();
 
-                        text.Span(" 6. Cancelamento: Caso o cliente cancele o serviÁo apÛs o diagnÛstico, poder· haver cobranÁa de taxa de an·lise conforme tabela vigente.");
+                        text.Span(" 6. Cancelamento: Caso o cliente cancele o servi√ßo ap√≥s o diagn√≥stico, poder√° haver cobran√ßa de taxa de an√°lise conforme tabela vigente.");
                         text.EmptyLine();
 
-                        text.Span(" 7. Responsabilidade sobre Dados: A UTI do PC Inform·tica n„o se responsabiliza por perda de dados caso o dispositivo chegue sem backup.");
+                        text.Span(" 7. Responsabilidade sobre Dados: A UTI do PC Inform√°tica n√£o se responsabiliza por perda de dados caso o dispositivo chegue sem backup.");
                         text.EmptyLine();
 
-                        text.Span(" 8. Equipamentos N„o Retirados: ApÛs 90 dias sem retirada, o equipamento poder· ser destinado ‡ descarte ou venda para cobertura de custos, conforme legislaÁ„o aplic·vel.");
+                        text.Span(" 8. Equipamentos N√£o Retirados: Ap√≥s 90 dias sem retirada, o equipamento poder√° ser destinado √† descarte ou venda para cobertura de custos, conforme legisla√ß√£o aplic√°vel.");
                     });
                 });
 
@@ -149,4 +135,3 @@ namespace FastOS.Application.Reports
         }
     }
 }
-

@@ -588,12 +588,8 @@ function AbrirModalAlterarOrcamento(idOrdem) {
 
     LimparCamposAlterarOrcamento();
 
-    var orcamento = ObterOrcamento(idOrdem);
-
-    if (orcamento == null || orcamento == undefined) {
-        PopularValorTotalPecas(idOrdem);
-    }
-
+    ObterOrcamento(idOrdem);
+    PopularValorTotalPecas(idOrdem);
 }
 
 function ObterOrcamento(idOrdem) {
@@ -607,12 +603,18 @@ function ObterOrcamento(idOrdem) {
         success: function (response) {
             console.log(response)
 
+            if (!response) {
+                CalcularValorOrcamento();
+                return;
+            }
+
             $("#txtOrcamentoMaoDeObra").val(response.maoDeObra);
             $("#txtOrcamentoMateriais").val(response.materiais);
             $("#txtOrcamentoDesconto").val(response.desconto);
-            $("#txtOrcamentoValorFinal").val(response.formaPagamento);
-            $("#txtOrcamentoFormaPagamento").val(response.valorFinal);
+            $("#txtOrcamentoValorFinal").val(response.valorFinal);
+            $("#txtOrcamentoFormaPagamento").val(response.formaPagamento);
             $("#txtOrcamentoTaxas").val(response.taxasExtras);
+            CalcularValorOrcamento();
         },
         error: function (xhr) {
             
@@ -638,6 +640,7 @@ function PopularValorTotalPecas(idOrdem) {
             });
 
             $("#txtOrcamentoMateriais").val(totalMateriais.toFixed(2));
+            CalcularValorOrcamento();
         },
         error: function (xhr) {
             Swal.fire("Erro!", "Não foi possível salvar o orçamento.", "error");

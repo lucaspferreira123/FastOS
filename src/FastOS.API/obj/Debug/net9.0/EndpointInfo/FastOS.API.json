@@ -954,6 +954,14 @@
             "type": "string",
             "nullable": true
           },
+          "valorCusto": {
+            "type": "number",
+            "format": "double"
+          },
+          "valorVenda": {
+            "type": "number",
+            "format": "double"
+          },
           "quantidade": {
             "type": "number",
             "format": "double"

@@ -39,7 +39,9 @@ public class ProdutoRepository
     {
         try
         {
-            return await _context.Produto.ToListAsync();
+            return await _context.Produto
+                .Where(p => !p.Excluido)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -66,7 +68,7 @@ public class ProdutoRepository
         try
         {
             return await _context.Produto
-                .Where(p => p.idProduto == idProduto)
+                .Where(p => p.Id == idProduto && !p.Excluido)
                 .ToListAsync();
         }
         catch (Exception ex)

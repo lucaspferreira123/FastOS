@@ -9,6 +9,10 @@
 # .NET build artifacts
 [Bb]in/
 [Oo]bj/
+**/[Bb]in/
+**/[Oo]bj/
+.dotnet/
+.artifacts/
 *.cache
 *.g.cs
 *.generated.cs
@@ -21,3 +25,4 @@
 *.assets.cache
 *.sourcelink.json
 *.dswa.cache.json
+project.assets.json

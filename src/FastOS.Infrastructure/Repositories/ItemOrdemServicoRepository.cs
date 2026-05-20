@@ -103,18 +103,18 @@ public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoEntity>
     {
         return await _context.ItensOrdemServico
             .Join(
-                _context.Produto,
+                _context.Produto.Where(p => !p.Excluido),
                 item => item.idProduto,
-                prod => prod.idProduto,
+                prod => prod.Id,
                 (item, prod) => new ItensOrdemServicoDto
                 {
                     idOrdemServico = item.idOrdemServico,
                     idItemOrdemServico = item.idItemOrdem,
-                    idProduto = prod.idProduto,
-                    nomeProduto = prod.NomeProduto,
+                    idProduto = prod.Id,
+                    nomeProduto = $"{prod.Codigo} - {prod.Descricao}",
                     quantidade = item.Quantidade.ToString(),
                     DescricaoServico = prod.Descricao,
-                    valorUnitario = prod.PrecoUnitario
+                    valorUnitario = 0
                 })
             .Where(i => i.idOrdemServico == idOrdem)
             .ToListAsync();

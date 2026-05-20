@@ -15,7 +15,9 @@ public class ProdutoRepository
 
     public List<ProdutoEntity> GetAll()
     {
-        return _context.Produto.ToList();
+        return _context.Produto
+            .Where(p => !p.Excluido)
+            .ToList();
     }
 
     public async Task<ProdutoEntity> CadastrarProduto(ProdutoEntity produto)
@@ -45,17 +47,17 @@ public class ProdutoRepository
         }
     }
 
-    public async Task<List<ProdutoEntity>> ObterProdutoPeloNome(string nome)
+    public async Task<List<ProdutoEntity>> ObterProdutoPeloCodigo(string codigo)
     {
         try
         {
             return await _context.Produto
-                .Where(p => p.NomeProduto == nome)
+                .Where(p => !p.Excluido && p.Codigo == codigo)
                 .ToListAsync();
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao obter produto pelo nome", ex);
+            throw new Exception("Erro ao obter produto pelo codigo", ex);
         }
     }
 
@@ -78,16 +80,17 @@ public class ProdutoRepository
         try
         {
             var produtoExistente = await _context.Produto
-                .FirstOrDefaultAsync(p => p.idProduto == dadosAtualizados.idProduto);
+                .FirstOrDefaultAsync(p => p.Id == dadosAtualizados.Id && !p.Excluido);
 
             if (produtoExistente == null)
                 throw new Exception("Produto não encontrado.");
 
-            produtoExistente.NomeProduto = dadosAtualizados.NomeProduto;
             produtoExistente.Descricao = dadosAtualizados.Descricao;
-            produtoExistente.PrecoUnitario = dadosAtualizados.PrecoUnitario;
-            produtoExistente.QuantidadeTotal = dadosAtualizados.QuantidadeTotal;
-            produtoExistente.Marca = dadosAtualizados.Marca;
+            produtoExistente.Codigo = dadosAtualizados.Codigo;
+            produtoExistente.ValorCusto = dadosAtualizados.ValorCusto;
+            produtoExistente.ValorVenda = dadosAtualizados.ValorVenda;
+            produtoExistente.Quantidade = dadosAtualizados.Quantidade;
+            produtoExistente.QuantidadeMinimaEstoque = dadosAtualizados.QuantidadeMinimaEstoque;
 
             _context.Produto.Update(produtoExistente);
             await _context.SaveChangesAsync();
@@ -103,11 +106,12 @@ public class ProdutoRepository
     {
         try
         {
-            var produto = await _context.Produto.FirstOrDefaultAsync(p => p.idProduto == idProduto);
+            var produto = await _context.Produto.FirstOrDefaultAsync(p => p.Id == idProduto && !p.Excluido);
             if (produto == null)
                 throw new Exception("Produto não encontrado.");
 
-            _context.Produto.Remove(produto);
+            produto.Excluido = true;
+            _context.Produto.Update(produto);
             await _context.SaveChangesAsync();
             return produto;
         }

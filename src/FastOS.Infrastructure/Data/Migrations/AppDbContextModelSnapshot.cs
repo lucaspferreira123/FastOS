@@ -252,31 +252,40 @@ namespace FastOS.Infrastructure.Migrations
 
             modelBuilder.Entity("FastOS.Domain.Entities.ProdutoEntity", b =>
                 {
-                    b.Property<int>("idProduto")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idProduto"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
-                    b.Property<string>("Marca")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Excluido")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
-                    b.Property<string>("NomeProduto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PrecoUnitario")
+                    b.Property<decimal>("Quantidade")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("QuantidadeTotal")
-                        .HasColumnType("int");
+                    b.Property<decimal>("QuantidadeMinimaEstoque")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("idProduto");
+                    b.Property<decimal>("ValorCusto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ValorVenda")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Produto", (string)null);
                 });

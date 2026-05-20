@@ -14,6 +14,42 @@ tabelaOrdensDT = $('#tabelaOrdens').DataTable({
     }
 });
 
+function ObterInstanciaModal(seletor) {
+    const elemento = document.querySelector(seletor);
+
+    if (!elemento) {
+        return null;
+    }
+
+    if (window.bootstrap?.Modal) {
+        return bootstrap.Modal.getOrCreateInstance(elemento);
+    }
+
+    return null;
+}
+
+function AbrirModal(seletor) {
+    const modal = ObterInstanciaModal(seletor);
+
+    if (modal) {
+        modal.show();
+        return;
+    }
+
+    $(seletor).modal("show");
+}
+
+function FecharModal(seletor) {
+    const modal = ObterInstanciaModal(seletor);
+
+    if (modal) {
+        modal.hide();
+        return;
+    }
+
+    $(seletor).modal("hide");
+}
+
 function ObterOrdens() {
 
     $.ajax({
@@ -74,7 +110,7 @@ function AlterarStatus(idOrdem, idStatus) {
 
 function RequisitarItens(idOrdemServico) {
 
-    $("#modalAdicionarPecas").modal("show");
+    AbrirModal("#modalAdicionarPecas");
 
     $("#modalAdicionarPecas").attr("data-id-os", idOrdemServico);
 
@@ -349,7 +385,7 @@ function GerarFuncoesPorStatus(o) {
 
 function AbrirModalAlterarOrdem(idOrdem) {
 
-    $("#modalEditarOS").modal("show");
+    AbrirModal("#modalEditarOS");
 
     $("#modalEditarOS").data("id-ordem", idOrdem);
 
@@ -481,6 +517,8 @@ function CriarOrdem() {
             dataType: 'text',
             success: function (response) {
 
+                FecharModal("#modalCadastroOS");
+
                 let ordem = JSON.parse(response);
 
                 Swal.fire({
@@ -491,8 +529,6 @@ function CriarOrdem() {
 
                 LimparInputsCriarOrdem();
                 ObterOrdens();
-                $('#modalCadastroOS').modal('hide');
-                $('.modal-backdrop').remove();
             },
             error: function (xhr) {
                 Swal.fire("Erro!", "Não foi possível carregar as OS.", "error");
@@ -542,13 +578,13 @@ function SalvarOrcamento() {
         dataType: 'json',
         success: function (response) {
 
+            FecharModal("#modalOrcamentoOS");
+
             Swal.fire({
                 icon: "success",
                 title: "Sucesso!",
                 text: `Orcamento salvo com sucesso!`,
             });
-
-            $('#modalOrcamentoOS').modal('hide');
         },
         error: function (xhr) {
             Swal.fire("Erro!", "Não foi possível salvar o orçamento.", "error");
@@ -572,7 +608,7 @@ function CarregarJsonOrcamento(idOrdem) {
 }
 
 function AbrirModalAlterarOrcamento(idOrdem) {
-    $("#modalOrcamentoOS").modal("show");
+    AbrirModal("#modalOrcamentoOS");
     $("#modalOrcamentoOS").data("id-ordem", idOrdem);
 
     LimparCamposAlterarOrcamento();

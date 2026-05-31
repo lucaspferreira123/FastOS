@@ -12,16 +12,23 @@ public class EmailService
     private readonly string _password;
     private readonly string _remetente;
     private readonly string _nomeRemetente;
+    private readonly bool _useSsl;
 
     public EmailService(IConfiguration configuration)
     {
         var section = configuration.GetSection("Email");
-        _host          = section["Host"]          ?? throw new InvalidOperationException("Email:Host não configurado.");
-        _port          = int.Parse(section["Port"] ?? "2525");
-        _username      = section["Username"]      ?? throw new InvalidOperationException("Email:Username não configurado.");
-        _password      = section["Password"]      ?? throw new InvalidOperationException("Email:Password não configurado.");
-        _remetente     = section["Remetente"]     ?? "noreply@fastos.local";
+
+        _host = section["Host"] ?? throw new InvalidOperationException("Configuração de e-mail ausente: Email:Host.");
+
+        _port = int.TryParse(section["Port"], out var port)
+            ? port
+            : 587;
+
+        _username = section["Username"] ?? throw new InvalidOperationException("Configuração de e-mail ausente: Email:Username.");
+        _password = section["Password"] ?? throw new InvalidOperationException("Configuração de e-mail ausente: Email:Password.");
+        _remetente = section["Remetente"] ?? _username;
         _nomeRemetente = section["NomeRemetente"] ?? "FastOS";
+        _useSsl = bool.TryParse(section["UseSsl"], out var useSsl) ? useSsl : true;
     }
 
     public async Task EnviarReciboAsync(string destinatario, string nomeCliente, int idOrdem, byte[] pdfBytes)
@@ -29,11 +36,11 @@ public class EmailService
         using var client = new SmtpClient(_host, _port)
         {
             Credentials = new NetworkCredential(_username, _password),
-            EnableSsl   = true
+            EnableSsl = _useSsl
         };
 
         using var mensagem = new MailMessage();
-        mensagem.From    = new MailAddress(_remetente, _nomeRemetente);
+        mensagem.From = new MailAddress(_remetente, _nomeRemetente);
         mensagem.To.Add(new MailAddress(destinatario, nomeCliente));
         mensagem.Subject = $"Recibo de Cobrança - Ordem de Serviço Nº {idOrdem}";
         mensagem.IsBodyHtml = true;
@@ -48,7 +55,7 @@ public class EmailService
                     <p style='font-size:15px;'>Olá, <strong>{nomeCliente}</strong>!</p>
                     <p>Segue em anexo o <strong>recibo de cobrança</strong> referente à
                        <strong>Ordem de Serviço Nº {idOrdem}</strong>.</p>
-                    <p>O recibo contém o <strong>QR Code PIX</strong> para pagamento. 
+                    <p>O recibo contém o <strong>QR Code PIX</strong> para pagamento.
                        Basta escanear com o aplicativo do seu banco para realizar o pagamento.</p>
 
                     <div style='background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;margin:20px 0;'>
@@ -71,9 +78,8 @@ public class EmailService
                 </div>
             </div>";
 
-        // Anexa o PDF
-        var stream = new MemoryStream(pdfBytes);
-        var anexo  = new Attachment(stream, $"Recibo_OS_{idOrdem}.pdf", "application/pdf");
+        using var stream = new MemoryStream(pdfBytes);
+        using var anexo = new Attachment(stream, $"Recibo_OS_{idOrdem}.pdf", "application/pdf");
         mensagem.Attachments.Add(anexo);
 
         await client.SendMailAsync(mensagem);

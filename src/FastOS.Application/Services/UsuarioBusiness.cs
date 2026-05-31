@@ -26,7 +26,7 @@ namespace FastOS.Application.Services
             var usuarioValidado = await ObterUsuarioPeloLoginESenha(email, senha);
 
             if (!usuarioValidado.Ativo)
-                throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+                throw new UnauthorizedAccessException("UsuÃ¡rio ou senha incorreta.");
 
             var identityUser = await _userManager.FindByEmailAsync(usuarioValidado.Email);
             if (identityUser == null)
@@ -42,19 +42,19 @@ namespace FastOS.Application.Services
 
                 var resultadoCriacao = await _userManager.CreateAsync(identityUser);
                 if (!resultadoCriacao.Succeeded)
-                    throw new InvalidOperationException("Não foi possível preparar o acesso do usuário.");
+                    throw new InvalidOperationException("NÃ£o foi possÃ­vel preparar o acesso do usuÃ¡rio.");
             }
             else
             {
                 identityUser.UserName = usuarioValidado.Email;
-                identityUser.Email    = usuarioValidado.Nome;
+                identityUser.Email    = usuarioValidado.Email;
                 identityUser.Nome     = usuarioValidado.Nome;
                 identityUser.Ativo    = usuarioValidado.Ativo;
                 await _userManager.UpdateAsync(identityUser);
             }
 
             // Sincroniza a role do usuário
-            var role = string.IsNullOrWhiteSpace(usuarioValidado.Role) ? "Tecnico" : usuarioValidado.Role;
+            var role = NormalizarRole(usuarioValidado.Role);
             var rolesAtuais = await _userManager.GetRolesAsync(identityUser);
             if (!rolesAtuais.Contains(role))
             {
@@ -66,11 +66,33 @@ namespace FastOS.Application.Services
             return "/Home/Index";
         }
 
+        private static string NormalizarRole(string? role)
+        {
+            var normalized = (role ?? string.Empty).Trim();
+
+            if (string.IsNullOrWhiteSpace(normalized))
+                return "Tecnico";
+
+            if (normalized.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Equals("administrador", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Admin";
+            }
+
+            if (normalized.Equals("tecnico", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Equals("técnico", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Tecnico";
+            }
+
+            return normalized;
+        }
+
         public async Task<UsuarioEntity> ObterUsuarioPeloLoginESenha(string email, string senha)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
             {
-                throw new ArgumentException("Email e senha não podem ser nulos ou vazios.");
+                throw new ArgumentException("Email e senha nÃ£o podem ser nulos ou vazios.");
             }
 
             var usuarios = await _repository.ObterUsuarioPeloLoginESenha(email, senha);
@@ -78,15 +100,15 @@ namespace FastOS.Application.Services
 
             if (usuario == null)
             {
-                throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+                throw new UnauthorizedAccessException("UsuÃ¡rio ou senha incorreta.");
             }
 
             var passwordHasher = new PasswordHasher<UsuarioEntity>();
 
             var resultado = passwordHasher.VerifyHashedPassword(
                 usuario,
-                usuario.Senha, 
-                senha          
+                usuario.Senha,
+                senha
             );
 
             if (resultado == PasswordVerificationResult.Success ||
@@ -95,7 +117,7 @@ namespace FastOS.Application.Services
                 return usuario;
             }
 
-            throw new UnauthorizedAccessException("Usuário ou senha incorreta.");
+            throw new UnauthorizedAccessException("UsuÃ¡rio ou senha incorreta.");
         }
 
         public async Task<UsuarioEntity> CadastrarUsuario(UsuarioEntity usuario)
@@ -104,7 +126,7 @@ namespace FastOS.Application.Services
             {
                 if (usuario == null)
                 {
-                    throw new ArgumentException("Não foi possivel cadastrar o usuario.");
+                    throw new ArgumentException("NÃ£o foi possivel cadastrar o usuario.");
                 }
 
                 var usuarios = await ObterUsuarioPeloNome(usuario.Nome);
@@ -115,14 +137,14 @@ namespace FastOS.Application.Services
 
                     usuario.Senha = passwordHasher.HashPassword(usuario, usuario.Senha);
                     usuario.Excluido = false;
-                    
+
                     var usuariosCadastrados = await _repository.CadastrarUsuario(usuario);
 
                     return usuariosCadastrados;
                 }
                 else
                 {
-                    throw new ArgumentException("Usuario já cadastrado!");
+                    throw new ArgumentException("Usuario jÃ¡ cadastrado!");
                 }
             }
             catch (Exception ex)
@@ -157,14 +179,14 @@ namespace FastOS.Application.Services
             {
                 if (usuario == null)
                 {
-                    throw new ArgumentException("Não foi possivel alterar o usuario.");
+                    throw new ArgumentException("NÃ£o foi possivel alterar o usuario.");
                 }
 
                 var usuarioAntigo = ObterUsuarioPeloId(usuario.Id).Result.FirstOrDefault();
 
                 if (usuarioAntigo == null)
                 {
-                    throw new ArgumentException("Usuario não encontrado para alteração!");
+                    throw new ArgumentException("Usuario nÃ£o encontrado para alteraÃ§Ã£o!");
                 }
                 else
                 {
@@ -228,11 +250,9 @@ namespace FastOS.Application.Services
         {
             try
             {
-
                 var usuario = await _repository.ObterUsuarioPeloId(idUsuario);
 
                 return usuario;
-
             }
             catch (Exception ex)
             {
@@ -241,4 +261,3 @@ namespace FastOS.Application.Services
         }
     }
 }
-

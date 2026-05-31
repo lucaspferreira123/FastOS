@@ -24,8 +24,7 @@
 <div class="offcanvas offcanvas-start" tabindex="-1" id="appSidebar" aria-labelledby="appSidebarLabel">
     <div class="offcanvas-header border-bottom">
         <div>
-@*             <div class="text-uppercase text-secondary small">FastOS</div>
- *@            <h5 class="offcanvas-title text-danger fw-bold mb-0" id="appSidebarLabel">Menu</h5>
+            <h5 class="offcanvas-title text-danger fw-bold mb-0" id="appSidebarLabel">Menu</h5>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
     </div>
@@ -41,6 +40,7 @@
                aria-current="@(currentController == "cliente" ? "page" : null)">
                 Cadastro de Clientes
             </a>
+
             @if (User.IsInRole("Admin"))
             {
                 <a href="/Produto"
@@ -56,10 +56,9 @@
                 <a href="/Relatorio"
                    class="@GetItemClasses("relatorio")"
                    aria-current="@(currentController == "relatorio" ? "page" : null)">
-                    Relatórios
+                    Analitico
                 </a>
             }
         </nav>
     </div>
 </div>
-

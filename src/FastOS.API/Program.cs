@@ -31,19 +31,19 @@ using (var scope = app.Services.CreateScope())
         }
 
         var identitySeedSection = builder.Configuration.GetSection("IdentitySeed");
-        var adminEmail    = identitySeedSection["Email"]    ?? "admin@fastos.local";
+        var adminEmail = identitySeedSection["Email"] ?? "admin@fastos.local";
         var adminPassword = identitySeedSection["Password"] ?? "Admin1234";
-        var adminName     = identitySeedSection["Nome"]     ?? "Administrador";
+        var adminName = identitySeedSection["Nome"] ?? "Administrador";
 
         var user = await userManager.FindByEmailAsync(adminEmail);
         if (user == null)
         {
             var adminUser = new ApplicationUser
             {
-                UserName       = adminEmail,
-                Email          = adminEmail,
-                Nome           = adminName,
-                Ativo          = true,
+                UserName = adminEmail,
+                Email = adminEmail,
+                Nome = adminName,
+                Ativo = true,
                 EmailConfirmed = true
             };
 
@@ -65,15 +65,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseFastOsSwagger();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+app.UseExceptionHandler("/Home/Error");
+app.UseHsts();
 
 app.UseHttpsRedirection();
 app.UseRouting();

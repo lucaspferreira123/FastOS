@@ -8,11 +8,8 @@ namespace FastOS.Infrastructure.Repositories;
 
 public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoEntity>, IItemOrdemServicoRepository
 {
-    private readonly AppDbContext _context;
-
     public ItemOrdemServicoRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<List<ItemOrdemServicoEntity>> AlterarItensOrdemServico(List<ItemOrdemServicoEntity> itens)
@@ -120,7 +117,7 @@ public class ItemOrdemServicoRepository : BaseRepository<ItemOrdemServicoEntity>
                     nomeProduto = $"{prod.Codigo} - {prod.Descricao}",
                     quantidade = item.Quantidade.ToString(),
                     DescricaoServico = prod.Descricao,
-                    valorUnitario = 0
+                    valorUnitario = prod.ValorVenda
                 })
             .Where(i => i.idOrdemServico == idOrdem)
             .ToListAsync();

@@ -612,35 +612,29 @@ function AbrirModalAlterarOrcamento(idOrdem) {
     $("#modalOrcamentoOS").data("id-ordem", idOrdem);
 
     LimparCamposAlterarOrcamento();
-
-    var orcamento = ObterOrcamento(idOrdem);
-
-    if (orcamento == null || orcamento == undefined) {
-        PopularValorTotalPecas(idOrdem);
-    }
+    ObterOrcamento(idOrdem);
 
 }
 
 function ObterOrcamento(idOrdem) {
-
-
     $.ajax({
         url: `/Orcamento/ObterOrcamento/${idOrdem}`,
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (response) {
-            console.log(response)
+            if (response) {
+                $("#txtOrcamentoMaoDeObra").val(response.maoDeObra);
+                $("#txtOrcamentoDesconto").val(response.desconto);
+                $("#txtOrcamentoTaxas").val(response.taxasExtras);
+                $("#txtOrcamentoFormaPagamento").val(response.formaPagamento);
+                $("#txtOrcamentoValorFinal").val(response.valorFinal);
+            }
 
-            $("#txtOrcamentoMaoDeObra").val(response.maoDeObra);
-            $("#txtOrcamentoMateriais").val(response.materiais);
-            $("#txtOrcamentoDesconto").val(response.desconto);
-            $("#txtOrcamentoValorFinal").val(response.formaPagamento);
-            $("#txtOrcamentoFormaPagamento").val(response.valorFinal);
-            $("#txtOrcamentoTaxas").val(response.taxasExtras);
+            PopularValorTotalPecas(idOrdem);
         },
         error: function (xhr) {
-            
+            PopularValorTotalPecas(idOrdem);
         }
     });
 }
@@ -656,13 +650,14 @@ function PopularValorTotalPecas(idOrdem) {
             let totalMateriais = 0;
 
             $.each(response, function (i, item) {
-                let valor = parseFloat(item.valorUnitario) || 0;
+                let valor = parseFloat(item.valorUnitario ?? item.valorVenda ?? item.valor ?? 0) || 0;
                 let quantidade = parseFloat(item.quantidade) || 0;
 
                 totalMateriais += valor * quantidade;
             });
 
             $("#txtOrcamentoMateriais").val(totalMateriais.toFixed(2));
+            CalcularValorOrcamento();
         },
         error: function (xhr) {
             Swal.fire("Erro!", "Não foi possível salvar o orçamento.", "error");
@@ -781,7 +776,7 @@ function InicializarFiltros() {
         </div>
     </div>`;
 
-    $('.table-responsive').before(barraHtml);
+    $('#tabelaOrdens').closest('.table-responsive').before(barraHtml);
 }
 
 function PopularSelectsFiltro(ordens) {

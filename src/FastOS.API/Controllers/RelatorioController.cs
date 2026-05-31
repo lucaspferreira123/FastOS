@@ -10,14 +10,10 @@ namespace FastOS.API.Controllers
     public class RelatorioController : Controller
     {
         private readonly RelatorioBusiness _relatorioBusiness;
-        private readonly EmailService _emailService;
-        private readonly ClienteBusiness _clienteBusiness;
 
-        public RelatorioController(RelatorioBusiness relatorioBusiness, EmailService emailService, ClienteBusiness clienteBusiness)
+        public RelatorioController(RelatorioBusiness relatorioBusiness)
         {
             _relatorioBusiness = relatorioBusiness;
-            _emailService      = emailService;
-            _clienteBusiness   = clienteBusiness;
         }
 
         public IActionResult Index()
@@ -79,7 +75,10 @@ namespace FastOS.API.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin,Tecnico")]
         [Route("Relatorio/EnviarReciboPorEmail/{idOrdem}")]
-        public async Task<IActionResult> EnviarReciboPorEmail(int idOrdem)
+        public async Task<IActionResult> EnviarReciboPorEmail(
+            int idOrdem,
+            [FromServices] EmailService emailService,
+            [FromServices] ClienteBusiness clienteBusiness)
         {
             try
             {
@@ -100,7 +99,7 @@ namespace FastOS.API.Controllers
 
                 // Busca e-mail do cliente diretamente pelo idCliente da entidade OS
                 var ordemEntity = await _relatorioBusiness.ObterIdClienteDaOrdem(idOrdem);
-                var clientes    = await _clienteBusiness.ObterClientePeloId(ordemEntity);
+                var clientes    = await clienteBusiness.ObterClientePeloId(ordemEntity);
                 var cliente     = clientes?.FirstOrDefault();
 
                 if (cliente == null)
@@ -109,7 +108,7 @@ namespace FastOS.API.Controllers
                 if (string.IsNullOrWhiteSpace(cliente.Email))
                     return BadRequest("Cliente não possui e-mail cadastrado.");
 
-                await _emailService.EnviarReciboAsync(
+                await emailService.EnviarReciboAsync(
                     destinatario: cliente.Email,
                     nomeCliente:  cliente.Nome,
                     idOrdem:      idOrdem,

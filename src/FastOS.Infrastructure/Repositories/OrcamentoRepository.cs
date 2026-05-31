@@ -7,11 +7,8 @@ namespace FastOS.Infrastructure.Repositories;
 
 public class OrcamentoRepository : BaseRepository<OrcamentoEntity>, IOrcamentoRepository
 {
-    private readonly AppDbContext _context;
-
     public OrcamentoRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<OrcamentoEntity> AlterarOrcamento(OrcamentoEntity model)

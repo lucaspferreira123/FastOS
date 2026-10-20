@@ -56,6 +56,8 @@
 
                     <div class="modal-body">
 
+                        @Html.AntiForgeryToken()
+
                         <div class="row g-4">
 
                             <div class="col-md-12">
@@ -94,6 +96,11 @@
                                 <label class="form-label fw-semibold">Descrição do Problema</label>
                                 <textarea class="form-control" id="txtCriarOrdemDescricao" rows="3"></textarea>
                             </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Diagnóstico técnico do equipamento</label>
+                                <textarea class="form-control" id="txtCriarOrdemDiagnosticoTecnico" rows="4"></textarea>
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="PrepararImportacaoDiagnostico('criar')">Importar diagnóstico do computador (.json)</button>
+                            </div>
 
                         </div>
 
@@ -118,6 +125,7 @@
                 </div>
 
                 <div class="modal-body">
+                    @Html.AntiForgeryToken()
 
                     <div class="row g-4">
 
@@ -156,6 +164,11 @@
                         <div class="col-12">
                             <label class="form-label fw-semibold">Descrição do Problema</label>
                             <textarea class="form-control" id="txtEditarOrdemDescricao" rows="3"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Diagnóstico técnico do equipamento</label>
+                            <textarea class="form-control" id="txtEditarOrdemDiagnosticoTecnico" rows="4"></textarea>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="PrepararImportacaoDiagnostico('editar')">Importar diagnóstico do computador (.json)</button>
                         </div>
 
                     </div>
@@ -309,6 +322,27 @@
     </div>
 
 
+        <div class="modal fade" id="modalImportarDiagnostico" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Importar diagnóstico do computador</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button></div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div id="diagnosticImportMessage" class="d-none" role="alert"></div>
+                    <p class="text-muted">Prévia do arquivo antes de aplicar. Escolha as seções que serão anexadas ao campo separado de diagnóstico técnico. A descrição do problema, cliente, status, valores e peças não serão alterados. A OS só será salva pelo botão normal do formulário.</p>
+                    <label for="diagnosticJsonFile" class="form-label">Arquivo JSON</label><input id="diagnosticJsonFile" type="file" accept=".json,application/json" class="form-control">
+                    <div id="diagnosticPreview" class="mt-3" aria-live="polite"></div>
+                    <div id="diagnosticSections" class="mt-3" hidden>
+                        <div class="fw-semibold mb-2">Informações a aplicar</div>
+                        <div class="form-check"><input class="form-check-input diagnostic-section" type="checkbox" value="computer" id="includeDiagnosticComputer" checked><label class="form-check-label" for="includeDiagnosticComputer">Identificação e sistema operacional</label></div>
+                        <div class="form-check"><input class="form-check-input diagnostic-section" type="checkbox" value="hardware" id="includeDiagnosticHardware" checked><label class="form-check-label" for="includeDiagnosticHardware">Processador, memória, discos, gráficos e sensores</label></div>
+                        <div class="form-check"><input class="form-check-input diagnostic-section" type="checkbox" value="health" id="includeDiagnosticHealth" checked><label class="form-check-label" for="includeDiagnosticHealth">Resumo, alertas e avisos de coleta</label></div>
+                    </div>
+                    <label for="diagnosticPdfFile" class="form-label mt-3">Relatório PDF (opcional)</label><input id="diagnosticPdfFile" type="file" accept="application/pdf,.pdf" class="form-control">
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar importação</button><button id="confirmDiagnosticImport" type="button" class="btn btn-primary" disabled>Aplicar dados selecionados</button></div>
+            </div></div>
+        </div>
+
         <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:2000"></div>
 
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
@@ -323,7 +357,7 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
 
-        <script src="/js/pages/Ordem.js"></script>
+        <script src="~/js/pages/Ordem.js" asp-append-version="true"></script>
 
 </body>
 </html>

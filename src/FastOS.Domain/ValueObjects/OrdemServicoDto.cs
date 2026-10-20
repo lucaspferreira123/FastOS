@@ -9,6 +9,7 @@ public class OrdemServicoDto
     public int idStatus { get; set; }
     public bool Pago { get; set; }
     public string DescricaoServico { get; set; } = string.Empty;
+    public string DiagnosticoTecnico { get; set; } = string.Empty;
     public DateTime DataAbertura { get; set; }
     public DateTime PrevisaoEntrega { get; set; }
 }

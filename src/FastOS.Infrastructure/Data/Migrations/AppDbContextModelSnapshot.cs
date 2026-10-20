@@ -218,6 +218,25 @@ namespace FastOS.Infrastructure.Migrations
                     b.ToTable("Orcamento", (string)null);
                 });
 
+            modelBuilder.Entity("FastOS.Domain.Entities.DiagnosticImportEntity", b =>
+                {
+                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ComputerName").IsRequired().HasMaxLength(200).HasColumnType("nvarchar(200)");
+                    b.Property<string>("DiagnosticJson").IsRequired().HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("DiagnosticId").HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("GeneratedAt").HasColumnType("datetime2");
+                    b.Property<int?>("ImportedByUserId").HasColumnType("int");
+                    b.Property<DateTime>("ImportedAt").HasColumnType("datetime2");
+                    b.Property<int>("OrdemServicoId").HasColumnType("int");
+                    b.Property<string>("PdfFileName").HasMaxLength(500).HasColumnType("nvarchar(500)");
+                    b.Property<string>("Summary").IsRequired().HasMaxLength(2000).HasColumnType("nvarchar(2000)");
+                    b.HasKey("Id");
+                    b.HasIndex("DiagnosticId").IsUnique();
+                    b.HasIndex("OrdemServicoId");
+                    b.ToTable("DiagnosticImport", (string)null);
+                });
+
             modelBuilder.Entity("FastOS.Domain.Entities.OrdemServicoEntity", b =>
                 {
                     b.Property<int>("idOrdemServico")
@@ -229,9 +248,13 @@ namespace FastOS.Infrastructure.Migrations
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DescricaoServico")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                      b.Property<string>("DescricaoServico")
+                          .IsRequired()
+                          .HasColumnType("nvarchar(max)");
+
+                      b.Property<string>("DiagnosticoTecnico")
+                          .IsRequired()
+                          .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Pago")
                         .HasColumnType("bit");
@@ -564,6 +587,15 @@ namespace FastOS.Infrastructure.Migrations
                     b.Navigation("Itens");
 
                     b.Navigation("Orcamento");
+                });
+            modelBuilder.Entity("FastOS.Domain.Entities.DiagnosticImportEntity", b =>
+                {
+                    b.HasOne("FastOS.Domain.Entities.OrdemServicoEntity", "OrdemServico")
+                        .WithMany()
+                        .HasForeignKey("OrdemServicoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                    b.Navigation("OrdemServico");
                 });
 #pragma warning restore 612, 618
         }

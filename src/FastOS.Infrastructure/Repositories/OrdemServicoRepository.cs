@@ -48,6 +48,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                      StatusDescricao = s != null ? s.Descricao : string.Empty,
                      Pago = o.Pago,
                      DescricaoServico = o.DescricaoServico,
+                     DiagnosticoTecnico = o.DiagnosticoTecnico,
                      DataAbertura = o.DataAbertura,
                      PrevisaoEntrega = o.PrevisaoEntrega
                  })
@@ -76,6 +77,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                     StatusDescricao = _context.Status.Where(s => s.idStatus == o.idStatus).Select(s => s.Descricao).FirstOrDefault() ?? string.Empty,
                     Pago = o.Pago,
                     DescricaoServico = o.DescricaoServico,
+                    DiagnosticoTecnico = o.DiagnosticoTecnico,
                     DataAbertura = o.DataAbertura,
                     PrevisaoEntrega = o.PrevisaoEntrega
                 })
@@ -99,6 +101,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
             ordem.Pago = model.Pago;
             ordem.idStatus = model.idStatus;
             ordem.DescricaoServico = model.DescricaoServico;
+            ordem.DiagnosticoTecnico = model.DiagnosticoTecnico;
             ordem.DataAbertura = model.DataAbertura;
             ordem.PrevisaoEntrega = model.PrevisaoEntrega;
 

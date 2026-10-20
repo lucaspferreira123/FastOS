@@ -16,6 +16,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
     public DbSet<UsuarioEntity> Usuario { get; set; }
     public DbSet<StatusEntity> Status { get; set; }
     public DbSet<OrcamentoEntity> Orcamento { get; set; }
+    public DbSet<DiagnosticImportEntity> DiagnosticImports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,6 +30,14 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
                   .WithOne(i => i.OrdemServico)
                   .HasForeignKey(i => i.idOrdemServico)
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<DiagnosticImportEntity>(entity =>
+        {
+            entity.ToTable("DiagnosticImport");
+            entity.HasIndex(x => x.DiagnosticId).IsUnique();
+            entity.Property(x => x.DiagnosticJson).HasColumnType("nvarchar(max)");
+            entity.HasOne(x => x.OrdemServico).WithMany().HasForeignKey(x => x.OrdemServicoId).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<ItemOrdemServicoEntity>(entity =>

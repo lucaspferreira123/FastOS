@@ -50,6 +50,196 @@ function FecharModal(seletor) {
     $(seletor).modal("hide");
 }
 
+let diagnosticTarget = null;
+let diagnosticPreviewReady = false;
+let diagnosticPreviewData = null;
+let diagnosticPendingFiles = null;
+let openDiagnosticAfterEdit = false;
+let editingOrderPaidState = false;
+let diagnosticReturnModal = null;
+
+function AbrirImportacaoDiagnostico(idOrdem) {
+    openDiagnosticAfterEdit = true;
+    AbrirModalAlterarOrdem(idOrdem);
+}
+
+function PrepararImportacaoDiagnostico(target) {
+    diagnosticTarget = target;
+    diagnosticReturnModal = target === "criar" ? "#modalCadastroOS" : "#modalEditarOS";
+    const idOrdem = target === "editar" ? $("#modalEditarOS").data("id-ordem") : null;
+    AbrirSeletorDiagnostico(idOrdem);
+}
+
+function AbrirSeletorDiagnostico(idOrdem) {
+    diagnosticPreviewReady = false;
+    diagnosticPreviewData = null;
+    $("#diagnosticJsonFile, #diagnosticPdfFile").val("");
+    $("#diagnosticPreview").empty();
+    $("#diagnosticSections").prop("hidden", true);
+    $("#diagnosticImportMessage").addClass("d-none").removeClass("alert alert-warning").empty();
+    $(".diagnostic-section").prop("checked", true);
+    $("#confirmDiagnosticImport").prop("disabled", true);
+    if (idOrdem) CarregarDiagnosticosImportados(idOrdem);
+
+    const parentElement = diagnosticReturnModal ? document.querySelector(diagnosticReturnModal) : null;
+    if (!parentElement || !parentElement.classList.contains("show")) {
+        AbrirModal("#modalImportarDiagnostico");
+        return;
+    }
+
+    const parentModal = ObterInstanciaModal(diagnosticReturnModal);
+    const openImporter = () => {
+        let importerOpened = false;
+        const showImporter = () => {
+            if (importerOpened) return;
+            importerOpened = true;
+            AbrirModal("#modalImportarDiagnostico");
+        };
+        parentElement.addEventListener("hidden.bs.modal", showImporter, { once: true });
+        if (parentModal?._isTransitioning) {
+            parentElement.addEventListener("shown.bs.modal", () => parentModal.hide(), { once: true });
+        } else {
+            parentModal?.hide();
+        }
+        window.setTimeout(() => {
+            if (!parentElement.classList.contains("show")) showImporter();
+        }, 350);
+    };
+
+    if (parentModal) openImporter();
+    else AbrirModal("#modalImportarDiagnostico");
+}
+
+$(document).on("hidden.bs.modal", "#modalImportarDiagnostico", function () {
+    const returnModal = diagnosticReturnModal;
+    diagnosticReturnModal = null;
+    if (returnModal) AbrirModal(returnModal);
+});
+
+function CarregarDiagnosticosImportados(idOrdem) {
+    const host = $("#diagnosticPreview");
+    $.get(`/Diagnostico/PorOrdem/${idOrdem}`).done(items => {
+        const section = $("<section class='mt-3 border-top pt-3'><h6>Diagnósticos já associados</h6></section>");
+        if (!items.length) section.append($('<p class="text-muted mb-0">Nenhum diagnóstico importado nesta OS.</p>'));
+        items.forEach(item => {
+            const row = $("<div class='border rounded p-2 mb-2'></div>");
+            row.append($('<div class="fw-semibold"></div>').text(item.computerName || "Computador não identificado"));
+            row.append($('<div class="small text-muted"></div>').text(`${new Date(item.generatedAt).toLocaleString("pt-BR")} · ${item.summary || ""}`));
+            row.append($(`<a class="btn btn-sm btn-outline-primary mt-2 me-2" href="/Diagnostico/Detalhe/${item.id}" target="_blank" rel="noopener">Consultar dados</a>`));
+            if (item.hasPdf) row.append($(`<a class="btn btn-sm btn-outline-secondary mt-2" href="/Diagnostico/Pdf/${item.id}" target="_blank" rel="noopener">Abrir PDF</a>`));
+            section.append(row);
+        });
+        host.append(section);
+    }).fail(() => host.append($('<div class="alert alert-warning mt-2">Não foi possível carregar os diagnósticos anteriores.</div>')));
+}
+
+$(document).on("change", "#diagnosticJsonFile", function () {
+    diagnosticPreviewReady = false;
+    $("#confirmDiagnosticImport").prop("disabled", true);
+    const file = this.files?.[0];
+    if (!file) return;
+    const form = new FormData();
+    form.append("jsonFile", file);
+    form.append("__RequestVerificationToken", $("#modalImportarDiagnostico input[name='__RequestVerificationToken']").val());
+    const host = $("#diagnosticPreview");
+    host.empty().append($('<div class="text-muted">Validando o arquivo e preparando a prévia…</div>'));
+    $.ajax({ url: "/Diagnostico/Preview", method: "POST", data: form, processData: false, contentType: false })
+        .done(data => {
+            host.empty();
+            diagnosticPreviewData = data;
+            const preview = $("<div class='alert alert-info'></div>");
+            preview.append($('<h6 class="alert-heading">Prévia do diagnóstico</h6>'));
+            preview.append($('<div></div>').text(`Computador: ${data.computerName || "Não identificado"} · ID: ${data.diagnosticId}`));
+            preview.append($('<div></div>').text(`Sistema: ${data.operatingSystem || "Não informado"} · Processador: ${data.processor || "Não informado"}`));
+            preview.append($('<div></div>').text(`Coletado em: ${new Date(data.generatedAt).toLocaleString("pt-BR")} · RAM: ${data.memoryGb ?? "indisponível"} GB`));
+            const hardware = data.hardware || {};
+            const processor = hardware.processor || {};
+            const memory = hardware.memory || {};
+            const cpuTemp = processor.temperatureC == null ? "Não disponível" : `${processor.temperatureC} °C`;
+            preview.append($('<div class="small mt-2"></div>').text(`CPU: uso ${processor.usagePercent == null ? "Não disponível" : processor.usagePercent + "%"} · temperatura ${cpuTemp}`));
+            preview.append($('<div class="small"></div>').text(`Memória: ${memory.usedGb ?? "Não disponível"} GB usados · ${memory.availableGb ?? "Não disponível"} GB disponíveis`));
+            const disks = Array.isArray(hardware.disks) ? hardware.disks : [];
+            disks.forEach(d => preview.append($('<div class="small"></div>').text(`Disco ${d.name || "unidade"}: ${d.capacityGb ?? "Não disponível"} GB · livre ${d.freeGb ?? "Não disponível"} GB · saúde ${d.health || "Não disponível"}`)));
+            const graphics = Array.isArray(hardware.graphics) ? hardware.graphics : [];
+            graphics.forEach(g => preview.append($('<div class="small"></div>').text(`GPU ${g.name || "Não identificada"}: uso ${g.usagePercent == null ? "Não disponível" : g.usagePercent + "%"} · temperatura ${g.temperatureC == null ? "Não disponível" : g.temperatureC + " °C"}`)));
+            const sensors = Array.isArray(hardware.sensors) ? hardware.sensors : [];
+            sensors.slice(0, 12).forEach(s => preview.append($('<div class="small"></div>').text(`Sensor ${s.hardware} · ${s.name}: ${s.value == null ? "Não disponível" : s.value + " " + s.unit}`)));
+            preview.append($('<div class="mt-1"></div>').text(data.summary || "Resumo não informado."));
+            const targetField = diagnosticTarget === "criar" ? "#txtCriarOrdemDiagnosticoTecnico" : "#txtEditarOrdemDiagnosticoTecnico";
+            preview.append($('<div class="small mt-2"></div>').text($(targetField).val()?.trim()
+                ? "O campo de diagnóstico técnico já contém dados; a seleção será anexada ao final após confirmação."
+                : "O campo de diagnóstico técnico está vazio; a seleção será aplicada após confirmação."));
+            const alerts = Array.isArray(data.alerts) ? data.alerts : [];
+            const warnings = Array.isArray(data.warnings) ? data.warnings : [];
+            preview.append($('<div class="mt-2 fw-semibold"></div>').text(`Alertas: ${alerts.length} · Avisos de coleta: ${warnings.length}`));
+            [...alerts.map(a => a.title || a.description || "Alerta"), ...warnings].forEach(message => preview.append($('<div class="small"></div>').text(`• ${message}`)));
+            host.append(preview);
+            $("#diagnosticSections").prop("hidden", false);
+            diagnosticPreviewReady = true;
+            $("#confirmDiagnosticImport").prop("disabled", false);
+        })
+        .fail(xhr => host.empty().append($('<div class="alert alert-danger"></div>').text(xhr.responseJSON?.message || "Não foi possível validar o JSON.")));
+});
+
+$(document).on("click", "#confirmDiagnosticImport", function () {
+    if (!diagnosticPreviewReady || !diagnosticPreviewData || !diagnosticTarget) return;
+    const sections = $(".diagnostic-section:checked").map((_, item) => item.value).get();
+    if (!sections.length) {
+        $("#diagnosticImportMessage").removeClass("d-none alert-success").addClass("alert alert-warning").text("Selecione ao menos uma seção para aplicar.");
+        return;
+    }
+    const data = diagnosticPreviewData;
+    const lines = [];
+    if (sections.includes("computer")) lines.push(`Computador: ${data.computerName || "Não disponível"}`, `Sistema operacional: ${data.operatingSystem || "Não disponível"}`);
+    if (sections.includes("hardware")) {
+        const hw = data.hardware || {};
+        const cpu = hw.processor || {};
+        const ram = hw.memory || {};
+        lines.push(`Processador: ${cpu.name || "Não disponível"}; uso ${cpu.usagePercent == null ? "Não disponível" : cpu.usagePercent + "%"}; temperatura ${cpu.temperatureC == null ? "Não disponível" : cpu.temperatureC + " °C"}`);
+        lines.push(`Memória RAM: ${ram.usedGb ?? "Não disponível"} GB usados de ${ram.totalGb ?? "Não disponível"} GB; ${ram.availableGb ?? "Não disponível"} GB disponíveis`);
+        (hw.disks || []).forEach(d => lines.push(`Armazenamento ${d.name || "unidade"}: ${d.capacityGb ?? "Não disponível"} GB; livre ${d.freeGb ?? "Não disponível"} GB; saúde ${d.health || "Não disponível"}`));
+        (hw.graphics || []).forEach(g => lines.push(`Placa de vídeo: ${g.name || "Não disponível"}; uso ${g.usagePercent == null ? "Não disponível" : g.usagePercent + "%"}; temperatura ${g.temperatureC == null ? "Não disponível" : g.temperatureC + " °C"}`));
+        (hw.sensors || []).forEach(s => lines.push(`Sensor ${s.hardware} · ${s.name}: ${s.value == null ? "Não disponível" : s.value + " " + s.unit}`));
+    }
+    if (sections.includes("health")) {
+        lines.push(`Diagnóstico ${data.diagnosticId} · coletado em ${new Date(data.generatedAt).toLocaleString("pt-BR")}`, data.summary || "Resumo não informado.");
+        (data.alerts || []).forEach(a => lines.push(`Alerta: ${a.title || a.description || "Atenção"} — ${a.description || ""}`));
+        (data.warnings || []).forEach(w => lines.push(`Aviso de coleta: ${w}`));
+    }
+    const selector = diagnosticTarget === "criar" ? "#txtCriarOrdemDiagnosticoTecnico" : "#txtEditarOrdemDiagnosticoTecnico";
+    const current = $(selector).val() || "";
+    const addition = `Diagnóstico importado (${data.diagnosticId})\n${lines.join("\n")}`;
+    const proposed = current.trim() ? `${current.trim()}\n\n${addition}` : addition;
+    if (current.trim()) {
+        const result = confirm("O campo de diagnóstico técnico já contém informações. As informações selecionadas serão acrescentadas ao final, preservando o texto atual. Continuar?");
+        if (!result) return;
+    }
+    $(selector).val(proposed);
+    $(selector).siblings(".diagnostic-import-result").remove();
+    $(selector).after($('<div class="diagnostic-import-result alert alert-success mt-2 mb-0"></div>')
+        .text("Diagnóstico aplicado ao formulário. Revise a OS e salve pelo fluxo normal para persistir."));
+    diagnosticPendingFiles = { json: $("#diagnosticJsonFile")[0].files[0], pdf: $("#diagnosticPdfFile")[0].files[0] || null };
+    FecharModal("#modalImportarDiagnostico");
+});
+
+function UploadPendingDiagnostic(idOrdem) {
+    if (!diagnosticPendingFiles?.json) return;
+    const files = diagnosticPendingFiles;
+    const form = new FormData();
+    form.append("jsonFile", files.json);
+    form.append("__RequestVerificationToken", $("#modalImportarDiagnostico input[name='__RequestVerificationToken']").val() || "");
+    if (files.pdf) form.append("pdfFile", files.pdf);
+    $.ajax({ url: `/Diagnostico/Importar/${idOrdem}`, method: "POST", data: form, processData: false, contentType: false })
+        .done(() => { diagnosticPendingFiles = null; })
+        .fail(xhr => Swal.fire("OS salva; vínculo pendente", xhr.responseJSON?.message || "Não foi possível vincular o arquivo do diagnóstico. A informação técnica aplicada ao formulário foi salva.", "warning"));
+}
+
+$(document).on("hidden.bs.modal", "#modalCadastroOS", function () {
+    if (diagnosticReturnModal === "#modalCadastroOS") return;
+    diagnosticPendingFiles = null;
+    diagnosticTarget = null;
+});
+
 function ObterOrdens() {
 
     $.ajax({
@@ -64,7 +254,7 @@ function ObterOrdens() {
 
             ordens.forEach(o => {
 
-                let funcoes = GerarFuncoesPorStatus(o);
+                let funcoes = GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>`;
 
                 tabelaOrdensDT.row.add([
                     o.idOrdemServico,
@@ -400,7 +590,13 @@ function AbrirModalAlterarOrdem(idOrdem) {
             $("#txtEditarOrdemDataAbertura").val(ordem.dataAbertura?.substring(0, 10));
             $("#txtEditarOrdemPrevisaoEntrega").val(ordem.previsaoEntrega?.substring(0, 10));
             $("#selectEditarOrdemStatus").val(ordem.idStatus);
+            editingOrderPaidState = Boolean(ordem.pago);
             $("#txtEditarOrdemDescricao").val(ordem.descricaoServico);
+            $("#txtEditarOrdemDiagnosticoTecnico").val(ordem.diagnosticoTecnico || "");
+            if (openDiagnosticAfterEdit) {
+                openDiagnosticAfterEdit = false;
+                PrepararImportacaoDiagnostico("editar");
+            }
         },
         error: function () {
             console.error("Erro ao obter a ordem.");
@@ -424,6 +620,9 @@ function AlterarOrdem() {
             contentType: 'application/json; charset=utf-8',
             dataType: 'text',
             success: function (response) {
+
+                UploadPendingDiagnostic(idOrdem);
+                FecharModal("#modalEditarOS");
 
                 Swal.fire({
                     icon: "success",
@@ -449,9 +648,10 @@ function CarregarJsonOrdemEditar(idOrdem) {
     let ordemJson = {
         idOrdemServico: idOrdem,
         idCliente: parseInt(cliente),
-        pago: false,
+        pago: editingOrderPaidState,
         idStatus: parseInt(status),
         descricaoServico: descricao,
+        diagnosticoTecnico: $('#txtEditarOrdemDiagnosticoTecnico').val() || "",
         dataAbertura: dataAbertura,
         previsaoEntrega: previsaoEntrega,
     };
@@ -465,6 +665,7 @@ function LimparCamposAlterarOrdem() {
     $("#txtEditarOrdemPrevisaoEntrega").val("");
     $("#selectEditarOrdemStatus").val("");
     $("#txtEditarOrdemDescricao").val("");
+    $("#txtEditarOrdemDiagnosticoTecnico").val("");
 }
 
 function formatarData(data) {
@@ -520,6 +721,7 @@ function CriarOrdem() {
                 FecharModal("#modalCadastroOS");
 
                 let ordem = JSON.parse(response);
+                UploadPendingDiagnostic(ordem.id);
 
                 Swal.fire({
                     icon: "success",
@@ -550,6 +752,7 @@ function CarregarJsonOrdem() {
         pago: false,
         idStatus: parseInt(status),
         descricaoServico: descricao,
+        diagnosticoTecnico: $('#txtCriarOrdemDiagnosticoTecnico').val() || "",
         dataAbertura: dataAbertura,
         previsaoEntrega: previsaoEntrega,
     };
@@ -562,6 +765,7 @@ function LimparInputsCriarOrdem() {
     $('#txtCriarOrdemPrevisaoEntrega').val('');
     $('#txtCriarOrdemDataAbertura').val('');
     $('#txtCriarOrdemDescricao').val('');
+    $('#txtCriarOrdemDiagnosticoTecnico').val('');
     $('#selectCriarOrdemStatus').val('');
 }
 
@@ -832,7 +1036,7 @@ function AplicarFiltros() {
             o.statusDescricao,
             formatarData(o.dataAbertura),
             formatarData(o.previsaoEntrega),
-            GerarFuncoesPorStatus(o)
+            GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>`
         ]);
     });
 

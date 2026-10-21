@@ -3,6 +3,7 @@ using FastOS.Domain.Entities;
 using FastOS.Domain.Interfaces;
 using FastOS.Infrastructure.Data;
 using FastOS.Infrastructure.Repositories;
+using FastOS.Infrastructure.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,7 @@ public static class DependencyInjection
         services.AddScoped<ClienteRepository>();
         services.AddScoped<ProdutoRepository>();
         services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
+        services.AddSingleton<IRelatorioPdfStorage, FileSystemRelatorioPdfStorage>();
         services.AddScoped<StatusRepository>();
         services.AddScoped<IItemOrdemServicoRepository, ItemOrdemServicoRepository>();
         services.AddScoped<IOrcamentoRepository, OrcamentoRepository>();

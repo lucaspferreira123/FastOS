@@ -73,7 +73,7 @@ function PrepararImportacaoDiagnostico(target) {
 function AbrirSeletorDiagnostico(idOrdem) {
     diagnosticPreviewReady = false;
     diagnosticPreviewData = null;
-    $("#diagnosticJsonFile, #diagnosticPdfFile").val("");
+    $("#diagnosticJsonFile").val("");
     $("#diagnosticPreview").empty();
     $("#diagnosticSections").prop("hidden", true);
     $("#diagnosticImportMessage").addClass("d-none").removeClass("alert alert-warning").empty();
@@ -88,25 +88,11 @@ function AbrirSeletorDiagnostico(idOrdem) {
     }
 
     const parentModal = ObterInstanciaModal(diagnosticReturnModal);
-    const openImporter = () => {
-        let importerOpened = false;
-        const showImporter = () => {
-            if (importerOpened) return;
-            importerOpened = true;
-            AbrirModal("#modalImportarDiagnostico");
-        };
-        parentElement.addEventListener("hidden.bs.modal", showImporter, { once: true });
-        if (parentModal?._isTransitioning) {
-            parentElement.addEventListener("shown.bs.modal", () => parentModal.hide(), { once: true });
-        } else {
-            parentModal?.hide();
-        }
-        window.setTimeout(() => {
-            if (!parentElement.classList.contains("show")) showImporter();
-        }, 350);
-    };
-
-    if (parentModal) openImporter();
+    if (parentModal) {
+        // Aguarda o evento real do Bootstrap e mantém os campos do formulário no DOM.
+        parentElement.addEventListener("hidden.bs.modal", () => AbrirModal("#modalImportarDiagnostico"), { once: true });
+        parentModal.hide();
+    }
     else AbrirModal("#modalImportarDiagnostico");
 }
 
@@ -218,7 +204,7 @@ $(document).on("click", "#confirmDiagnosticImport", function () {
     $(selector).siblings(".diagnostic-import-result").remove();
     $(selector).after($('<div class="diagnostic-import-result alert alert-success mt-2 mb-0"></div>')
         .text("Diagnóstico aplicado ao formulário. Revise a OS e salve pelo fluxo normal para persistir."));
-    diagnosticPendingFiles = { json: $("#diagnosticJsonFile")[0].files[0], pdf: $("#diagnosticPdfFile")[0].files[0] || null };
+    diagnosticPendingFiles = { json: $("#diagnosticJsonFile")[0].files[0] };
     FecharModal("#modalImportarDiagnostico");
 });
 
@@ -228,11 +214,15 @@ function UploadPendingDiagnostic(idOrdem) {
     const form = new FormData();
     form.append("jsonFile", files.json);
     form.append("__RequestVerificationToken", $("#modalImportarDiagnostico input[name='__RequestVerificationToken']").val() || "");
-    if (files.pdf) form.append("pdfFile", files.pdf);
     $.ajax({ url: `/Diagnostico/Importar/${idOrdem}`, method: "POST", data: form, processData: false, contentType: false })
         .done(() => { diagnosticPendingFiles = null; })
         .fail(xhr => Swal.fire("OS salva; vínculo pendente", xhr.responseJSON?.message || "Não foi possível vincular o arquivo do diagnóstico. A informação técnica aplicada ao formulário foi salva.", "warning"));
 }
+
+$(document).on("change", "#relatorioPdfOrdem", function () {
+    const file = this.files?.[0];
+    $("#relatorioPdfSelecionado").text(file ? `Relatório selecionado: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)` : "Nenhum relatório selecionado.");
+});
 
 $(document).on("hidden.bs.modal", "#modalCadastroOS", function () {
     if (diagnosticReturnModal === "#modalCadastroOS") return;
@@ -254,7 +244,7 @@ function ObterOrdens() {
 
             ordens.forEach(o => {
 
-                let funcoes = GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>`;
+                let funcoes = GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>` + AcaoRelatorioPdf(o);
 
                 tabelaOrdensDT.row.add([
                     o.idOrdemServico,
@@ -710,17 +700,23 @@ function CriarOrdem() {
     let ordemValidada = ValidarCamposCriarOrdem(ordemBody);
 
     if (ordemValidada) {
+        const form = new FormData();
+        Object.entries(ordemBody).forEach(([key, value]) => form.append(key, value ?? ""));
+        const pdfFile = $("#relatorioPdfOrdem")[0].files?.[0];
+        if (pdfFile) form.append("pdfFile", pdfFile);
+
         $.ajax({
             url: '/Ordem/CadastrarOrdem',
             type: 'POST',
-            data: JSON.stringify(ordemBody),
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'text',
+            data: form,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
             success: function (response) {
 
                 FecharModal("#modalCadastroOS");
 
-                let ordem = JSON.parse(response);
+                let ordem = response;
                 UploadPendingDiagnostic(ordem.id);
 
                 Swal.fire({
@@ -733,7 +729,7 @@ function CriarOrdem() {
                 ObterOrdens();
             },
             error: function (xhr) {
-                Swal.fire("Erro!", "Não foi possível carregar as OS.", "error");
+                Swal.fire("Erro!", xhr.responseJSON?.message || "Não foi possível salvar a OS e o relatório.", "error");
             }
         });
     }
@@ -767,6 +763,8 @@ function LimparInputsCriarOrdem() {
     $('#txtCriarOrdemDescricao').val('');
     $('#txtCriarOrdemDiagnosticoTecnico').val('');
     $('#selectCriarOrdemStatus').val('');
+    $('#relatorioPdfOrdem').val('');
+    $('#relatorioPdfSelecionado').text('Nenhum relatório selecionado.');
 }
 
 function SalvarOrcamento() {
@@ -818,6 +816,12 @@ function AbrirModalAlterarOrcamento(idOrdem) {
     LimparCamposAlterarOrcamento();
     ObterOrcamento(idOrdem);
 
+}
+
+function AcaoRelatorioPdf(ordem) {
+    return ordem.possuiRelatorioPdf
+        ? ` <a class="btn btn-outline-secondary btn-sm" title="Abrir relatório PDF" href="/Ordem/RelatorioPdf/${ordem.idOrdemServico}" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf"></i> PDF</a>`
+        : ` <span class="small text-muted" title="Esta ordem não possui relatório PDF">Sem relatório</span>`;
 }
 
 function ObterOrcamento(idOrdem) {
@@ -1036,7 +1040,7 @@ function AplicarFiltros() {
             o.statusDescricao,
             formatarData(o.dataAbertura),
             formatarData(o.previsaoEntrega),
-            GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>`
+            GerarFuncoesPorStatus(o) + ` <button class="btn btn-outline-primary btn-sm" title="Importar diagnóstico" onclick="AbrirImportacaoDiagnostico(${o.idOrdemServico})"><i class="bi bi-pc-display"></i></button>` + AcaoRelatorioPdf(o)
         ]);
     });
 

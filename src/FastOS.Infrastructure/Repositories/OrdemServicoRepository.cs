@@ -49,6 +49,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                      Pago = o.Pago,
                      DescricaoServico = o.DescricaoServico,
                      DiagnosticoTecnico = o.DiagnosticoTecnico,
+                     PossuiRelatorioPdf = o.RelatorioPdfFileName != null,
                      DataAbertura = o.DataAbertura,
                      PrevisaoEntrega = o.PrevisaoEntrega
                  })
@@ -78,6 +79,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                     Pago = o.Pago,
                     DescricaoServico = o.DescricaoServico,
                     DiagnosticoTecnico = o.DiagnosticoTecnico,
+                    PossuiRelatorioPdf = o.RelatorioPdfFileName != null,
                     DataAbertura = o.DataAbertura,
                     PrevisaoEntrega = o.PrevisaoEntrega
                 })

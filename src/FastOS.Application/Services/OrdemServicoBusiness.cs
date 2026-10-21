@@ -8,13 +8,15 @@ namespace FastOS.Application.Services
     {
         private static readonly SemaphoreSlim CadastrarOrdemMutex = new(1, 1);
         private readonly IOrdemServicoRepository _repository;
+        private readonly IRelatorioPdfStorage _relatorioStorage;
 
-        public OrdemServicoBusiness(IOrdemServicoRepository repository)
+        public OrdemServicoBusiness(IOrdemServicoRepository repository, IRelatorioPdfStorage relatorioStorage)
         {
             _repository = repository;
+            _relatorioStorage = relatorioStorage;
         }
 
-        public async Task<OrdemServicoEntity> CadastrarOrdem(OrdemServicoEntity ordem)
+        public async Task<OrdemServicoEntity> CadastrarOrdem(OrdemServicoEntity ordem, Stream? relatorioPdf = null, CancellationToken cancellationToken = default)
         {
             await CadastrarOrdemMutex.WaitAsync();
             try
@@ -24,9 +26,23 @@ namespace FastOS.Application.Services
                     throw new ArgumentException("Nao foi possivel cadastrar a ordem.");
                 }
 
-                var ordemCadastrada = await _repository.CadastrarOrdem(ordem);
+                string? nomeArquivo = null;
+                try
+                {
+                    if (relatorioPdf is not null)
+                    {
+                        nomeArquivo = await _relatorioStorage.SalvarAsync(relatorioPdf, cancellationToken);
+                        ordem.RelatorioPdfFileName = nomeArquivo;
+                    }
 
-                return ordemCadastrada;
+                    return await _repository.CadastrarOrdem(ordem);
+                }
+                catch
+                {
+                    if (nomeArquivo is not null)
+                        await _relatorioStorage.RemoverAsync(nomeArquivo, CancellationToken.None);
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -36,6 +52,13 @@ namespace FastOS.Application.Services
             {
                 CadastrarOrdemMutex.Release();
             }
+        }
+
+        public async Task<Stream?> ObterRelatorioPdf(int idOrdem, CancellationToken cancellationToken = default)
+        {
+            var ordem = await _repository.GetByIdAsync(idOrdem);
+            if (ordem is null || string.IsNullOrWhiteSpace(ordem.RelatorioPdfFileName)) return null;
+            return await _relatorioStorage.AbrirAsync(ordem.RelatorioPdfFileName, cancellationToken);
         }
 
         public async Task<List<OrdemServicoDto>> ObterTodasOrdens()

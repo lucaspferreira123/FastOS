@@ -70,6 +70,32 @@ public sealed class DiagnosticImportValidatorTests
         Assert.Contains("hardware.disks", result.Error);
     }
 
+    [Theory]
+    [InlineData("{ \"name\": \"GPU\" }")]
+    [InlineData("{ \"name\": \"GPU\", \"driver\": \"Driver 1\", \"vramGb\": 8, \"usagePercent\": null, \"temperatureC\": null }")]
+    [InlineData("{ \"name\": \"GPU\", \"driver\": \"Driver 1\", \"vramGb\": null, \"usagePercent\": 34.5, \"temperatureC\": 47 }")]
+    public void AcceptsGraphicsItemsFromDiagnosticExporter(string graphicsItem)
+    {
+        var json = ValidJson().Replace("\"graphics\": []", $"\"graphics\": [{graphicsItem}]", StringComparison.Ordinal);
+
+        var result = DiagnosticImportValidator.Validate(json);
+
+        Assert.True(result.IsValid, result.Error);
+    }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("\"GPU\"")]
+    public void RejectsMalformedGraphicsItems(string graphicsItem)
+    {
+        var json = ValidJson().Replace("\"graphics\": []", $"\"graphics\": [{graphicsItem}]", StringComparison.Ordinal);
+
+        var result = DiagnosticImportValidator.Validate(json);
+
+        Assert.False(result.IsValid);
+        Assert.Contains("hardware.graphics", result.Error);
+    }
+
     [Fact]
     public void RejectsMalformedAlertsAndAcceptsUnavailableOptionalSensorValues()
     {

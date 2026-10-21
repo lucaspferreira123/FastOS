@@ -10,6 +10,7 @@ public class OrdemServicoDto
     public bool Pago { get; set; }
     public string DescricaoServico { get; set; } = string.Empty;
     public string DiagnosticoTecnico { get; set; } = string.Empty;
+    public bool PossuiRelatorioPdf { get; set; }
     public DateTime DataAbertura { get; set; }
     public DateTime PrevisaoEntrega { get; set; }
 }

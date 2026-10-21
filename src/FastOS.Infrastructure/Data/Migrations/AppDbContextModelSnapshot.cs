@@ -252,9 +252,13 @@ namespace FastOS.Infrastructure.Migrations
                           .IsRequired()
                           .HasColumnType("nvarchar(max)");
 
-                      b.Property<string>("DiagnosticoTecnico")
-                          .IsRequired()
-                          .HasColumnType("nvarchar(max)");
+                    b.Property<string>("DiagnosticoTecnico")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RelatorioPdfFileName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Pago")
                         .HasColumnType("bit");

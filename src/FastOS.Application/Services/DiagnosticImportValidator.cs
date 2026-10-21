@@ -56,7 +56,10 @@ public static class DiagnosticImportValidator
                     !TryNullableNumber(disk, "freeGb", 0, 1_000_000) || !TryNullableNumber(disk, "usedPercent", 0, 100))
                     return Invalid("hardware.disks contém um item inválido.");
             foreach (var gpu in hardware.GetProperty("graphics").EnumerateArray())
-                if (gpu.ValueKind != JsonValueKind.Object || !TryString(gpu, "name", 300) || !TryNullableNumber(gpu, "usagePercent", 0, 100) || !TryNullableNumber(gpu, "temperatureC", -50, 250))
+                // GPU metadata differs by provider and driver (for example driver/vramGb
+                // may be present only for the WMI fallback). Preserve the complete object;
+                // the preview reads known fields defensively and the raw JSON is retained.
+                if (gpu.ValueKind != JsonValueKind.Object)
                     return Invalid("hardware.graphics contém um item inválido.");
             foreach (var sensor in hardware.GetProperty("sensors").EnumerateArray())
                 if (sensor.ValueKind != JsonValueKind.Object || !TryString(sensor, "hardware", 300) || !TryString(sensor, "name", 300) ||

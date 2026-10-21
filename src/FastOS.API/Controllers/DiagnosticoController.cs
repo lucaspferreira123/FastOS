@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using FastOS.Application.Services;
 using FastOS.Domain.Entities;
+using FastOS.Domain.Interfaces;
 using FastOS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,12 @@ public sealed class DiagnosticoController : Controller
     private const long MaxJsonBytes = 10 * 1024 * 1024;
     private const long MaxPdfBytes = 20 * 1024 * 1024;
     private readonly AppDbContext _db;
+    private readonly IRelatorioPdfStorage _pdfStorage;
     private readonly IWebHostEnvironment _environment;
     private readonly ILogger<DiagnosticoController> _logger;
 
-    public DiagnosticoController(AppDbContext db, IWebHostEnvironment environment, ILogger<DiagnosticoController> logger)
-    { _db = db; _environment = environment; _logger = logger; }
+    public DiagnosticoController(AppDbContext db, IRelatorioPdfStorage pdfStorage, IWebHostEnvironment environment, ILogger<DiagnosticoController> logger)
+    { _db = db; _pdfStorage = pdfStorage; _environment = environment; _logger = logger; }
 
     [HttpPost("Preview")]
     [ValidateAntiForgeryToken]
@@ -71,17 +73,12 @@ public sealed class DiagnosticoController : Controller
             return Conflict(new { message = "Este diagnosticId já foi importado." });
 
         string? storedPdf = null;
-        string? absolutePdf = null;
         try
         {
             if (pdfFile is not null)
             {
-                var folder = Path.Combine(_environment.ContentRootPath, "App_Data", "diagnostics");
-                Directory.CreateDirectory(folder);
-                storedPdf = $"{Guid.NewGuid():N}.pdf";
-                absolutePdf = Path.Combine(folder, storedPdf);
-                await using var target = System.IO.File.Create(absolutePdf);
-                await pdfFile.CopyToAsync(target, token);
+                await using var pdfStream = pdfFile.OpenReadStream();
+                storedPdf = await _pdfStorage.SalvarAsync(pdfStream, token);
             }
 
             var entity = new DiagnosticImportEntity
@@ -102,7 +99,7 @@ public sealed class DiagnosticoController : Controller
         }
         catch (DbUpdateException ex)
         {
-            if (absolutePdf is not null && System.IO.File.Exists(absolutePdf)) System.IO.File.Delete(absolutePdf);
+            if (storedPdf is not null) await _pdfStorage.RemoverAsync(storedPdf, CancellationToken.None);
             _logger.LogWarning(ex, "Duplicidade ou falha de persistência ao importar diagnóstico {DiagnosticId}", id);
             if (await _db.DiagnosticImports.AnyAsync(x => x.DiagnosticId == id, token))
                 return Conflict(new { message = "Este diagnosticId já foi importado." });
@@ -110,7 +107,7 @@ public sealed class DiagnosticoController : Controller
         }
         catch (Exception ex)
         {
-            if (absolutePdf is not null && System.IO.File.Exists(absolutePdf)) System.IO.File.Delete(absolutePdf);
+            if (storedPdf is not null) await _pdfStorage.RemoverAsync(storedPdf, CancellationToken.None);
             _logger.LogError(ex, "Falha ao importar diagnóstico {DiagnosticId}", id);
             return StatusCode(500, new { message = "Não foi possível concluir a importação." });
         }
@@ -130,10 +127,14 @@ public sealed class DiagnosticoController : Controller
         var import = await _db.DiagnosticImports.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, token);
         if (import is null) return NotFound();
         if (string.IsNullOrWhiteSpace(import.PdfFileName) || Path.GetFileName(import.PdfFileName) != import.PdfFileName) return NotFound();
-        var folder = Path.GetFullPath(Path.Combine(_environment.ContentRootPath, "App_Data", "diagnostics"));
-        var path = Path.GetFullPath(Path.Combine(folder, import.PdfFileName));
-        if (!path.StartsWith(folder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) || !System.IO.File.Exists(path)) return NotFound();
-        return PhysicalFile(path, "application/pdf", $"diagnostico-{import.DiagnosticId:N}.pdf");
+        var stream = await _pdfStorage.AbrirAsync(import.PdfFileName, token);
+        if (stream is not null) return File(stream, "application/pdf", $"diagnostico-{import.DiagnosticId:N}.pdf", enableRangeProcessing: true);
+
+        // Importações anteriores à configuração comum guardavam PDFs neste diretório.
+        var legacyFolder = Path.GetFullPath(Path.Combine(_environment.ContentRootPath, "App_Data", "diagnostics"));
+        var legacyPath = Path.GetFullPath(Path.Combine(legacyFolder, import.PdfFileName));
+        if (!legacyPath.StartsWith(legacyFolder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) || !System.IO.File.Exists(legacyPath)) return NotFound();
+        return PhysicalFile(legacyPath, "application/pdf", $"diagnostico-{import.DiagnosticId:N}.pdf", enableRangeProcessing: true);
     }
 
     [HttpGet("Detalhe/{id:int}")]

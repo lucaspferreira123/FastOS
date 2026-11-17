@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Relatório de Tolerância a Falhas — FastOS</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 13px;
+            color: #222;
+            background: #fff;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Capa */
+        .capa {
+            text-align: center;
+            padding: 60px 0 40px;
+            border-bottom: 3px solid #c0392b;
+            margin-bottom: 40px;
+        }
+        .capa .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: #c0392b;
+            letter-spacing: 2px;
+        }
+        .capa .subtitulo {
+            font-size: 13px;
+            color: #777;
+            margin-top: 4px;
+        }
+        .capa h1 {
+            font-size: 22px;
+            margin: 30px 0 8px;
+            color: #1a1a1a;
+        }
+        .capa h2 {
+            font-size: 15px;
+            font-weight: 400;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .capa .meta {
+            display: inline-block;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 14px 30px;
+            font-size: 12px;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        /* Seções */
+        h3 {
+            font-size: 15px;
+            color: #c0392b;
+            border-left: 4px solid #c0392b;
+            padding-left: 10px;
+            margin: 32px 0 12px;
+        }
+        h4 {
+            font-size: 13px;
+            color: #333;
+            margin: 18px 0 6px;
+        }
+        p { line-height: 1.7; margin-bottom: 8px; color: #333; }
+        ul { padding-left: 20px; margin-bottom: 10px; }
+        li { line-height: 1.8; }
+
+        /* Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 12px;
+        }
+        th {
+            background: #c0392b;
+            color: #fff;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:nth-child(even) td { background: #fafafa; }
+
+        /* Caixas de evidência */
+        .evidencia-box {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 12px 0;
+            background: #fafafa;
+            min-height: 120px;
+            text-align: center;
+            color: #aaa;
+            font-size: 12px;
+        }
+        .evidencia-box .label {
+            font-weight: bold;
+            color: #888;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .badge-ok  { background: #d5f5e3; color: #1e8449; }
+        .badge-err { background: #fadbd8; color: #c0392b; }
+        .badge-inf { background: #d6eaf8; color: #1a5276; }
+
+        /* Código */
+        code {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        /* Linha divisória */
+        hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+
+        /* Rodapé */
+        .rodape {
+            margin-top: 50px;
+            padding-top: 16px;
+            border-top: 2px solid #c0392b;
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* Print */
+        @media print {
+            body { padding: 20px; }
+            .no-print { display: none; }
+            h3 { page-break-before: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── CAPA ─────────────────────────────────────────────────────────── -->
+<div class="capa">
+    <div class="logo">FastOS</div>
+    <div class="subtitulo">Sistema de Gerenciamento de Ordens de Serviço</div>
+
+    <h1>Relatório de Tolerância a Falhas</h1>
+    <h2>Evidências de Teste — Detecção de Queda e Reconexão Automática do Cliente</h2>
+
+    <div class="meta">
+        <strong>Curso:</strong> &nbsp;[Nome do Curso]<br/>
+        <strong>Instituição:</strong> &nbsp;[Nome da Instituição]<br/>
+        <strong>Alunos:</strong><br/>
+        &nbsp;&nbsp;Lucas Panhossi Ferreira — RA: 230023612<br/>
+        &nbsp;&nbsp;Lucas da Silva Pinto — RA: 230023407<br/>
+        &nbsp;&nbsp;Luis Felipe Gomes Sobreira — RA: 230023822<br/>
+        <strong>Data:</strong> &nbsp;07 de Maio de 2026
+    </div>
+</div>
+
+<!-- ── 1. INTRODUÇÃO ─────────────────────────────────────────────────── -->
+<h3>1. Introdução</h3>
+<p>
+    Este relatório documenta a implementação e os testes de <strong>tolerância a falhas</strong>
+    no sistema <strong>FastOS</strong>, especificamente o mecanismo de detecção de queda do
+    servidor e reconexão automática por parte do cliente.
+</p>
+<p>
+    O objetivo é demonstrar que o sistema é capaz de identificar quando o servidor se torna
+    indisponível e notificar o usuário em tempo real, realizando tentativas automáticas de
+    reconexão sem necessidade de intervenção manual do usuário.
+</p>
+
+<!-- ── 2. DESCRIÇÃO DA SOLUÇÃO ──────────────────────────────────────── -->
+<h3>2. Descrição da Solução Implementada</h3>
+
+<h4>2.1 Componentes</h4>
+<table>
+    <tr>
+        <th>Componente</th>
+        <th>Localização</th>
+        <th>Responsabilidade</th>
+    </tr>
+    <tr>
+        <td>Endpoint <code>/health</code></td>
+        <td><code>Program.cs</code></td>
+        <td>Retorna status 200 OK quando o servidor está online</td>
+    </tr>
+    <tr>
+        <td>Script <code>reconnect.js</code></td>
+        <td><code>wwwroot/js/reconnect.js</code></td>
+        <td>Polling periódico, detecção de falha e exibição do banner</td>
+    </tr>
+    <tr>
+        <td>Partial <code>_SidebarMenu.cshtml</code></td>
+        <td><code>Views/Shared/</code></td>
+        <td>Inclui o script em todas as páginas autenticadas</td>
+    </tr>
+</table>
+
+<h4>2.2 Fluxo de Funcionamento</h4>
+<ul>
+    <li>A cada <strong>3 segundos</strong>, o frontend realiza uma requisição <code>GET /health</code></li>
+    <li>Se o servidor responder com <strong>200 OK</strong> → sistema operando normalmente, nenhuma ação</li>
+    <li>Se a requisição <strong>falhar</strong> → banner vermelho é exibido com contador de tentativas</li>
+    <li>O intervalo entre tentativas dobra a cada falha (<strong>backoff exponencial</strong>): 3s → 6s → 12s → 24s → máx. 30s</li>
+    <li>Quando o servidor <strong>voltar</strong> → banner verde exibido e página recarregada automaticamente em 2 segundos</li>
+</ul>
+
+<h4>2.3 Código do Endpoint de Health Check</h4>
+<pre>// Program.cs
+app.MapGet("/health", () => Results.Ok(new {
+    status = "online",
+    timestamp = DateTime.Now
+})).AllowAnonymous();</pre>
+
+<h4>2.4 Estratégia de Backoff Exponencial</h4>
+<table>
+    <tr>
+        <th>Tentativa</th>
+        <th>Intervalo</th>
+        <th>Tempo acumulado</th>
+    </tr>
+    <tr><td>1ª</td><td>3 segundos</td><td>3s</td></tr>
+    <tr><td>2ª</td><td>6 segundos</td><td>9s</td></tr>
+    <tr><td>3ª</td><td>12 segundos</td><td>21s</td></tr>
+    <tr><td>4ª</td><td>24 segundos</td><td>45s</td></tr>
+    <tr><td>5ª em diante</td><td>30 segundos (máx.)</td><td>—</td></tr>
+</table>
+
+<!-- ── 3. PROCEDIMENTO DE TESTE ──────────────────────────────────────── -->
+<h3>3. Procedimento de Teste</h3>
+
+<table>
+    <tr>
+        <th>#</th>
+        <th>Ação</th>
+        <th>Resultado Esperado</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Sistema iniciado e usuário logado na página de Ordens de Serviço</td>
+        <td>Página carregada normalmente, sem banner</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Servidor derrubado intencionalmente (<code>Ctrl+C</code> no terminal)</td>
+        <td>Processo encerrado, porta 5086 liberada</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Aguardar ~3 segundos após a queda</td>
+        <td>Banner vermelho aparece: "Servidor offline. Tentando reconectar..."</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Observar contador de tentativas e regressivo</td>
+        <td>Número de tentativas incrementa, contador regressivo visível</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Servidor reiniciado manualmente (<code>dotnet run</code>)</td>
+        <td>Servidor sobe na porta 5086</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Frontend detecta retorno do servidor</td>
+        <td>Banner verde: "Servidor reconectado! Recarregando..."</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Aguardar 2 segundos</td>
+        <td>Página recarregada automaticamente, sistema operacional</td>
+        <td><span class="badge badge-ok">✓ OK</span></td>
+    </tr>
+</table>
+
+<!-- ── 4. EVIDÊNCIAS ─────────────────────────────────────────────────── -->
+<h3>4. Evidências Fotográficas</h3>
+<p>Insira abaixo os prints capturados durante a execução do teste.</p>
+
+<h4>Evidência 1 — Sistema operando normalmente</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Sistema rodando, página de Ordens de Serviço carregada, sem nenhum banner visível.
+</div>
+
+<h4>Evidência 2 — Servidor derrubado (terminal)</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Terminal mostrando o processo encerrado com Ctrl+C.
+</div>
+
+<h4>Evidência 3 — Banner de offline no browser</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Banner vermelho no topo da página: "Servidor offline. Tentando reconectar..." com contador de tentativas.
+</div>
+
+<h4>Evidência 4 — Múltiplas tentativas de reconexão</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Banner mostrando tentativa 2, 3 ou mais, com intervalo crescente visível.
+</div>
+
+<h4>Evidência 5 — Servidor reiniciado (terminal)</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Terminal mostrando o servidor subindo novamente: "Now listening on: http://localhost:5086".
+</div>
+
+<h4>Evidência 6 — Banner de reconexão bem-sucedida</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Banner verde: "Servidor reconectado! Recarregando a página..."
+</div>
+
+<h4>Evidência 7 — Sistema restaurado</h4>
+<div class="evidencia-box">
+    <span class="label">[ INSERIR PRINT AQUI ]</span>
+    Página recarregada automaticamente, sistema funcionando normalmente.
+</div>
+
+<!-- ── 5. ANÁLISE ────────────────────────────────────────────────────── -->
+<h3>5. Análise dos Resultados</h3>
+<p>
+    O mecanismo de tolerância a falhas implementado demonstrou comportamento correto em todos
+    os cenários testados. Os principais pontos observados foram:
+</p>
+<ul>
+    <li><strong>Detecção rápida:</strong> a queda do servidor foi detectada em aproximadamente 3 segundos após o encerramento do processo</li>
+    <li><strong>Feedback visual imediato:</strong> o banner vermelho foi exibido em todas as páginas autenticadas do sistema</li>
+    <li><strong>Backoff exponencial:</strong> o intervalo entre tentativas aumentou progressivamente, evitando sobrecarga desnecessária na rede</li>
+    <li><strong>Recuperação automática:</strong> ao retornar, o servidor foi detectado sem intervenção do usuário e a página foi recarregada automaticamente</li>
+    <li><strong>Transparência:</strong> o usuário foi informado em tempo real sobre o estado da conexão durante todo o período de indisponibilidade</li>
+</ul>
+
+<!-- ── 6. CONCLUSÃO ──────────────────────────────────────────────────── -->
+<h3>6. Conclusão</h3>
+<p>
+    A implementação do mecanismo de detecção de falhas e reconexão automática no sistema
+    <strong>FastOS</strong> atende aos requisitos de tolerância a falhas propostos.
+    O cliente web é capaz de identificar a indisponibilidade do servidor de forma autônoma,
+    notificar o usuário de maneira clara e realizar tentativas de reconexão com estratégia
+    de backoff exponencial, minimizando o impacto de falhas temporárias na experiência do usuário.
+</p>
+
+<hr/>
+
+<div class="rodape">
+    FastOS — Sistema de Gerenciamento de Ordens de Serviço &nbsp;|&nbsp;
+    Relatório de Tolerância a Falhas &nbsp;|&nbsp; 07/05/2026
+</div>
+
+<br/>
+<div class="no-print" style="text-align:center;margin-top:20px;">
+    <button onclick="window.print()"
+        style="background:#c0392b;color:#fff;border:none;padding:10px 28px;border-radius:6px;font-size:14px;cursor:pointer;">
+        🖨️ Imprimir / Salvar como PDF
+    </button>
+</div>
+
+</body>
+</html>

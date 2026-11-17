@@ -1,16 +1,28 @@
 # Visual Studio
 .vs/
+.vscode/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-# Build artifacts
-**/bin/
-**/obj/
-
-# .NET CLI local cache and telemetry
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/
+**/[Bb]in/
+**/[Oo]bj/
 .dotnet/
-
-# Local build logs
-*.log
+.artifacts/
+*.cache
+*.g.cs
+*.generated.cs
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache
+*.csproj.AssemblyReference.cache
+*.csproj.CoreCompileInputs.cache
+*.csproj.FileListAbsolute.txt
+*.csproj.Up2Date
+*.assets.cache
+*.sourcelink.json
+*.dswa.cache.json
+project.assets.json

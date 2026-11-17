@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard de Relatórios - FastOS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body { background-color: #f4f6f9; }
+
+        .card-indicador {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+            transition: transform .15s;
+        }
+        .card-indicador:hover { transform: translateY(-3px); }
+
+        .card-indicador .icon-box {
+            width: 52px; height: 52px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-chart {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+        .section-title {
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%);
+            color: #fff;
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-ultimas th { font-size: .8rem; text-transform: uppercase; color: #6c757d; }
+        .badge-status { font-size: .72rem; padding: .35em .65em; border-radius: 6px; }
+
+        .spinner-overlay {
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,.7);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <partial name="_SidebarMenu" />
+
+    <div id="spinnerOverlay" class="spinner-overlay">
+        <div class="spinner-border text-danger" style="width:3rem;height:3rem;" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+
+    <div class="container-fluid px-4 py-3">
+
+        <!-- Header -->
+        <div class="page-header d-flex align-items-center gap-3">
+            <i class="bi bi-bar-chart-line-fill fs-2"></i>
+            <div>
+                <h4 class="mb-0 fw-bold">Dashboard de Relatórios</h4>
+                <small class="opacity-75">Visão geral das Ordens de Serviço</small>
+            </div>
+            <button class="btn btn-light btn-sm ms-auto" onclick="carregarDados()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Atualizar
+            </button>
+        </div>
+
+        <!-- Indicadores -->
+        <p class="section-title">Indicadores</p>
+        <div class="row g-3 mb-4" id="indicadores">
+            <!-- preenchido via JS -->
+        </div>
+
+        <!-- Linha 1: Pizza + Linha OS por mês -->
+        <p class="section-title">Distribuição e Evolução</p>
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-pie-chart-fill text-danger me-2"></i>OS por Status</h6>
+                    <canvas id="chartStatus" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-8">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-graph-up text-primary me-2"></i>OS por Mês (últimos 12 meses)</h6>
+                    <canvas id="chartMes" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 2: Abertas vs Concluídas + Tempo médio de resolução -->
+        <p class="section-title">Desempenho</p>
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-8">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-activity text-success me-2"></i>OS Abertas vs Concluídas (últimos 6 meses)</h6>
+                    <canvas id="chartAbertasVsConcluidas" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-stopwatch text-purple me-2" style="color:#6f42c1"></i>Tempo Médio de Resolução (dias)</h6>
+                    <canvas id="chartTempoMedio" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 3: Por cliente + Dia da semana -->
+        <p class="section-title">Análise por Cliente e Demanda</p>
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-people-fill text-info me-2"></i>OS por Cliente (top 10)</h6>
+                    <canvas id="chartCliente" height="260"></canvas>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card card-chart h-100 p-3">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-calendar-week text-secondary me-2"></i>OS por Dia da Semana</h6>
+                    <canvas id="chartDiaSemana" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimas OS -->
+        <p class="section-title">Atividades Recentes</p>
+        <div class="card card-chart mb-4">
+            <div class="card-body p-3">
+                <h6 class="fw-semibold mb-3"><i class="bi bi-clock-history text-danger me-2"></i>Últimas Ordens de Serviço</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-ultimas mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Descrição</th>
+                                <th>Status</th>
+                                <th>Abertura</th>
+                                <th>Previsão</th>
+                                <th>Pago</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyUltimas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // ── paleta ──────────────────────────────────────────────────────────
+        const CORES = ['#dc3545','#0d6efd','#198754','#ffc107','#0dcaf0','#6f42c1','#fd7e14','#20c997','#6c757d','#e83e8c'];
+        const CORES_TRANS = CORES.map(c => c + 'CC');
+
+        let charts = {};
+
+        function destroyChart(id) {
+            if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+        }
+
+        // ── indicadores ─────────────────────────────────────────────────────
+        const configIndicadores = [
+            { key: 'totalOS',              label: 'Total de OS',           icon: 'bi-clipboard2-data-fill', cor: '#dc3545', bg: '#fde8ea' },
+            { key: 'osEmAndamento',        label: 'OS em Andamento',       icon: 'bi-gear-fill',            cor: '#0d6efd', bg: '#e7f0ff' },
+            { key: 'osConcluidas',         label: 'OS Concluídas',         icon: 'bi-check-circle-fill',    cor: '#198754', bg: '#e6f4ec' },
+            { key: 'osAtrasadas',          label: 'OS Atrasadas',          icon: 'bi-exclamation-triangle-fill', cor: '#ffc107', bg: '#fff8e1' },
+            { key: 'tempoMedioResolucaoDias', label: 'Tempo Médio (dias)', icon: 'bi-stopwatch-fill',       cor: '#6f42c1', bg: '#f0ebff' },
+        ];
+
+        function renderIndicadores(dados) {
+            const el = document.getElementById('indicadores');
+            el.innerHTML = configIndicadores.map(cfg => {
+                const val = dados[cfg.key];
+                const display = typeof val === 'number' && !Number.isInteger(val)
+                    ? val.toFixed(1) : val;
+                return `
+                <div class="col-6 col-sm-4 col-lg-2">
+                  <div class="card card-indicador p-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="icon-box" style="background:${cfg.bg};color:${cfg.cor}">
+                        <i class="bi ${cfg.icon}"></i>
+                      </div>
+                      <div>
+                        <div class="fs-4 fw-bold" style="color:${cfg.cor}">${display}</div>
+                        <div class="text-muted" style="font-size:.75rem">${cfg.label}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ── gráficos ────────────────────────────────────────────────────────
+        function renderChartStatus(dados) {
+            destroyChart('status');
+            const ctx = document.getElementById('chartStatus').getContext('2d');
+            charts['status'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: dados.osPorStatus.map(x => x.status),
+                    datasets: [{ data: dados.osPorStatus.map(x => x.quantidade), backgroundColor: CORES, borderWidth: 2 }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+            });
+        }
+
+        function renderChartMes(dados) {
+            destroyChart('mes');
+            const ctx = document.getElementById('chartMes').getContext('2d');
+            charts['mes'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dados.osPorMes.map(x => x.mes),
+                    datasets: [{
+                        label: 'OS Abertas',
+                        data: dados.osPorMes.map(x => x.quantidade),
+                        borderColor: '#dc3545', backgroundColor: '#dc354520',
+                        tension: .4, fill: true, pointRadius: 4
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderChartAbertasVsConcluidas(dados) {
+            destroyChart('avc');
+            const ctx = document.getElementById('chartAbertasVsConcluidas').getContext('2d');
+            charts['avc'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dados.osAbertasVsConcluidas.map(x => x.mes),
+                    datasets: [
+                        { label: 'Abertas',    data: dados.osAbertasVsConcluidas.map(x => x.abertas),    borderColor: '#dc3545', backgroundColor: '#dc354520', tension: .4, fill: true, pointRadius: 4 },
+                        { label: 'Concluídas', data: dados.osAbertasVsConcluidas.map(x => x.concluidas), borderColor: '#198754', backgroundColor: '#19875420', tension: .4, fill: true, pointRadius: 4 }
+                    ]
+                },
+                options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+        }
+
+        function renderChartTempoMedio(dados) {
+            destroyChart('tempo');
+            const ctx = document.getElementById('chartTempoMedio').getContext('2d');
+            charts['tempo'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dados.tempoMedioPorMes.map(x => x.mes),
+                    datasets: [{
+                        label: 'Dias',
+                        data: dados.tempoMedioPorMes.map(x => x.tempoMedioDias),
+                        borderColor: '#6f42c1', backgroundColor: '#6f42c120',
+                        tension: .4, fill: true, pointRadius: 5,
+                        pointBackgroundColor: '#6f42c1'
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Dias' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderChartCliente(dados) {
+            destroyChart('cliente');
+            const ctx = document.getElementById('chartCliente').getContext('2d');
+            charts['cliente'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dados.osPorCliente.map(x => x.cliente),
+                    datasets: [{ label: 'OS', data: dados.osPorCliente.map(x => x.quantidade), backgroundColor: CORES_TRANS, borderColor: CORES, borderWidth: 1.5, borderRadius: 6 }]
+                },
+                options: { indexAxis: 'y', scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderChartDiaSemana(dados) {
+            destroyChart('dia');
+            const ctx = document.getElementById('chartDiaSemana').getContext('2d');
+            charts['dia'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dados.osPorDiaSemana.map(x => x.diaSemana),
+                    datasets: [{ label: 'OS', data: dados.osPorDiaSemana.map(x => x.quantidade), backgroundColor: '#0d6efd99', borderColor: '#0d6efd', borderWidth: 1.5, borderRadius: 6 }]
+                },
+                options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // ── tabela últimas OS ────────────────────────────────────────────────
+        const statusCores = { 1: 'secondary', 2: 'primary', 3: 'warning', 4: 'success', 5: 'success' };
+
+        function renderUltimas(dados) {
+            const tbody = document.getElementById('tbodyUltimas');
+            if (!dados.ultimasOrdens || dados.ultimasOrdens.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Nenhuma ordem encontrada</td></tr>';
+                return;
+            }
+            tbody.innerHTML = dados.ultimasOrdens.map(o => {
+                const cor = statusCores[o.idStatus] || 'secondary';
+                const abertura = new Date(o.dataAbertura).toLocaleDateString('pt-BR');
+                const previsao = new Date(o.previsaoEntrega).toLocaleDateString('pt-BR');
+                const atrasada = !([4,5].includes(o.idStatus)) && new Date(o.previsaoEntrega) < new Date();
+                return `<tr>
+                    <td><span class="fw-semibold">#${o.idOrdemServico}</span></td>
+                    <td>${o.clienteNome}</td>
+                    <td class="text-truncate" style="max-width:200px" title="${o.descricaoServico}">${o.descricaoServico}</td>
+                    <td><span class="badge badge-status bg-${cor}">${o.statusDescricao}</span></td>
+                    <td>${abertura}</td>
+                    <td>${atrasada ? '<span class="text-danger fw-semibold">' + previsao + ' ⚠</span>' : previsao}</td>
+                    <td>${o.pago ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>'}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ── carregamento principal ───────────────────────────────────────────
+        function carregarDados() {
+            document.getElementById('spinnerOverlay').style.display = 'flex';
+            $.ajax({
+                url: '/Relatorio/ObterDadosDashboard',
+                type: 'GET',
+                success: function (dados) {
+                    renderIndicadores(dados);
+                    renderChartStatus(dados);
+                    renderChartMes(dados);
+                    renderChartAbertasVsConcluidas(dados);
+                    renderChartTempoMedio(dados);
+                    renderChartCliente(dados);
+                    renderChartDiaSemana(dados);
+                    renderUltimas(dados);
+                },
+                error: function () {
+                    alert('Erro ao carregar dados do dashboard.');
+                },
+                complete: function () {
+                    document.getElementById('spinnerOverlay').style.display = 'none';
+                }
+            });
+        }
+
+        $(document).ready(function () { carregarDados(); });
+    </script>
+</body>
+</html>

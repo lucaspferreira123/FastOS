@@ -1,10 +1,12 @@
 using FastOS.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using FastOS.Domain.Entities;
 
 namespace FastOS.API.Controllers
 {
+    [Authorize(Roles = "Admin,Tecnico")]
     public class ProdutoController : Controller
     {
         private readonly ProdutoBusiness _produtoBusiness;

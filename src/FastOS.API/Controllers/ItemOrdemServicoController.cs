@@ -22,6 +22,10 @@ public class ItemOrdemServicoController : Controller
             var itensCadastrados = await _itemOrdemServicoBusiness.AlterarItensOrdemServico(itens);
             return Ok(itensCadastrados);
         }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message); // estoque insuficiente
+        }
         catch (Exception)
         {
             return StatusCode(500, "Ocorreu um erro interno.");

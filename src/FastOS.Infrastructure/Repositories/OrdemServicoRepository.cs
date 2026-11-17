@@ -8,11 +8,8 @@ namespace FastOS.Infrastructure.Repositories;
 
 public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdemServicoRepository
 {
-    private readonly AppDbContext _context;
-
     public OrdemServicoRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<OrdemServicoEntity> CadastrarOrdem(OrdemServicoEntity ordem)
@@ -34,18 +31,31 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
     {
         try
         {
-            return await _context.OrdensServico
-                .Select(o => new OrdemServicoDto
-                {
-                    idOrdemServico = o.idOrdemServico,
-                    ClienteNome = _context.Cliente.Where(c => c.idCliente == o.idCliente).Select(c => c.Nome).FirstOrDefault() ?? string.Empty,
-                    StatusDescricao = _context.Status.Where(s => s.idStatus == o.idStatus).Select(s => s.Descricao).FirstOrDefault() ?? string.Empty,
-                    Pago = o.Pago,
-                    DescricaoServico = o.DescricaoServico,
-                    DataAbertura = o.DataAbertura,
-                    PrevisaoEntrega = o.PrevisaoEntrega
-                })
+            var ordens = await
+                (from o in _context.OrdensServico.AsNoTracking()
+                 join c in _context.Cliente.AsNoTracking()
+                    on o.idCliente equals c.idCliente into clientes
+                 from c in clientes.DefaultIfEmpty()
+                 join s in _context.Status.AsNoTracking()
+                    on o.idStatus equals s.idStatus into status
+                 from s in status.DefaultIfEmpty()
+                 select new OrdemServicoDto
+                 {
+                     idOrdemServico = o.idOrdemServico,
+                     idCliente = o.idCliente,
+                     idStatus = o.idStatus,
+                     ClienteNome = c != null ? c.Nome : string.Empty,
+                     StatusDescricao = s != null ? s.Descricao : string.Empty,
+                     Pago = o.Pago,
+                     DescricaoServico = o.DescricaoServico,
+                     DiagnosticoTecnico = o.DiagnosticoTecnico,
+                     PossuiRelatorioPdf = o.RelatorioPdfFileName != null,
+                     DataAbertura = o.DataAbertura,
+                     PrevisaoEntrega = o.PrevisaoEntrega
+                 })
                 .ToListAsync();
+
+            return ordens;
         }
         catch (Exception ex)
         {
@@ -68,6 +78,8 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
                     StatusDescricao = _context.Status.Where(s => s.idStatus == o.idStatus).Select(s => s.Descricao).FirstOrDefault() ?? string.Empty,
                     Pago = o.Pago,
                     DescricaoServico = o.DescricaoServico,
+                    DiagnosticoTecnico = o.DiagnosticoTecnico,
+                    PossuiRelatorioPdf = o.RelatorioPdfFileName != null,
                     DataAbertura = o.DataAbertura,
                     PrevisaoEntrega = o.PrevisaoEntrega
                 })
@@ -91,6 +103,7 @@ public class OrdemServicoRepository : BaseRepository<OrdemServicoEntity>, IOrdem
             ordem.Pago = model.Pago;
             ordem.idStatus = model.idStatus;
             ordem.DescricaoServico = model.DescricaoServico;
+            ordem.DiagnosticoTecnico = model.DiagnosticoTecnico;
             ordem.DataAbertura = model.DataAbertura;
             ordem.PrevisaoEntrega = model.PrevisaoEntrega;
 

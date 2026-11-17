@@ -35,7 +35,8 @@ public class UsuarioRepository
                     Senha = u.Senha,
                     Ativo = u.Ativo,
                     Excluido = u.Excluido,
-                    Cargo = u.Cargo
+                    Cargo = u.Cargo,
+                    Role = u.Role
                 })
                 .ToListAsync();
         }

@@ -1,5 +1,6 @@
 using FastOS.Application.Services;
 using FastOS.Domain.Entities;
+using FastOS.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastOS.API.Controllers
@@ -7,15 +8,90 @@ namespace FastOS.API.Controllers
     public class ClienteController : Controller
     {
         private readonly ClienteBusiness _clienteBusiness;
+        private readonly OrdemServicoBusiness _ordemBusiness;
+        private readonly OrcamentoBusiness _orcamentoBusiness;
 
-        public ClienteController(ClienteBusiness clienteBusiness)
+        public ClienteController(ClienteBusiness clienteBusiness, OrdemServicoBusiness ordemBusiness, OrcamentoBusiness orcamentoBusiness)
         {
-            _clienteBusiness = clienteBusiness;
+            _clienteBusiness   = clienteBusiness;
+            _ordemBusiness     = ordemBusiness;
+            _orcamentoBusiness = orcamentoBusiness;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        [Route("Cliente/Perfil/{idCliente:int}")]
+        public IActionResult Perfil(int idCliente)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Route("Cliente/ObterPerfil/{idCliente}")]
+        public async Task<IActionResult> ObterPerfil(int idCliente)
+        {
+            try
+            {
+                var cliente = (await _clienteBusiness.ObterClientePeloId(idCliente)).FirstOrDefault();
+                if (cliente == null) return NotFound();
+
+                var todasOrdens = await _ordemBusiness.ObterTodasOrdens();
+                var ordensCliente = todasOrdens.Where(o => o.idCliente == idCliente).OrderByDescending(o => o.DataAbertura).ToList();
+
+                var idsStatusConcluido = new[] { 5, 6 };
+                var agora = DateTime.Now;
+
+                // Busca orçamentos das OS concluídas para calcular total gasto
+                decimal totalGasto = 0;
+                foreach (var os in ordensCliente.Where(o => idsStatusConcluido.Contains(o.idStatus)))
+                {
+                    try
+                    {
+                        var orc = await _orcamentoBusiness.ObterOrcamento(os.idOrdemServico);
+                        if (orc != null) totalGasto += orc.ValorFinal;
+                    }
+                    catch { /* orçamento não cadastrado, ignora */ }
+                }
+
+                var osConcluidas = ordensCliente.Count(o => idsStatusConcluido.Contains(o.idStatus));
+
+                // Equipamentos = descrições únicas das OS (primeiras palavras)
+                var equipamentos = ordensCliente
+                    .Select(o => o.DescricaoServico?.Split('-').FirstOrDefault()?.Trim() ?? o.DescricaoServico)
+                    .Where(d => !string.IsNullOrWhiteSpace(d))
+                    .Distinct()
+                    .Take(20)
+                    .ToList();
+
+                var perfil = new ClientePerfilDto
+                {
+                    IdCliente    = cliente.idCliente,
+                    Nome         = cliente.Nome,
+                    Email        = cliente.Email,
+                    Telefone     = cliente.Telefone,
+                    Endereco     = cliente.Endereco,
+                    TipoCliente  = cliente.TipoCliente == Domain.Enums.TipoClienteEnum.PessoaFisica ? "Pessoa Física" : "Pessoa Jurídica",
+                    Documento    = cliente.TipoCliente == Domain.Enums.TipoClienteEnum.PessoaFisica ? cliente.CPF : cliente.CNPJ,
+                    Ativo        = cliente.Ativo,
+                    TotalOS      = ordensCliente.Count,
+                    OSAbertas    = ordensCliente.Count(o => !idsStatusConcluido.Contains(o.idStatus)),
+                    OSConcluidas = osConcluidas,
+                    OSAtrasadas  = ordensCliente.Count(o => !idsStatusConcluido.Contains(o.idStatus) && o.PrevisaoEntrega < agora),
+                    TotalGasto   = totalGasto,
+                    TicketMedio  = osConcluidas > 0 ? Math.Round(totalGasto / osConcluidas, 2) : 0,
+                    Ordens       = ordensCliente,
+                    Equipamentos = equipamentos!
+                };
+
+                return Ok(perfil);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu um erro interno.");
+            }
         }
 
         [HttpGet]

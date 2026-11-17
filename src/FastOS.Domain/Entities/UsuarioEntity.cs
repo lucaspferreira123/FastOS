@@ -25,4 +25,8 @@ public class UsuarioEntity
     [Column(TypeName = "varchar(100)")]
     [MaxLength(100)]
     public string? Cargo { get; set; }
+
+    [Column(TypeName = "varchar(20)")]
+    [MaxLength(20)]
+    public string Role { get; set; } = "Tecnico";
 }

@@ -1,10 +1,12 @@
 using FastOS.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using FastOS.Domain.Entities;
 
 namespace FastOS.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsuarioController : Controller
     {
         private readonly UsuarioBusiness _usuarioBusiness;
@@ -33,7 +35,8 @@ namespace FastOS.API.Controllers
                     u.Email,
                     u.Ativo,
                     u.Excluido,
-                    u.Cargo
+                    u.Cargo,
+                    u.Role
                 }));
             }
             catch (Exception)
@@ -62,7 +65,8 @@ namespace FastOS.API.Controllers
                     usuario.Email,
                     usuario.Ativo,
                     usuario.Excluido,
-                    usuario.Cargo
+                    usuario.Cargo,
+                    usuario.Role
                 });
             }
             catch (Exception)

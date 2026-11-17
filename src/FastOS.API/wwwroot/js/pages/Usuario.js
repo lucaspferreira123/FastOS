@@ -144,11 +144,16 @@ function renderizarTabela() {
             ? '<span class="badge bg-success-subtle text-success border border-success-subtle">Ativo</span>'
             : '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Inativo</span>';
 
+        const badgeRole = usuario.role === 'Admin'
+            ? '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Admin</span>'
+            : '<span class="badge bg-primary-subtle text-primary border border-primary-subtle">Técnico</span>';
+
         tbody.append(`
             <tr>
                 <td>${escapeHtml(usuario.nome)}</td>
                 <td>${escapeHtml(usuario.email)}</td>
                 <td>${escapeHtml(usuario.cargo || '-')}</td>
+                <td>${badgeRole}</td>
                 <td>${badgeStatus}</td>
                 <td class="text-center">
                     <button class="btn btn-sm btn-outline-danger me-1" type="button" onclick="abrirModalEdicao(${usuario.id})">
@@ -204,6 +209,7 @@ function abrirModalEdicao(idUsuario) {
     $('#editNomeUsuario').val(usuario.nome);
     $('#editEmailUsuario').val(usuario.email);
     $('#editCargoUsuario').val(usuario.cargo || '');
+    $('#editRoleUsuario').val(usuario.role || 'Tecnico');
     $('#editSenhaUsuario').val('');
     $('#editConfirmarSenhaUsuario').val('');
     $('#editAtivoUsuario').prop('checked', usuario.ativo);
@@ -222,21 +228,23 @@ function abrirModalExclusao(idUsuario, nomeUsuario) {
 
 function obterDadosCadastro() {
     return {
-        nome: $('#nomeUsuario').val().trim(),
+        nome:  $('#nomeUsuario').val().trim(),
         email: $('#emailUsuario').val().trim(),
         senha: $('#senhaUsuario').val(),
         cargo: ($('#cargoUsuario').val() || '').trim() || null,
+        role:  $('#roleUsuario').val() || 'Tecnico',
         ativo: $('#ativoUsuario').is(':checked')
     };
 }
 
 function obterDadosEdicao() {
     return {
-        id: parseInt($('#editIdUsuario').val(), 10),
-        nome: $('#editNomeUsuario').val().trim(),
+        id:    parseInt($('#editIdUsuario').val(), 10),
+        nome:  $('#editNomeUsuario').val().trim(),
         email: $('#editEmailUsuario').val().trim(),
         senha: $('#editSenhaUsuario').val(),
         cargo: ($('#editCargoUsuario').val() || '').trim() || null,
+        role:  $('#editRoleUsuario').val() || 'Tecnico',
         ativo: $('#editAtivoUsuario').is(':checked')
     };
 }

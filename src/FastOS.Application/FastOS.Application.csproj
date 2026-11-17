@@ -12,6 +12,7 @@
     <ProjectReference Include="..\\FastOS.Infrastructure\\FastOS.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.6.0" />
     <PackageReference Include="QuestPDF" Version="2025.7.4" />
   </ItemGroup>
 </Project>

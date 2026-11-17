@@ -1,1 +1,0 @@
-- Fixed the DocumentOperation.ExtendMetadata operation to preserve /Metadata tag attributes (/Subtype /XML) and improve compatibility with the Mustang validation tool for ZUGFeRD files.

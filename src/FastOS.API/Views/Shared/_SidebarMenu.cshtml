@@ -9,6 +9,8 @@
     }
 }
 
+<script src="~/js/reconnect.js" asp-append-version="true"></script>
+
 <button id="btnHamburger"
         class="btn btn-danger m-3"
         type="button"
@@ -22,8 +24,7 @@
 <div class="offcanvas offcanvas-start" tabindex="-1" id="appSidebar" aria-labelledby="appSidebarLabel">
     <div class="offcanvas-header border-bottom">
         <div>
-@*             <div class="text-uppercase text-secondary small">FastOS</div>
- *@            <h5 class="offcanvas-title text-danger fw-bold mb-0" id="appSidebarLabel">Menu</h5>
+            <h5 class="offcanvas-title text-danger fw-bold mb-0" id="appSidebarLabel">Menu</h5>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
     </div>
@@ -39,17 +40,25 @@
                aria-current="@(currentController == "cliente" ? "page" : null)">
                 Cadastro de Clientes
             </a>
-            <a href="/Produto"
-               class="@GetItemClasses("produto")"
-               aria-current="@(currentController == "produto" ? "page" : null)">
-                Estoque de Pecas
-            </a>
-            <a href="/Usuario"
-               class="@GetItemClasses("usuario")"
-               aria-current="@(currentController == "usuario" ? "page" : null)">
-                Cadastro de Usuarios
-            </a>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="/Produto"
+                   class="@GetItemClasses("produto")"
+                   aria-current="@(currentController == "produto" ? "page" : null)">
+                    Estoque de Pecas
+                </a>
+                <a href="/Usuario"
+                   class="@GetItemClasses("usuario")"
+                   aria-current="@(currentController == "usuario" ? "page" : null)">
+                    Cadastro de Usuarios
+                </a>
+                <a href="/Relatorio"
+                   class="@GetItemClasses("relatorio")"
+                   aria-current="@(currentController == "relatorio" ? "page" : null)">
+                    Analitico
+                </a>
+            }
         </nav>
     </div>
 </div>
-
